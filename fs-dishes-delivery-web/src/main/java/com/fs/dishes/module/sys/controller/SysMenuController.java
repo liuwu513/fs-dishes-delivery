@@ -11,10 +11,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -39,7 +36,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 所有菜单列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     @RequiresPermissions("sys:menu:list")
     public List<SysMenu> list() {
         List<SysMenu> menuList = sysMenuService.queryList(new HashMap<String, Object>());
@@ -50,7 +47,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 选择菜单(添加、修改菜单)
      */
-    @RequestMapping("/select")
+    @RequestMapping(value = "/select",method = RequestMethod.GET)
     @RequiresPermissions("sys:menu:select")
     public ResResult select() {
         //查询列表数据
@@ -69,7 +66,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 角色授权菜单
      */
-    @RequestMapping("/perms")
+    @RequestMapping(value = "/perms",method = RequestMethod.GET)
     @RequiresPermissions("sys:menu:perms")
     public ResResult perms() {
         //查询列表数据
@@ -87,7 +84,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 菜单信息
      */
-    @RequestMapping("/info/{menuId}")
+    @RequestMapping(value = "/info/{menuId}",method = RequestMethod.GET)
     @RequiresPermissions("sys:menu:info")
     public ResResult info(@PathVariable("menuId") Long menuId) {
         SysMenu menu = sysMenuService.queryObject(menuId);
@@ -98,7 +95,7 @@ public class SysMenuController extends AbstractController {
      * 保存
      */
     @LogManage("保存菜单")
-    @RequestMapping("/save")
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiresPermissions("sys:menu:save")
     public ResResult save(@RequestBody SysMenu menu) {
         //数据校验
@@ -111,7 +108,7 @@ public class SysMenuController extends AbstractController {
      * 修改
      */
     @LogManage("修改菜单")
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("sys:menu:update")
     public ResResult update(@RequestBody SysMenu menu) {
         //数据校验
@@ -124,7 +121,7 @@ public class SysMenuController extends AbstractController {
      * 删除
      */
     @LogManage("删除菜单")
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("sys:menu:delete")
     public ResResult delete(long menuId) {
         if (menuId <= 30) {
@@ -142,7 +139,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 用户菜单列表
      */
-    @RequestMapping("/user")
+    @RequestMapping(value = "/user",method = RequestMethod.GET)
     public ResResult user() {
         List<SysMenu> menuList = sysMenuService.getUserMenuList(getUserId());
         Set<String> permissions = shiroService.getUserPermissions(getUserId());

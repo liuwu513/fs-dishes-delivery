@@ -35,7 +35,7 @@ public class SysRoleController extends AbstractController {
     /**
      * 角色列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     @RequiresPermissions("sys:role:list")
     public ResResult list(@RequestParam Map<String, Object> params) {
         //如果不是超级管理员，则只查询自己创建的角色列表
@@ -56,7 +56,7 @@ public class SysRoleController extends AbstractController {
     /**
      * 角色列表
      */
-    @RequestMapping("/select")
+    @RequestMapping(value = "/select",method = RequestMethod.GET)
     @RequiresPermissions("sys:role:select")
     public ResResult select() {
         Map<String, Object> map = new HashMap<>();
@@ -71,7 +71,7 @@ public class SysRoleController extends AbstractController {
     /**
      * 角色信息
      */
-    @RequestMapping("/info/{roleId}")
+    @RequestMapping(value = "/info/{roleId}",method = RequestMethod.GET)
     @RequiresPermissions("sys:role:info")
     public ResResult info(@PathVariable("roleId") Long roleId) {
         SysRole role = sysRoleService.queryObject(roleId);
@@ -86,7 +86,7 @@ public class SysRoleController extends AbstractController {
      * 保存角色
      */
     @LogManage("保存角色")
-    @RequestMapping("/save")
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiresPermissions("sys:role:save")
     public ResResult save(@RequestBody SysRole role) {
         ValidatorUtils.validateEntity(role);
@@ -99,7 +99,7 @@ public class SysRoleController extends AbstractController {
      * 修改角色
      */
     @LogManage("修改角色")
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("sys:role:update")
     public ResResult update(@RequestBody SysRole role) {
         ValidatorUtils.validateEntity(role);
@@ -112,7 +112,7 @@ public class SysRoleController extends AbstractController {
      * 删除角色
      */
     @LogManage("删除角色")
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("sys:role:delete")
     public ResResult delete(@RequestBody Long[] roleIds) {
         sysRoleService.deleteBatch(roleIds);

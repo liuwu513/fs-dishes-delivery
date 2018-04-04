@@ -28,7 +28,7 @@ public class SysConfigController extends AbstractController {
     /**
      * 所有配置列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     @RequiresPermissions("sys:config:list")
     public ResResult list(@RequestParam Map<String, Object> params) {
         //查询列表数据
@@ -45,7 +45,7 @@ public class SysConfigController extends AbstractController {
     /**
      * 配置信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping(value = "/info/{id}",method = RequestMethod.POST)
     @RequiresPermissions("sys:config:info")
     public ResResult info(@PathVariable("id") Long id) {
         SysConfig config = sysConfigService.queryObject(id);
@@ -56,7 +56,7 @@ public class SysConfigController extends AbstractController {
      * 保存配置
      */
     @LogManage("保存配置")
-    @RequestMapping("/save")
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiresPermissions("sys:config:save")
     public ResResult save(@RequestBody SysConfig config) {
         ValidatorUtils.validateEntity(config);
@@ -68,7 +68,7 @@ public class SysConfigController extends AbstractController {
      * 修改配置
      */
     @LogManage("修改配置")
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("sys:config:update")
     public ResResult update(@RequestBody SysConfig config) {
         ValidatorUtils.validateEntity(config);
@@ -80,7 +80,7 @@ public class SysConfigController extends AbstractController {
      * 删除配置
      */
     @LogManage("删除配置")
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("sys:config:delete")
     public ResResult delete(@RequestBody Long[] ids) {
         sysConfigService.deleteBatch(ids);

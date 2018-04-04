@@ -39,7 +39,7 @@ public class SysUserController extends AbstractController {
     /**
      * 所有用户列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list")
     @RequiresPermissions("sys:user:list")
     public ResResult list(@RequestParam Map<String, Object> params) {
         //只有超级管理员，才能查看所有管理员列表
@@ -57,7 +57,7 @@ public class SysUserController extends AbstractController {
     /**
      * 获取登录的用户信息
      */
-    @RequestMapping("/info")
+    @RequestMapping(value = "/info",method = RequestMethod.GET)
     public ResResult info() {
         return ResResult.ok().withData(getUser());
     }
@@ -66,7 +66,7 @@ public class SysUserController extends AbstractController {
      * 修改登录用户密码
      */
     @LogManage("修改密码")
-    @RequestMapping("/password")
+    @RequestMapping(value = "/password",method = RequestMethod.POST)
     public ResResult password(String password, String newPassword) {
         Assert.isBlank(newPassword, "新密码不为能空");
 
@@ -86,7 +86,7 @@ public class SysUserController extends AbstractController {
     /**
      * 用户信息
      */
-    @RequestMapping("/info/{userId}")
+    @RequestMapping(value = "/info/{userId}",method = RequestMethod.GET)
     @RequiresPermissions("sys:user:info")
     public ResResult info(@PathVariable("userId") String userId) {
         SysUser user = sysUserService.queryObject(userId);
@@ -101,7 +101,7 @@ public class SysUserController extends AbstractController {
      * 保存用户
      */
     @LogManage("保存用户")
-    @RequestMapping("/save")
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiresPermissions("sys:user:save")
     public ResResult save(@RequestBody SysUser user) {
         ValidatorUtils.validateEntity(user, AddGroup.class);
@@ -116,7 +116,7 @@ public class SysUserController extends AbstractController {
      * 修改用户
      */
     @LogManage("修改用户")
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("sys:user:update")
     public ResResult update(@RequestBody SysUser user) {
         ValidatorUtils.validateEntity(user, UpdateGroup.class);
@@ -129,7 +129,7 @@ public class SysUserController extends AbstractController {
      * 删除用户
      */
     @LogManage("删除用户")
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("sys:user:delete")
     public ResResult delete(@RequestBody String[] userIds) {
         if (ArrayUtils.contains(userIds, 1L)) {
