@@ -7,9 +7,11 @@ import com.fs.dishes.module.customer.dao.PlsCustomerDao;
 import com.fs.dishes.module.customer.entity.PlsCustomer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +33,23 @@ public class PlsCustomerService extends BaseService {
      * @return
      */
     public ResResult pageCustomer(Map<String, Object> params) {
+        Integer status = MapUtils.getInteger(params, "status", 1);
+        params.put("status", status);
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsCustomer> list = plsCustomerDao.queryList(params);
         PageInfo<PlsCustomer> page = new PageInfo<>(list);
         return ResResult.ok().withData(page);
+    }
+
+    /**
+     * 根据客户ID获取客户详情
+     *
+     * @param customerId
+     * @return
+     */
+    public ResResult getById(Long customerId) {
+        PlsCustomer plsCustomer = plsCustomerDao.selectByPrimaryKey(customerId);
+        return ResResult.ok().withData(plsCustomer);
     }
 
     /**
@@ -44,14 +59,25 @@ public class PlsCustomerService extends BaseService {
      * @return
      */
     public ResResult delCustomer(Long id) {
-
-
         PlsCustomer customer = plsCustomerDao.selectByPrimaryKey(id);
         if (customer != null) {
             customer.setStatus(Constant.DataState.FAKE_DEL.getValue());
             plsCustomerDao.updateByPrimaryKey(customer);
         }
         return ResResult.ok().withData(Boolean.TRUE);
+    }
+
+
+    /**
+     * 批量删除该客户
+     *
+     * @param ids 客户ID数组
+     * @return
+     */
+    public ResResult delCustomers(Long[] ids) {
+        List<Long> idList = Arrays.asList(ids);
+        Boolean flag = plsCustomerDao.batchDel(idList, Constant.DataState.FAKE_DEL.getValue());
+        return ResResult.ok().withData(flag);
     }
 
     /**

@@ -18,7 +18,6 @@ import java.util.Properties;
 @Configuration
 public class KaptchaConfig {
 
-
     @Bean
     public DefaultKaptcha producer() {
         Properties properties = new Properties();

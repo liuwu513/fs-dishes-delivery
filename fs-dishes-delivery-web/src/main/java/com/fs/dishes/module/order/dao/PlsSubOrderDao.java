@@ -2,6 +2,7 @@ package com.fs.dishes.module.order.dao;
 
 import com.fs.dishes.base.annotations.DataRepository;
 import com.fs.dishes.module.order.entity.PlsSubOrder;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -20,4 +21,19 @@ public interface PlsSubOrderDao extends Mapper<PlsSubOrder>{
      * @return
      */
     List<PlsSubOrder> queryList(Map<String, Object> params);
+
+    /**
+     *  根据条件查询存在的主单
+     * @param params
+     * @return
+     */
+    List<String> queryMainByCondition(Map<String, Object> params);
+
+    /**
+     * 批量伪删除
+     * @param idList
+     * @param status
+     * @return
+     */
+    Boolean batchDel(@Param("idList") List<String> idList, @Param("status") Integer status);
 }

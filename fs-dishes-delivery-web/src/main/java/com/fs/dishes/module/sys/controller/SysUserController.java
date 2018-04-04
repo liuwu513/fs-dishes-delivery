@@ -3,6 +3,7 @@ package com.fs.dishes.module.sys.controller;
 import com.fs.dishes.base.annotations.LogManage;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
+import com.fs.dishes.base.controller.AbstractController;
 import com.fs.dishes.base.utils.PageUtils;
 import com.fs.dishes.base.utils.Query;
 import com.fs.dishes.base.validator.Assert;

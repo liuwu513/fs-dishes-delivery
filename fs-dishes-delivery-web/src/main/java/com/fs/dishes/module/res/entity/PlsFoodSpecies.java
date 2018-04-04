@@ -1,6 +1,7 @@
 package com.fs.dishes.module.res.entity;
 
 import com.fs.dishes.base.common.BaseEntity;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,4 +23,5 @@ public class PlsFoodSpecies extends BaseEntity {
     private String id;  //主键ID
     private String name;//种类名称
     private String remarks;//种类描述
+    private Integer status; //数据状态
 }

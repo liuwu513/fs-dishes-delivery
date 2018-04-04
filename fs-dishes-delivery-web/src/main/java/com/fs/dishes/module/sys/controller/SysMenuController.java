@@ -3,6 +3,7 @@ package com.fs.dishes.module.sys.controller;
 import com.fs.dishes.base.annotations.LogManage;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
+import com.fs.dishes.base.controller.AbstractController;
 import com.fs.dishes.base.exceptions.FDDException;
 import com.fs.dishes.module.sys.entity.SysMenu;
 import com.fs.dishes.module.sys.service.ShiroService;

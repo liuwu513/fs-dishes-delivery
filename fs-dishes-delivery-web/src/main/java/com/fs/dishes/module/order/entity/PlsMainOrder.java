@@ -10,10 +10,12 @@ import lombok.ToString;
  */
 @ToString
 @Data
-public class PlsMainOrder extends BaseEntity{
+public class PlsMainOrder extends BaseEntity {
     private String id;        //主键ID
-    private String orderDesc ;//主单描述(名称后+日期 yyyy-MM-dd)
-    private String details;	//主单详情
-    private String totalAmount;	//主单总金额
-    private String discountAmount;	//主单总优惠金额
+    private String orderDesc;//主单描述(名称后+日期 yyyy-MM-dd)
+    private String details;    //主单详情
+    private Integer status;      //数据状态
+    private Integer payStatus;   //支付状态
+    private String totalAmount;    //主单总金额
+    private String discountAmount;    //主单总优惠金额
 }

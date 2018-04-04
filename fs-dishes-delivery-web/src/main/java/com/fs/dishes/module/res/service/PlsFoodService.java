@@ -7,9 +7,11 @@ import com.fs.dishes.module.res.dao.PlsFoodDao;
 import com.fs.dishes.module.res.entity.PlsFood;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +33,12 @@ public class PlsFoodService extends BaseService {
      * @return
      */
     public ResResult pageFood(Map<String, Object> params) {
+        Integer status = MapUtils.getInteger(params, "status", 1);
+        params.put("status", status);
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsFood> list = plsFoodDao.queryList(params);
         PageInfo<PlsFood> page = new PageInfo<>(list);
+        logger.info("搜索条件：{}，搜索到的食品信息共{}条", params, page.getTotal());
         return ResResult.ok().withData(page);
     }
 
@@ -48,6 +53,7 @@ public class PlsFoodService extends BaseService {
         if (food != null) {
             food.setStatus(Constant.DataState.FAKE_DEL.getValue());
             plsFoodDao.updateByPrimaryKey(food);
+            logger.info("食品信息：{},删除成功！", food.getName());
         }
         return ResResult.ok().withData(Boolean.TRUE);
     }
@@ -61,12 +67,19 @@ public class PlsFoodService extends BaseService {
     public ResResult modifyFood(PlsFood plsFood) {
         Boolean isExists = existsFood(plsFood);
         if (isExists) {
-            return ResResult.error(300, "食品名称已存在，请重新输入！");
+            logger.info("食品名称:{}已存在，请重新输入！", plsFood.getName());
+            return ResResult.error(300, String.format("食品名称：%s 已存在，请重新输入！", plsFood.getName()));
         }
         if (plsFood.getId() != null) {
+            plsFood.setModifyBy(getUserId());
+            plsFood.setModifyTime(new Date());
             plsFoodDao.updateByPrimaryKey(plsFood);
+            logger.info("食品名称:{}，更新成功", plsFood.getName());
         } else {
+            plsFood.setCreateBy(getUserId());
+            plsFood.setCreateTime(new Date());
             plsFoodDao.insert(plsFood);
+            logger.info("食品名称:{}，新增成功", plsFood.getName());
         }
         return ResResult.ok().withData(Boolean.TRUE);
     }

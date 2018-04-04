@@ -14,6 +14,22 @@
             <if test="payStatus">
                 AND pay_status = #{payStatus}
             </if>
+            <if test="idList != null and idList.size() > 0">
+                id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
+
+    <update id="batchDel">
+        UPDATE pls_main_order SET status = #{status}
+        <where>
+            id IN
+            <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
 </mapper>

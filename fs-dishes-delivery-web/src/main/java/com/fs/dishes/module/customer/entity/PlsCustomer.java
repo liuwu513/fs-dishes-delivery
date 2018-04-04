@@ -4,12 +4,15 @@ import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.Table;
+
 /**
  * 客户实体
  * Created by liuwu on 2018/4/2 0002.
  */
 @Data
 @ToString
+@Table(name = "pls_customer")
 public class PlsCustomer extends BaseEntity{
 
     private Long id;    //主键ID
