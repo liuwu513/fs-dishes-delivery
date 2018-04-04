@@ -11,12 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -24,10 +23,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 登录相关
- *
+ * <p>
  * Created by liuwu on 2018/2/28 0028.
  */
 @Api(description = "系统登录相关接口")
@@ -68,8 +68,12 @@ public class SysLoginController {
             @ApiImplicitParam(name = "captcha", value = "验证码", dataType = "String", paramType = "query")
     })
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-    public ResResult login(String username, String password, String captcha) throws IOException {
+    public ResResult login(@RequestBody Map<String,Object> params) throws IOException {
         String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+        String captcha = MapUtils.getString(params,"captcha");
+        String username = MapUtils.getString(params,"username");
+        String password = MapUtils.getString(params,"password");
+
         if (!captcha.equalsIgnoreCase(kaptcha)) {
             return ResResult.error(111, "验证码不正确");
         }

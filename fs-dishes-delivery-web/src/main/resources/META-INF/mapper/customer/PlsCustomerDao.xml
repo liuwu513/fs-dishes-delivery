@@ -23,7 +23,7 @@
         </where>
     </select>
 
-    <select id="exists" parameterType="PlsCustomer" resultType="java.lang.Boolean">
+    <select id="exists" resultType="java.lang.Boolean">
         select count(1) from pls_customer
         <where>
             status = 1

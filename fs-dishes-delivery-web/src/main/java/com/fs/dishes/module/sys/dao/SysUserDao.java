@@ -2,6 +2,7 @@ package com.fs.dishes.module.sys.dao;
 
 import com.fs.dishes.base.annotations.DataRepository;
 import com.fs.dishes.module.sys.entity.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -19,17 +20,17 @@ public interface SysUserDao extends BaseDao<SysUser> {
      *
      * @param userId 用户ID
      */
-    List<String> queryAllPerms(String userId);
+    List<String> queryAllPerms(@Param("userId") String userId);
 
     /**
      * 查询用户的所有菜单ID
      */
-    List<Long> queryAllMenuId(String userId);
+    List<Long> queryAllMenuId(@Param("userId") String userId);
 
     /**
      * 根据用户名，查询系统用户
      */
-    SysUser queryByUserName(String username);
+    SysUser queryByUserName(@Param("username") String username);
 
     /**
      * 修改密码

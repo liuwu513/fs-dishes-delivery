@@ -14,7 +14,7 @@
         </where>
     </select>
 
-    <select id="exists" parameterType="PlsFoodSpecies" resultType="java.lang.Boolean">
+    <select id="exists" resultType="java.lang.Boolean">
         select count(1) from pls_food_species
         <where>
             status = 1
