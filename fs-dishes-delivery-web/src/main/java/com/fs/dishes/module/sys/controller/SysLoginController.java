@@ -7,6 +7,10 @@ import com.fs.dishes.module.sys.service.SysUserService;
 import com.fs.dishes.module.sys.service.SysUserTokenService;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import java.io.IOException;
  *
  * Created by liuwu on 2018/2/28 0028.
  */
+@Api(description = "系统登录相关接口")
 @RestController
 public class SysLoginController {
     @Autowired
@@ -35,7 +40,7 @@ public class SysLoginController {
     @Autowired
     private SysUserTokenService sysUserTokenService;
 
-
+    @ApiOperation(value = "验证码图片", notes = "验证码图片", httpMethod = "GET")
     @RequestMapping("captcha.jpg")
     public void captcha(HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -56,6 +61,12 @@ public class SysLoginController {
     /**
      * 登录
      */
+    @ApiOperation(value = "系统登录", notes = "系统登录", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "captcha", value = "验证码", dataType = "String", paramType = "query")
+    })
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
     public ResResult login(String username, String password, String captcha) throws IOException {
         String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);

@@ -29,4 +29,24 @@
             </if>
         </where>
     </select>
+
+    <update id="batchDel">
+        UPDATE pls_food SET status = #{status}
+        <where>
+            id IN
+            <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="querySpeciesByCondition" parameterType="map" resultType="java.lang.Long">
+        SELECT DISTINCT species_id FROM pls_food
+        <where>
+            status = #{status}
+            <foreach collection="idList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
 </mapper>

@@ -36,7 +36,28 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="customerIdList and customerIdList.size > 0">
+                AND customer_id IN
+                <foreach collection="customerIdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
+    </select>
+
+
+    <select id="queryCustomerByCondition" parameterType="map" resultType="java.lang.Long">
+        SELECT DISTINCT customer_id FROM pls_sub_order
+        <where>
+            status = #{status}
+            <if test="idList != null and idList.size()>0 ">
+                customer_id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
     </select>
 
     <update id="batchDel">

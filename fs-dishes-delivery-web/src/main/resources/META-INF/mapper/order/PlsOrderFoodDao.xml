@@ -47,4 +47,17 @@
             </if>
         </where>
     </select>
+
+    <select id="queryFoodByCondition" parameterType="map" resultType="java.lang.String">
+        select DISTINCT food_id from pls_order_food
+        <where>
+            1=1
+            <if test="idList != null and idList.size() > 0">
+                AND food_id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

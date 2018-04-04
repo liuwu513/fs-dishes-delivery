@@ -5,8 +5,12 @@ import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
 import com.fs.dishes.module.customer.dao.PlsCustomerDao;
 import com.fs.dishes.module.customer.entity.PlsCustomer;
+import com.fs.dishes.module.order.dao.PlsSubOrderDao;
+import com.fs.dishes.module.order.entity.PlsMainOrder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,9 @@ public class PlsCustomerService extends BaseService {
     @Autowired
     private PlsCustomerDao plsCustomerDao;
 
+    @Autowired
+    private PlsSubOrderDao plsSubOrderDao;
+
 
     /**
      * 客户分页搜索
@@ -38,7 +45,21 @@ public class PlsCustomerService extends BaseService {
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsCustomer> list = plsCustomerDao.queryList(params);
         PageInfo<PlsCustomer> page = new PageInfo<>(list);
+        logger.info("搜索条件：{}，搜索到的客户信息共{}条", params, page.getTotal());
         return ResResult.ok().withData(page);
+    }
+
+    /**
+     * 客户列表
+     *
+     * @return
+     */
+    public ResResult listCustomer() {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("status", Constant.DataState.NORMAL.getValue());
+        List<PlsCustomer> list = plsCustomerDao.queryList(params);
+        logger.info("客户信息共{}条", list.size());
+        return ResResult.ok().withData(list);
     }
 
     /**
@@ -75,9 +96,34 @@ public class PlsCustomerService extends BaseService {
      * @return
      */
     public ResResult delCustomers(Long[] ids) {
-        List<Long> idList = Arrays.asList(ids);
-        Boolean flag = plsCustomerDao.batchDel(idList, Constant.DataState.FAKE_DEL.getValue());
-        return ResResult.ok().withData(flag);
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("idList", Arrays.asList(ids));
+        params.put("status", Constant.DataState.NORMAL.getValue());
+        List<PlsCustomer> customerList = plsCustomerDao.queryList(params);
+        Boolean flag = Boolean.TRUE;
+        StringBuilder errorMsg = new StringBuilder();
+        if (CollectionUtils.isNotEmpty(customerList)) {
+            List<Long> customerIdList = plsSubOrderDao.queryCustomerByCondition(params);
+            if (CollectionUtils.isNotEmpty(customerIdList)) {
+                flag = Boolean.FALSE;
+                errorMsg.append("客户名称 [");
+                for (PlsCustomer customer : customerList) {
+                    if (customerList.contains(customer.getId())) {
+                        errorMsg.append(customer.getName() + "，");
+                    }
+                }
+                errorMsg.append("已存在下单信息，请重新选择！");
+                logger.info(errorMsg.toString());
+            } else {
+                flag = plsCustomerDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
+                logger.info("客戶ids：{},共{}个,删除成功！", ids, ids.length);
+            }
+        }
+        if (flag) {
+            return ResResult.ok().withData(flag);
+        } else {
+            return ResResult.error(300, errorMsg.toString());
+        }
     }
 
     /**

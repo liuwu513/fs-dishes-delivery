@@ -3,6 +3,7 @@ package com.fs.dishes.module.res.dao;
 import com.fs.dishes.base.annotations.DataRepository;
 import com.fs.dishes.module.res.entity.PlsFood;
 import com.fs.dishes.module.res.entity.PlsFoodSpecies;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -27,4 +28,12 @@ public interface PlsFoodSpeciesDao extends Mapper<PlsFoodSpecies>{
      * @return
      */
     Boolean exists(PlsFoodSpecies species);
+
+    /**
+     * 批量伪删除
+     * @param idList
+     * @param status
+     * @return
+     */
+    Boolean batchDel(@Param("idList") List<Long> idList, @Param("status") Integer status);
 }

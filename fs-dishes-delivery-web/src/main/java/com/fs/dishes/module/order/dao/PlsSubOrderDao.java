@@ -30,6 +30,13 @@ public interface PlsSubOrderDao extends Mapper<PlsSubOrder>{
     List<String> queryMainByCondition(Map<String, Object> params);
 
     /**
+     * 根据客户ID搜索是否客户已有下单
+     * @param params
+     * @return
+     */
+    List<Long> queryCustomerByCondition(Map<String, Object> params);
+
+    /**
      * 批量伪删除
      * @param idList
      * @param status

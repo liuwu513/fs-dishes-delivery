@@ -13,6 +13,10 @@ import com.fs.dishes.base.validator.group.UpdateGroup;
 import com.fs.dishes.module.sys.entity.SysUser;
 import com.fs.dishes.module.sys.service.SysUserRoleService;
 import com.fs.dishes.module.sys.service.SysUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Sha256Hash;
@@ -29,6 +33,7 @@ import java.util.Map;
  * @email sunlightcs@gmail.com
  * @date 2016年10月31日 上午10:40:10
  */
+@Api(description = "系统用户接口")
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController extends AbstractController {
@@ -40,6 +45,10 @@ public class SysUserController extends AbstractController {
     /**
      * 所有用户列表
      */
+    @ApiOperation(value = "系统用户列表接口", notes = "系统用户列表接口", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "用户名称", dataType = "String", paramType = "query")
+    })
     @RequestMapping(value = "/list")
     @RequiresPermissions("sys:user:list")
     public ResResult list(@RequestParam Map<String, Object> params) {
@@ -58,7 +67,8 @@ public class SysUserController extends AbstractController {
     /**
      * 获取登录的用户信息
      */
-    @RequestMapping(value = "/info",method = RequestMethod.GET)
+    @ApiOperation(value = "系统用户详情", notes = "系统用户详情", httpMethod = "GET")
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ResResult info() {
         return ResResult.ok().withData(getUser());
     }
@@ -66,8 +76,13 @@ public class SysUserController extends AbstractController {
     /**
      * 修改登录用户密码
      */
+    @ApiOperation(value = "修改密码", notes = "修改密码", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "password", value = "原始密码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "newPassword", value = "新密码", dataType = "String", paramType = "query")
+    })
     @LogManage("修改密码")
-    @RequestMapping(value = "/password",method = RequestMethod.POST)
+    @RequestMapping(value = "/password", method = RequestMethod.POST)
     public ResResult password(String password, String newPassword) {
         Assert.isBlank(newPassword, "新密码不为能空");
 
@@ -87,7 +102,8 @@ public class SysUserController extends AbstractController {
     /**
      * 用户信息
      */
-    @RequestMapping(value = "/info/{userId}",method = RequestMethod.GET)
+    @ApiOperation(value = "根据用户ID获取用户详情", notes = "根据用户ID获取用户详情", httpMethod = "GET")
+    @RequestMapping(value = "/info/{userId}", method = RequestMethod.GET)
     @RequiresPermissions("sys:user:info")
     public ResResult info(@PathVariable("userId") String userId) {
         SysUser user = sysUserService.queryObject(userId);
@@ -101,8 +117,17 @@ public class SysUserController extends AbstractController {
     /**
      * 保存用户
      */
+    @ApiOperation(value = "保存用户", notes = "保存用户", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户ID", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "username", value = "用户名", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "mobile", value = "手机号码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query")
+    })
     @LogManage("保存用户")
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @RequiresPermissions("sys:user:save")
     public ResResult save(@RequestBody SysUser user) {
         ValidatorUtils.validateEntity(user, AddGroup.class);
@@ -116,8 +141,17 @@ public class SysUserController extends AbstractController {
     /**
      * 修改用户
      */
+    @ApiOperation(value = "更新用户", notes = "更新用户", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户ID", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "username", value = "用户名", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "mobile", value = "手机号码", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query")
+    })
     @LogManage("修改用户")
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @RequiresPermissions("sys:user:update")
     public ResResult update(@RequestBody SysUser user) {
         ValidatorUtils.validateEntity(user, UpdateGroup.class);
@@ -129,8 +163,12 @@ public class SysUserController extends AbstractController {
     /**
      * 删除用户
      */
+    @ApiOperation(value = "删除用户", notes = "删除用户", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userIds", value = "用户ID集合", paramType = "query")
+    })
     @LogManage("删除用户")
-    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @RequiresPermissions("sys:user:delete")
     public ResResult delete(@RequestBody String[] userIds) {
         if (ArrayUtils.contains(userIds, 1L)) {

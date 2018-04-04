@@ -31,9 +31,16 @@ public interface PlsOrderFoodDao extends Mapper<PlsOrderFood>{
     Boolean batchDel(@Param("idList") List<String> idList);
 
     /**
-     * 根据查询条件获取子弹ID集合
+     * 根据查询条件获取子单ID集合
      * @param params
      * @return
      */
     List<String> querySubByCondition(Map<String,Object> params);
+
+    /**
+     * 根据条件查询到被使用食品ID集合
+     * @param params
+     * @return
+     */
+    List<String> queryFoodByCondition(Map<String,Object> params);
 }

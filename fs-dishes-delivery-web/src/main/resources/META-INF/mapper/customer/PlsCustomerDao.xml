@@ -14,6 +14,12 @@
             <if test="level != null">
                 AND level = #{level}
             </if>
+            <if test="idList != null and idList.size() > 1">
+                AND id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 

@@ -3,14 +3,19 @@ package com.fs.dishes.module.res.service;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
+import com.fs.dishes.module.order.entity.PlsMainOrder;
+import com.fs.dishes.module.res.dao.PlsFoodDao;
 import com.fs.dishes.module.res.dao.PlsFoodSpeciesDao;
 import com.fs.dishes.module.res.entity.PlsFoodSpecies;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,8 @@ public class FoodSpeciesService extends BaseService {
     @Autowired
     private PlsFoodSpeciesDao plsFoodSpeciesDao;
 
+    @Autowired
+    private PlsFoodDao plsFoodDao;
 
     /**
      * 食品分页搜索
@@ -42,6 +49,30 @@ public class FoodSpeciesService extends BaseService {
     }
 
     /**
+     * 查询所有食品种类
+     *
+     * @return
+     */
+    public ResResult listSpecies() {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("status", Constant.DataState.NORMAL);
+        List<PlsFoodSpecies> list = plsFoodSpeciesDao.queryList(params);
+        logger.info("搜索条件：{}，搜索到的食品品种信息共{}条", params, list.size());
+        return ResResult.ok().withData(list);
+    }
+
+    /**
+     * 获取种类详情
+     *
+     * @param speciesId
+     * @return
+     */
+    public ResResult getById(Long speciesId) {
+        PlsFoodSpecies foodSpecies = plsFoodSpeciesDao.selectByPrimaryKey(speciesId);
+        return ResResult.ok().withData(foodSpecies);
+    }
+
+    /**
      * 删除该食品
      *
      * @param id 客户ID
@@ -55,6 +86,37 @@ public class FoodSpeciesService extends BaseService {
             logger.info("品种信息：{},删除成功！", foodSpecies.getName());
         }
         return ResResult.ok().withData(Boolean.TRUE);
+    }
+
+    public ResResult delSpecies(Long[] ids) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("status", Constant.DataState.NORMAL);
+        params.put("idList", Arrays.asList(ids));
+        Boolean flag = Boolean.TRUE;
+        StringBuilder errorMsg = new StringBuilder();
+        List<PlsFoodSpecies> speciesList = plsFoodSpeciesDao.queryList(params);
+        if (CollectionUtils.isNotEmpty(speciesList)) {
+            List<Long> speciesIdList = plsFoodDao.querySpeciesByCondition(params);
+            if (CollectionUtils.isNotEmpty(speciesIdList)) {
+                flag = Boolean.FALSE;
+                errorMsg.append("食品种类名称 [");
+                for (PlsFoodSpecies foodSpecies : speciesList) {
+                    if (speciesIdList.contains(foodSpecies.getId())) {
+                        errorMsg.append(foodSpecies.getName() + "，");
+                    }
+                }
+                errorMsg.append("已存在食品信息中，请重新选择！");
+                logger.info(errorMsg.toString());
+            } else {
+                flag = plsFoodSpeciesDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
+                logger.info("食品种类ids：{},共{}个,删除成功！", ids, ids.length);
+            }
+        }
+        if (flag) {
+            return ResResult.ok().withData(flag);
+        } else {
+            return ResResult.error(300, errorMsg.toString());
+        }
     }
 
     /**

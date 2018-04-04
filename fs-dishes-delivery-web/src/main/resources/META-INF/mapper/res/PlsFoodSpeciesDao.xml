@@ -26,4 +26,14 @@
             </if>
         </where>
     </select>
+
+    <update id="batchDel">
+        UPDATE pls_food_species SET status = #{status}
+        <where>
+            id IN
+            <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
 </mapper>

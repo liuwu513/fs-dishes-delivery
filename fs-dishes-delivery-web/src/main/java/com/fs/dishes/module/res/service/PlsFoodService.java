@@ -3,14 +3,20 @@ package com.fs.dishes.module.res.service;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
+import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
+import com.fs.dishes.module.order.entity.PlsMainOrder;
+import com.fs.dishes.module.order.entity.PlsOrderFood;
 import com.fs.dishes.module.res.dao.PlsFoodDao;
 import com.fs.dishes.module.res.entity.PlsFood;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,9 @@ public class PlsFoodService extends BaseService {
 
     @Autowired
     private PlsFoodDao plsFoodDao;
+
+    @Autowired
+    private PlsOrderFoodDao plsOrderFoodDao;
 
 
     /**
@@ -43,12 +52,22 @@ public class PlsFoodService extends BaseService {
     }
 
     /**
+     * 食品详情
+     * @param foodId
+     * @return
+     */
+    public ResResult getById(String foodId){
+        PlsFood food = plsFoodDao.selectByPrimaryKey(foodId);
+        return ResResult.ok().withData(food);
+    }
+
+    /**
      * 删除该食品
      *
      * @param id 客户ID
      * @return
      */
-    public ResResult delFood(Long id) {
+    public ResResult delFood(String id) {
         PlsFood food = plsFoodDao.selectByPrimaryKey(id);
         if (food != null) {
             food.setStatus(Constant.DataState.FAKE_DEL.getValue());
@@ -56,6 +75,42 @@ public class PlsFoodService extends BaseService {
             logger.info("食品信息：{},删除成功！", food.getName());
         }
         return ResResult.ok().withData(Boolean.TRUE);
+    }
+
+    /**
+     * 删除食品信息
+     * @param ids
+     * @return
+     */
+    public ResResult delFoods(String[] ids){
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("status",Constant.DataState.NORMAL);
+        params.put("idList", Arrays.asList(ids));
+        List<PlsFood> foodList = plsFoodDao.queryList(params);
+        Boolean flag = Boolean.TRUE;
+        StringBuilder errorMsg = new StringBuilder();
+        if (CollectionUtils.isNotEmpty(foodList)) {
+            List<String> foodIdList = plsOrderFoodDao.queryFoodByCondition(params);
+            if (CollectionUtils.isNotEmpty(foodIdList)) {
+                flag = Boolean.FALSE;
+                errorMsg.append("食品名称 [");
+                for (PlsFood food : foodList) {
+                    if (foodIdList.contains(food.getId())) {
+                        errorMsg.append(food.getName()+ "，");
+                    }
+                }
+                errorMsg.append("已存在子单信息中，请重新选择！");
+                logger.info(errorMsg.toString());
+            } else {
+                flag = plsFoodDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
+                logger.info("食品ids：{},共{}个,删除成功！", ids, ids.length);
+            }
+        }
+        if (flag) {
+            return ResResult.ok().withData(flag);
+        } else {
+            return ResResult.error(300, errorMsg.toString());
+        }
     }
 
     /**
