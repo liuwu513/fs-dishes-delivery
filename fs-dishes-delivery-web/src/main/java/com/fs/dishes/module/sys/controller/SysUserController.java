@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 @Api(description = "系统用户接口")
 @RestController
-@RequestMapping("/sys/user")
+@RequestMapping("/api/sys/user")
 public class SysUserController extends AbstractController {
     @Autowired
     private SysUserService sysUserService;
@@ -50,8 +51,8 @@ public class SysUserController extends AbstractController {
             @ApiImplicitParam(name = "name", value = "用户名称", dataType = "String", paramType = "query")
     })
     @RequestMapping(value = "/list")
-    @RequiresPermissions("sys:user:list")
-    public ResResult list(@RequestParam Map<String, Object> params) {
+//    @RequiresPermissions("sys:user:list")
+    public ResResult list(@RequestBody Map<String, Object> params) {
         //只有超级管理员，才能查看所有管理员列表
         if (getUserId() != Constant.SUPER_ADMIN) {
             params.put("createUserId", getUserId());
@@ -67,9 +68,11 @@ public class SysUserController extends AbstractController {
     /**
      * 获取登录的用户信息
      */
-    @ApiOperation(value = "系统用户详情", notes = "系统用户详情", httpMethod = "GET")
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public ResResult info() {
+    @ApiOperation(value = "系统用户详情", notes = "系统用户详情", httpMethod = "POST")
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    public ResResult info(@RequestBody Map<String, Object> params) {
+        SysUser user = getUser();
+        user.setPassword(StringUtils.EMPTY);
         return ResResult.ok().withData(getUser());
     }
 

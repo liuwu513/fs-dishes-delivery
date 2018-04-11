@@ -14,7 +14,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  */
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {MybatisAutoConfiguration.class, DataSourceAutoConfiguration.class})
-
 public class FsDishesDeliveryWebApplication extends SpringBootServletInitializer {
 
     @Override

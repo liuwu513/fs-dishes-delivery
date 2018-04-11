@@ -11,7 +11,16 @@
             <if test="name != null and name !='' ">
                 AND name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="idList != null and idList.size() > 0">
+                AND id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
+        <if test="order != null and order != ''">
+            ORDER BY #{order}
+        </if>
     </select>
 
     <select id="exists" resultType="java.lang.Boolean">

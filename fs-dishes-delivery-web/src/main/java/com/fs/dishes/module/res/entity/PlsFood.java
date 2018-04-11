@@ -4,10 +4,7 @@ import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -27,5 +24,9 @@ public class PlsFood extends BaseEntity{
     private String imgLink;//食品图片链接，多个以“,”隔开
     private String feature; //食品特点
     private BigDecimal price;//食品默认价格
+    private Integer unitId;  //单位ID
     private Integer status; //状态 1 正常 2 伪删除
+
+    @Transient
+    private String speciesName; //品种名称
 }

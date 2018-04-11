@@ -47,7 +47,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework" level="INFO"/>
     <logger name="org.apache.zookeeper" level="ERROR"/>
     <logger name="com.alibaba.dubbo" level="ERROR"/>
     <logger name="org.hibernate" level="ERROR"/>

@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class PlsFoodSpecies extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;  //主键ID
+    private Long id;  //主键ID
     private String name;//种类名称
     private String remarks;//种类描述
     private Integer status; //数据状态

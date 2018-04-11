@@ -41,6 +41,7 @@ public class FoodSpeciesService extends BaseService {
     public ResResult pageSpecies(Map<String, Object> params) {
         Integer status = MapUtils.getInteger(params, "status", 1);
         params.put("status", status);
+        params.put("order", "create_time,modify_time desc");
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsFoodSpecies> list = plsFoodSpeciesDao.queryList(params);
         PageInfo<PlsFoodSpecies> page = new PageInfo<>(list);
@@ -55,7 +56,8 @@ public class FoodSpeciesService extends BaseService {
      */
     public ResResult listSpecies() {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("status", Constant.DataState.NORMAL);
+        params.put("status", Constant.DataState.NORMAL.getValue());
+        params.put("order", "id asc");
         List<PlsFoodSpecies> list = plsFoodSpeciesDao.queryList(params);
         logger.info("搜索条件：{}，搜索到的食品品种信息共{}条", params, list.size());
         return ResResult.ok().withData(list);

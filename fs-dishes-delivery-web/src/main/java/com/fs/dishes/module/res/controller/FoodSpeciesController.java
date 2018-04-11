@@ -34,8 +34,8 @@ public class FoodSpeciesController extends AbstractController {
      * 所有食品种类列表
      */
     @ApiOperation(value = "食品种类列表接口", notes = "食品种类列表接口", httpMethod = "POST")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @RequiresPermissions("species:list")
+    @RequestMapping(value = "/listMenu", method = RequestMethod.POST)
+//    @RequiresPermissions("species:list")
     public ResResult list() {
         return foodSpeciesService.listSpecies();
     }

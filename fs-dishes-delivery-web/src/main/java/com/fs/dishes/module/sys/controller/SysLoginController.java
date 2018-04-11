@@ -32,6 +32,7 @@ import java.util.Map;
  */
 @Api(description = "系统登录相关接口")
 @RestController
+@RequestMapping("/api")
 public class SysLoginController {
     @Autowired
     private Producer producer;

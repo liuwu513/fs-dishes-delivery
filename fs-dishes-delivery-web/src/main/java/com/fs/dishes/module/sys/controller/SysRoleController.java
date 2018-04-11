@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Api(description = "系统角色接口")
 @RestController
-@RequestMapping("/sys/role")
+@RequestMapping("/api/sys/role")
 public class SysRoleController extends AbstractController {
     @Autowired
     private SysRoleService sysRoleService;

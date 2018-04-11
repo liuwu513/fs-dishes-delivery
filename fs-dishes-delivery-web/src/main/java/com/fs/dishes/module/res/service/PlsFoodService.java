@@ -3,11 +3,14 @@ package com.fs.dishes.module.res.service;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
+import com.fs.dishes.base.utils.IdGen;
 import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
 import com.fs.dishes.module.order.entity.PlsMainOrder;
 import com.fs.dishes.module.order.entity.PlsOrderFood;
 import com.fs.dishes.module.res.dao.PlsFoodDao;
+import com.fs.dishes.module.res.dao.PlsFoodSpeciesDao;
 import com.fs.dishes.module.res.entity.PlsFood;
+import com.fs.dishes.module.res.entity.PlsFoodSpecies;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
@@ -20,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 客户业务类
@@ -30,6 +34,9 @@ public class PlsFoodService extends BaseService {
 
     @Autowired
     private PlsFoodDao plsFoodDao;
+
+    @Autowired
+    private PlsFoodSpeciesDao plsFoodSpeciesDao;
 
     @Autowired
     private PlsOrderFoodDao plsOrderFoodDao;
@@ -48,6 +55,22 @@ public class PlsFoodService extends BaseService {
         List<PlsFood> list = plsFoodDao.queryList(params);
         PageInfo<PlsFood> page = new PageInfo<>(list);
         logger.info("搜索条件：{}，搜索到的食品信息共{}条", params, page.getTotal());
+        List<PlsFood> foodList = page.getList();
+        if (CollectionUtils.isNotEmpty(foodList)){
+            List<Long> speciesIdList = foodList.stream().map(PlsFood::getSpeciesId).collect(Collectors.toList());
+            List<Long> distinctSpeciesIdList = speciesIdList.stream().distinct().collect(Collectors.toList());
+
+            Map<String,Object> query = Maps.newHashMap();
+            query.put("idList",distinctSpeciesIdList);
+            query.put("status",Constant.DataState.NORMAL.getValue());
+            List<PlsFoodSpecies> speciesList = plsFoodSpeciesDao.queryList(query);
+            if (CollectionUtils.isNotEmpty(speciesIdList)){
+                Map<Long,String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId,PlsFoodSpecies::getName));
+                foodList.forEach(item->{
+                    item.setSpeciesName(speciesMap.get(item.getSpeciesId()));
+                });
+            }
+        }
         return ResResult.ok().withData(page);
     }
 
@@ -128,11 +151,14 @@ public class PlsFoodService extends BaseService {
         if (plsFood.getId() != null) {
             plsFood.setModifyBy(getUserId());
             plsFood.setModifyTime(new Date());
+            plsFood.setStatus(Constant.DataState.NORMAL.getValue());
             plsFoodDao.updateByPrimaryKey(plsFood);
             logger.info("食品名称:{}，更新成功", plsFood.getName());
         } else {
+            plsFood.setId(IdGen.uuid());
             plsFood.setCreateBy(getUserId());
             plsFood.setCreateTime(new Date());
+            plsFood.setStatus(Constant.DataState.NORMAL.getValue());
             plsFoodDao.insert(plsFood);
             logger.info("食品名称:{}，新增成功", plsFood.getName());
         }

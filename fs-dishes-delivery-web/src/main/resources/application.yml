@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://47.106.100.83:3306/pls?useSSL=false&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
-    password: YIy7Ptsjo1pqmIrhhx9QRYqwDiWh1Km6POniPhInvB3s2MXJh5sn54yS6yv/uSCDNhO7N8G7qaxetcoZInBFaw==
+    password: XVQ8GfSFd8YIc+wdjvT91b4cPdct2RycUXnKW6SqMZKXAlCtBBDoVotZ5+NMLAsKaXMrzPzNgHiujNHq681/Lw==
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
@@ -34,3 +34,9 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true
     # 合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
+
+  #文件上传配置
+file:
+  upload:
+    max-size: 10000000
+    path: uploadfiles

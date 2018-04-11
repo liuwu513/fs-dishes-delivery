@@ -56,20 +56,20 @@ public class ShiroConfig {
         filters.put("oauth2", new OAuth2Filter());
         shiroFilter.setFilters(filters);
 
+        //资源配置
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/webjars/**", "anon");
         filterMap.put("/druid/**", "anon");
-        filterMap.put("/api/**", "anon");
 
         //swagger配置
         filterMap.put("/swagger**", "anon");
-        filterMap.put("/v2/api-docs", "anon");
         filterMap.put("/swagger-resources/configuration/ui", "anon");
 
-        filterMap.put("/sys/login", "anon");
-        filterMap.put("/captcha.jpg", "anon");
+        filterMap.put("/api/sys/login", "anon");
+        filterMap.put("/api/captcha.jpg", "anon");
         filterMap.put("/", "anon");
-        filterMap.put("/**", "oauth2");
+        filterMap.put("/*/upload/**", "anon");
+        filterMap.put("/api/**", "oauth2");
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilter;

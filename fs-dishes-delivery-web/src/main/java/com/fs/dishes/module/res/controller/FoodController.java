@@ -42,7 +42,7 @@ public class FoodController extends AbstractController{
             @ApiImplicitParam(name = "status", value = "状态", dataType = "Integer", paramType = "query")
     })
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    @RequiresPermissions("food:list")
+//    @RequiresPermissions("food:list")
     public ResResult list(@RequestParam Map<String, Object> params) {
         return plsFoodService.pageFood(params);
     }
@@ -75,7 +75,7 @@ public class FoodController extends AbstractController{
     })
     @LogManage("保存以及更新食品信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @RequiresPermissions("food:save")
+//    @RequiresPermissions("food:save")
     public ResResult save(@RequestBody PlsFood food) {
         ValidatorUtils.validateEntity(food, AddGroup.class);
         return plsFoodService.modifyFood(food);
@@ -91,7 +91,7 @@ public class FoodController extends AbstractController{
     })
     @LogManage("删除食品信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @RequiresPermissions("food:delete")
+//    @RequiresPermissions("food:delete")
     public ResResult delete(@RequestBody String[] foodIds) {
         return plsFoodService.delFoods(foodIds);
     }
