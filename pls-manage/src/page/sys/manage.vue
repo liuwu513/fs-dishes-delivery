@@ -11,7 +11,7 @@
 					<el-submenu index="3">
 						<template slot="title"><i class="el-icon-plus"></i>资源管理</template>
 						<el-menu-item index="foodList">菜品列表</el-menu-item>
-						<el-menu-item index="foodList">菜品品种</el-menu-item>
+						<el-menu-item index="speciesList">菜品品种</el-menu-item>
                         <el-menu-item index="shopList">客户列表</el-menu-item>
 					</el-submenu>
 					<el-submenu index="2">

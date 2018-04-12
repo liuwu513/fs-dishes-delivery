@@ -11,8 +11,14 @@
             <if test="name != null and name !='' ">
                 AND name LIKE CONCAT('%', #{name}, '%')
             </if>
-            <if test="speciesId != null">
+            <if test="speciesId != null and speciesId != '' ">
                 AND species_id = #{speciesId}
+            </if>
+            <if test="idList != null and idList.size() > 0">
+                AND id IN
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
     </select>
@@ -44,6 +50,7 @@
         SELECT DISTINCT species_id FROM pls_food
         <where>
             status = #{status}
+            AND species_id IN
             <foreach collection="idList" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>

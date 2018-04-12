@@ -5,18 +5,20 @@ import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.controller.AbstractController;
 import com.fs.dishes.base.validator.ValidatorUtils;
 import com.fs.dishes.base.validator.group.AddGroup;
-import com.fs.dishes.module.customer.entity.PlsCustomer;
 import com.fs.dishes.module.res.entity.PlsFood;
 import com.fs.dishes.module.res.service.PlsFoodService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +28,7 @@ import java.util.Map;
 @Api(description = "食品相关接口")
 @RestController
 @RequestMapping("/api/food")
-public class FoodController extends AbstractController{
+public class FoodController extends AbstractController {
 
     @Autowired
     private PlsFoodService plsFoodService;
@@ -43,7 +45,7 @@ public class FoodController extends AbstractController{
     })
     @RequestMapping(value = "/list", method = RequestMethod.POST)
 //    @RequiresPermissions("food:list")
-    public ResResult list(@RequestParam Map<String, Object> params) {
+    public ResResult list(@RequestBody Map<String, Object> params) {
         return plsFoodService.pageFood(params);
     }
 
@@ -55,8 +57,9 @@ public class FoodController extends AbstractController{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "foodId", value = "食品ID", dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/info{foodId}", method = RequestMethod.POST)
-    public ResResult info(@PathVariable("foodId") String foodId) {
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    public ResResult info(@RequestBody Map<String, Object> params) {
+        String foodId = MapUtils.getString(params, "id");
         return plsFoodService.getById(foodId);
     }
 
@@ -92,7 +95,8 @@ public class FoodController extends AbstractController{
     @LogManage("删除食品信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
 //    @RequiresPermissions("food:delete")
-    public ResResult delete(@RequestBody String[] foodIds) {
+    public ResResult delete(@RequestBody Map<String,Object> params) {
+        List<String> foodIds = (List)params.get("foodIds");
         return plsFoodService.delFoods(foodIds);
     }
 }

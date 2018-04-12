@@ -12,6 +12,7 @@ const adminList = r => require.ensure([], () => r(require('@/page/sys/adminList'
 const userList = r => require.ensure([], () => r(require('@/page/sys/userList')), 'userList');
 const shopList = r => require.ensure([], () => r(require('@/page/res/shopList')), 'shopList');
 const foodList = r => require.ensure([], () => r(require('@/page/res/foodList')), 'foodList');
+const speciesList = r => require.ensure([], () => r(require('@/page/res/speciesList')), 'speciesList');
 const orderList = r => require.ensure([], () => r(require('@/page/order/orderList')), 'orderList');
 const uploadImg = r => require.ensure([], () => r(require('@/page/common/uploadImg')), 'uploadImg');
 const adminSet = r => require.ensure([], () => r(require('@/page/sys/adminSet')), 'adminSet');
@@ -34,9 +35,9 @@ const routes = [
 			component: adminList,
 			meta: ['系统管理', '管理员列表'],
 		},{
-			path: '/shopList',
-			component: shopList,
-			meta: ['资源管理', '商家列表'],
+			path: '/speciesList',
+			component: speciesList,
+			meta: ['资源管理', '食品分类'],
 		},{
 			path: '/foodList',
 			component: foodList,

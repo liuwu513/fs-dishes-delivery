@@ -32,6 +32,40 @@ export const getAdminInfo = () => fetch('/api/sys/user/info',{},'POST');
 export const adminList = data => fetch('/api/sys/user/list', data, 'POST');
 
 /**
+ * 获取食品列表
+ */
+
+export const getFoods = data => fetch('/api/food/list', data, 'POST');
+
+/**
+ * 添加食品
+ */
+
+export const addFood = data => fetch('/api/food/save', data, 'POST');
+
+/**
+ * 获取食品种类menu列表
+ */
+export const getSpecies = data => fetch('/api/species/listMenu',{},'POST');
+
+/**
+ * 获取分类分页列表
+ * @param data
+ */
+export const getSpeciesList = data => fetch('/api/species/list',data,'POST');
+
+/**
+ * 删除食品分类信息
+ * @param data
+ */
+export const deleteSpecies = data => fetch('/api/species/delete',data,'POST');
+
+/**
+ * 添加或者更新食品种类
+ */
+export const addSpecies = data => fetch('/api/species/save', data, 'POST');
+
+/**
  * 添加商铺
  */
 
@@ -49,42 +83,17 @@ export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST
 
 export const deleteResturant = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id, {}, 'DELETE');
 
-/**
- * 获取食品列表
- */
-
-export const getFoods = data => fetch('/api/food/list', data, 'POST');
-
-/**
- * 添加食品
- */
-
-export const addFood = data => fetch('/api/food/save', data, 'POST');
 
 
-/**
- * 获取食品种类menu列表
- */
-
-export const getSpecies = data => fetch('/api/species/listMenu',{},'POST');
-
-/**
- * 添加食品种类
- */
-export const addSpecies = data => fetch('/api/species/save', data, 'POST');
 
 
-/**
- * 更新食品信息
- */
 
-export const updateFood = data => fetch('/shopping/v2/updatefood', data, 'POST');
 
 /**
  * 删除食品
  */
 
-export const deleteFood = food_id => fetch('/shopping/v2/food/' + food_id, {}, 'DELETE');
+export const deleteFood = data => fetch('/api/food/delete',data, 'POST');
 
 
 /**

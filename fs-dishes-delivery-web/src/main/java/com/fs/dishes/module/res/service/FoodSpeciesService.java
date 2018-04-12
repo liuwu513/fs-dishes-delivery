@@ -133,10 +133,11 @@ public class FoodSpeciesService extends BaseService {
             logger.info("品种名称:{}已存在，请重新输入！", foodSpecies.getName());
             return ResResult.error(300, String.format("品种名称：%s 已存在，请重新输入！", foodSpecies.getName()));
         }
+        foodSpecies.setStatus(Constant.DataState.NORMAL.getValue());
         if (foodSpecies.getId() != null) {
             foodSpecies.setModifyTime(new Date());
             foodSpecies.setModifyBy(getUserId());
-            plsFoodSpeciesDao.updateByPrimaryKey(foodSpecies);
+            plsFoodSpeciesDao.updateByPrimaryKeySelective(foodSpecies);
             logger.info("品种名称:{}，更新成功", foodSpecies.getName());
         } else {
             foodSpecies.setCreateTime(new Date());

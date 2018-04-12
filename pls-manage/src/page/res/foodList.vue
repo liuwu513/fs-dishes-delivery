@@ -2,30 +2,35 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
-            <el-form :model="queryForm" label-width="110px" class="form">
+            <div class="demo-input-size">
                 <el-row class="category_select">
-                    <el-form-item>
-                        <el-input v-model="queryForm.name" placeholder="商品名称"></el-input>
-                        <el-select v-model="queryForm.categorySelect" placeholder="请选择食品品种" style="width:100%;">
-                            <el-option
-                                v-for="item in queryForm.categoryList"
-                                :key="item.index"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+                    <el-input v-model="queryForm.name" placeholder="食品名称" style="width:200px;"></el-input>
+                    <el-select v-model="queryForm.speciesId" placeholder="请选择食品分类" style="width:200px;">
+                        <el-option
+                        v-for="item in menuSelectOptions"
+                        :key="item.value + 'B'"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button @click="handleQuery" type="primary">查询</el-button>
                 </el-row>
-            </el-form>
-            <div style="margin-bottom: 15px">
+            </div>
+            <div style="margin-bottom: 10px">
                 <el-button @click="handleAdd" type="primary">新增</el-button>
+                <el-button @click="handleRemove" type="primary">批量删除</el-button>
             </div>
             <el-table
                 :data="tableData"
                 @expand='expand'
                 :expand-row-keys='expendRow'
                 :row-key="row => row.index"
-                style="width: 100%">
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+                <el-table-column
+                    type="selection"
+                    width="55">
+                </el-table-column>
                 <el-table-column
                     type="index"
                     label="序号"
@@ -39,15 +44,22 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="菜品名称"
+                    label="食品名称"
                     prop="name">
                 </el-table-column>
                 <el-table-column
-                    label="菜品种类"
+                    label="食品价格"
+                    prop="price">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.price + ' ' + scope.row.unitName}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="食品种类"
                     prop="speciesName">
                 </el-table-column>
                 <el-table-column
-                    label="菜品详情"
+                    label="食品详情"
                     prop="details">
                 </el-table-column>
                 <el-table-column label="操作" width="160">
@@ -74,18 +86,17 @@
                     :total="count">
                 </el-pagination>
             </div>
-            <el-dialog title="修改菜品信息" v-model="dialogFormVisible">
+            <el-dialog title="修改食品信息" v-model="dialogFormVisible">
                 <el-form :model="selectTable">
-                    <el-form-item label="菜品名称" label-width="100px">
+                    <el-form-item label="食品名称" label-width="100px">
                         <el-input v-model="selectTable.name" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="菜品详情" label-width="100px">
+                    <el-form-item label="食品详情" label-width="100px">
                         <el-input v-model="selectTable.details"></el-input>
                     </el-form-item>
-                    <el-row class="category_select">
                     <el-form-item label="食品价格" label-width="100px">
                         <el-input placeholder="食品价格参考：5.00" v-model="selectTable.price">
-                            <el-select slot="append" v-model="selectTable.unitId"  style="width: 100px;">
+                            <el-select slot="append" v-model="selectTable.unitId" :placeholder="selectUnitMenu.label" placeholder="请选择单位"  style="width: 120px;">
                                 <el-option
                                     v-for="item in unitList"
                                     :key="item.value"
@@ -95,25 +106,24 @@
                             </el-select>
                         </el-input>
                     </el-form-item>
-                    </el-row>
-                    <el-form-item label="菜品分类" label-width="100px">
-                        <el-select v-model="selectIndex" :placeholder="selectMenu.label" @change="handleSelect">
+                    <el-form-item label="食品分类" label-width="100px">
+                        <el-select v-model="selectTable.speciesId" :placeholder="selectMenu.label" placeholder="请选择食品分类"  style="width: 100%;">
                             <el-option
                                 v-for="item in menuOptions"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
+                                :key="item.value + 'A'"
+                                :label="item.label"
+                                :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="菜品图片" label-width="100px">
+                    <el-form-item label="食品图片" label-width="100px">
                         <el-upload
                             class="avatar-uploader"
-                            :action="baseUrl + '/v1/addimg/food'"
+                            :action="baseUrl + '/api/upload/img'"
                             :show-file-list="false"
                             :on-success="handleServiceAvatarScucess"
                             :before-upload="beforeAvatarUpload">
-                            <img v-if="selectTable.image_path" :src="baseUrl + selectTable.image_path" class="avatar">
+                            <img v-if="selectTable.imgLink" :src="selectTable.imgLink" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -130,7 +140,7 @@
 <script>
     import headTop from '../../components/headTop'
     import {baseUrl} from '@/config/env'
-    import {getFoods, getSpecies, updateFood, deleteFood, getResturantDetail, getMenuById} from '@/api/getData'
+    import {getFoods, getSpecies, addFood, deleteFood, getMenuById} from '@/api/getData'
     export default {
         data(){
             return {
@@ -142,33 +152,41 @@
                 currentPage: 1,
                 selectTable: {},
                 dialogFormVisible: false,
+                menuSelectOptions:[],
                 menuOptions: [],
                 selectMenu: {},
+                selectUnitMenu:{},
                 selectIndex: null,
                 name: null,
                 speciesId: null,
                 expendRow: [],
-                queryForm:{},
+                foodIds:[],
+                queryForm:{
+                    speciesId:'',
+                    name:''
+                },
                 unitList:[{
-                    value: '1',
+                    value: 1,
                     label: '元/斤'
                 }, {
-                    value: '2',
+                    value: 2,
                     label: '元/瓶'
                 },{
-                    value: '3',
+                    value: 3,
                     label: '元/袋'
                 },{
-                    value: '4',
+                    value: 4,
                     label: '元/只'
                 },{
-                    value: '5',
+                    value: 5,
                     label: '元/个'
                 }],
+                multipleSelection:[]
             }
         },
         created(){
             this.initData();
+            this.getMenu();
         },
         computed: {},
         components: {
@@ -186,40 +204,63 @@
                 this.menuOptions = [];
                 try {
                     const menu = await getSpecies();
-                    menu.forEach((item, index) => {
-                        this.menuOptions.push({
-                            label: item.name,
-                            value: item.id,
-                            index: index
+                    if(menu.code = 200){
+                        this.menuSelectOptions.push({
+                            label: '请选择分类',
+                            value: '',
+                        });
+                        menu.data.forEach((item, index) => {
+                            this.menuOptions.push({
+                                label: item.name,
+                                value: item.id,
+                                index: index
+                            });
+                            this.menuSelectOptions.push({
+                                label: item.name,
+                                value: item.id,
+                                index: index
+                            });
                         })
-                    })
+                    }else {
+                        console.log(menu.message);
+                    }
                 } catch (err) {
-                    console.log('获取菜品种类失败', err);
+                    console.log('获取食品分类失败', err);
                 }
             },
             async getFoods(){
                 const Foods = await getFoods({
-                    offset: this.offset,
-                    limit: this.limit,
-                    speciesId: this.speciesId,
-                    name: this.name
+                    pageNo: this.offset,
+                    pageSize: this.limit,
+                    speciesId: this.queryForm.speciesId,
+                    name: this.queryForm.name
                 });
                 if (Foods.code == 200) {
                     this.count = Foods.data.total;
                     this.tableData = [];
                     Foods.data.list.forEach((item, index) => {
                         const tableData = {};
+                        tableData.id = item.id;
                         tableData.name = item.name;
                         tableData.speciesId = item.speciesId;
                         tableData.speciesName = item.speciesName;
                         tableData.details = item.details;
                         tableData.imgLink = baseUrl + item.imgLink;
+                        tableData.price = item.price;
+                        tableData.unitId = item.unitId;
+                        tableData.unitName = this.unitList[item.unitId - 1].label;
                         tableData.index = index;
                         this.tableData.push(tableData);
                     })
                 } else {
                     throw new Error(Foods.message);
                 }
+            },
+            handleQuery(){
+                this.initData();
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
             },
             tableRowClassName(row, index) {
                 if (index === 1) {
@@ -246,44 +287,30 @@
                 }
             },
             handleAdd(){
-                console.log(111);
                 this.$router.push('/addGoods');
             },
             handleEdit(row) {
-                this.getSelectItemData(row, 'edit');
+                console.log("获取菜单数据");
+                this.getSelectItemData(row);
                 this.dialogFormVisible = true;
             },
-            async getSelectItemData(row, type){
-                const restaurant = await getResturantDetail(row.restaurant_id);
-                const category = await getMenuById(row.category_id)
-                this.selectTable = {
-                    ...row, ...{
-                        restaurant_name: restaurant.name,
-                        restaurant_address: restaurant.address,
-                        category_name: category.name
-                    }
-                };
-
-                this.selectMenu = {label: category.name, value: row.category_id}
+            async getSelectItemData(row){
+                this.selectTable = row;
+                this.selectMenu = {label: row.speciesName, value: row.speciesId}
+                this.selectUnitMenu = this.unitList[row.unitId - 1];
                 this.tableData.splice(row.index, 1, {...this.selectTable});
-                this.$nextTick(() => {
-                    this.expendRow.push(row.index);
-                })
-                if (type == 'edit') {
-                    this.getMenu();
-                }
-            },
-            handleSelect(index){
-                this.selectIndex = index;
-                this.selectMenu = this.menuOptions[index];
             },
             async handleDelete(index, row) {
                 try {
-                    const res = await deleteFood(row.item_id);
-                    if (res.status == 1) {
+                    this.foodIds.push(row.id);
+                    console.log(this.foodIds);
+                    const res = await deleteFood({
+                        foodIds: this.foodIds
+                    });
+                    if (res.code == 200) {
                         this.$message({
                             type: 'success',
-                            message: '删除菜品成功'
+                            message: '删除食品成功'
                         });
                         this.tableData.splice(index, 1);
                     } else {
@@ -294,7 +321,7 @@
                         type: 'error',
                         message: err.message
                     });
-                    console.log('删除菜品失败')
+                    console.log('删除食品失败')
                 }
             },
             handleServiceAvatarScucess(res, file) {
@@ -317,25 +344,27 @@
                 return isRightType && isLt2M;
             },
             async updateFood(){
-                this.dialogFormVisible = false;
                 try {
-                    const subData = {new_category_id: this.selectMenu.value};
-                    const postData = {...this.selectTable, ...subData};
-                    const res = await updateFood(postData)
-                    if (res.status == 1) {
+                    const foodData = this.selectTable;
+                    const url = foodData.imgLink.replace(this.baseUrl,'');
+                    foodData.imgLink = url;
+                    const res = await addFood(foodData)
+                    if (res.code == 200) {
+                        this.dialogFormVisible = false;
                         this.$message({
                             type: 'success',
-                            message: '更新菜品信息成功'
+                            message: '更新食品信息成功'
                         });
                         this.getFoods();
                     } else {
+                        foodData.imgLink = this.baseUrl + foodData.imgLink;
                         this.$message({
                             type: 'error',
                             message: res.message
                         });
                     }
                 } catch (err) {
-                    console.log('更新餐馆信息失败', err);
+                    console.log('更新食品信息失败', err);
                 }
             },
         },
@@ -383,7 +412,7 @@
     }
 
     .category_select{
-        width: 350px;
+        width: 550px;
         border: 1px solid #eaeefb;
         padding: 10px 30px 10px 10px;
         border-top-right-radius: 6px;

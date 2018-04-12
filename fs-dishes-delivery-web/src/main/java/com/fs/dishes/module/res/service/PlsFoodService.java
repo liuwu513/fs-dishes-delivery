@@ -105,10 +105,10 @@ public class PlsFoodService extends BaseService {
      * @param ids
      * @return
      */
-    public ResResult delFoods(String[] ids){
+    public ResResult delFoods(List<String> ids){
         Map<String,Object> params = Maps.newHashMap();
-        params.put("status",Constant.DataState.NORMAL);
-        params.put("idList", Arrays.asList(ids));
+        params.put("status",Constant.DataState.NORMAL.getValue());
+        params.put("idList", ids);
         List<PlsFood> foodList = plsFoodDao.queryList(params);
         Boolean flag = Boolean.TRUE;
         StringBuilder errorMsg = new StringBuilder();
@@ -125,8 +125,8 @@ public class PlsFoodService extends BaseService {
                 errorMsg.append("已存在子单信息中，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
-                flag = plsFoodDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
-                logger.info("食品ids：{},共{}个,删除成功！", ids, ids.length);
+                flag = plsFoodDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
+                logger.info("食品ids：{},共{}个,删除成功！", ids, ids.size());
             }
         }
         if (flag) {
@@ -152,7 +152,7 @@ public class PlsFoodService extends BaseService {
             plsFood.setModifyBy(getUserId());
             plsFood.setModifyTime(new Date());
             plsFood.setStatus(Constant.DataState.NORMAL.getValue());
-            plsFoodDao.updateByPrimaryKey(plsFood);
+            plsFoodDao.updateByPrimaryKeySelective(plsFood);
             logger.info("食品名称:{}，更新成功", plsFood.getName());
         } else {
             plsFood.setId(IdGen.uuid());

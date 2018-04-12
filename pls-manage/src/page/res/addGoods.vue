@@ -3,10 +3,10 @@
      	<head-top></head-top>
         <el-row style="margin-top: 20px;">
   			<el-col :span="14" :offset="4">
-  				<header class="form_header">选择食品种类</header>
+  				<header class="form_header">选择食品分类</header>
 	  			<el-form :model="categoryForm" :rules="categoryRules" ref="categoryForm" label-width="110px" class="form">
-		  			<el-row class="category_select">
-		  				<el-form-item label="食品种类">
+		  			<el-row class="species_select">
+		  				<el-form-item label="食品分类">
 			  				<el-select v-model="categoryForm.categorySelect" :placeholder="selectValue.label" style="width:100%;">
 							    <el-option
 							      	v-for="item in categoryForm.categoryList"
@@ -19,10 +19,10 @@
 					</el-row>
 					<el-row class="add_category_row" :class="showAddCategory? 'showEdit': ''">
 						<div class="add_category">
-							<el-form-item label="食品种类" prop="name">
+							<el-form-item label="食品分类" prop="name">
 								<el-input v-model="categoryForm.name"></el-input>
 							</el-form-item>
-							<el-form-item label="种类描述" prop="remarks">
+							<el-form-item label="分类描述" prop="remarks">
 								<el-input v-model="categoryForm.remarks"></el-input>
 							</el-form-item>
 							<el-form-item>
@@ -33,7 +33,7 @@
 					<div class="add_category_button" @click="addCategoryFun">
 						<i class="el-icon-caret-top edit_icon" v-if="showAddCategory"></i>
 						<i class="el-icon-caret-bottom edit_icon" v-else slot="icon"></i>
-						<span>添加食品种类</span>
+						<span>添加食品分类</span>
 					</div>
 	  			</el-form>
 	  			<header class="form_header">添加食品</header>
@@ -113,7 +113,7 @@
     			},
                 categoryRules:{
                     speciesId:[
-                        { required: true, message: '请选择食品种类', trigger: 'blur' },
+                        { required: true, message: '请选择食品分类', trigger: 'blur' },
                     ]
                 },
     			foodForm: {
@@ -181,7 +181,7 @@
 						}
 						try{
 							const result = await addSpecies(params);
-							if (result.status == 1) {
+							if (result.code == 200) {
 								this.initData();
 								this.categoryForm.name = '';
 								this.categoryForm.remarks = '';
@@ -190,7 +190,12 @@
 					            	type: 'success',
 					            	message: '添加成功'
 					          	});
-							}
+							}else {
+                                this.$message({
+                                    type: 'error',
+                                    message: result.message
+                                });
+                            }
 						}catch(err){
 							console.log(err)
 						}
@@ -254,7 +259,7 @@
                                     feature: '',
 				    				price: 0.00,
 				    			}
-                                this.$router.push('/foodList');
+                                this.$router.push('foodList');
 							}else{
 								this.$message({
 					            	type: 'error',
@@ -282,6 +287,7 @@
 	@import '../../style/mixin';
 	.form{
 		min-width: 400px;
+        width: 100%;
 		margin-bottom: 30px;
 		&:hover{
 			box-shadow: 0 0 8px 0 rgba(232,237,250,.6), 0 2px 4px 0 rgba(232,237,250,.5);
@@ -291,13 +297,14 @@
 	}
 	.food_form{
 		border: 1px solid #eaeefb;
-		padding: 10px 10px 0;
+		padding: 10px 0px;
 	}
 	.form_header{
 		text-align: center;
 		margin-bottom: 10px;
 	}
-	.category_select{
+	.species_select{
+        width: 100%;
 		border: 1px solid #eaeefb;
 		padding: 10px 30px 10px 10px;
 		border-top-right-radius: 6px;
