@@ -9,7 +9,8 @@
                 AND status = #{status}
             </if>
             <if test="name != null and name !='' ">
-                AND name LIKE CONCAT('%', #{name}, '%')
+                AND (name LIKE CONCAT('%', #{name}, '%')
+                OR phone LIKE CONCAT('%', #{name}, '%'))
             </if>
             <if test="level != null">
                 AND level = #{level}

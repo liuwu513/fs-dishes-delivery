@@ -4,7 +4,7 @@
         <div class="table_container">
             <div class="demo-input-size">
                 <el-row class="category_select">
-                    <el-input v-model="queryForm.name" placeholder="食品分类名称" style="width:200px;"></el-input>
+                    <el-input v-model="queryForm.name" placeholder="客户名称/手机号码" style="width:200px;"></el-input>
                     <el-button @click="handleQuery" type="primary">查询</el-button>
                 </el-row>
             </div>
@@ -27,11 +27,19 @@
                 </el-table-column>
                 <el-table-column
                     property="name"
-                    label="分类名称">
+                    label="客户名称">
+                </el-table-column>
+                <el-table-column
+                    property="phone"
+                    label="手机号码">
+                </el-table-column>
+                <el-table-column
+                    property="address"
+                    label="客户地址">
                 </el-table-column>
                 <el-table-column
                     property="remarks"
-                    label="分类备注">
+                    label="备注">
                 </el-table-column>
                 <el-table-column label="操作" width="160">
                     <template scope="scope">
@@ -59,16 +67,22 @@
             </div>
             <el-dialog :title="modalTitle" v-model="dialogFormVisible">
                 <el-form :model="selectTable">
-                    <el-form-item label="分类名称" label-width="100px">
+                    <el-form-item label="客户名称" label-width="100px">
                         <el-input v-model="selectTable.name" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="分类备注" label-width="100px">
+                    <el-form-item label="手机号码" label-width="100px">
+                        <el-input v-model="selectTable.phone"></el-input>
+                    </el-form-item>
+                    <el-form-item label="客户地址" label-width="100px">
+                        <el-input v-model="selectTable.address"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" label-width="100px">
                         <el-input v-model="selectTable.remarks"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="updateSpecies">确 定</el-button>
+                    <el-button type="primary" @click="updateCustomer">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -77,7 +91,7 @@
 
 <script>
     import headTop from '../../components/headTop'
-    import {getSpeciesList,deleteSpecies,addSpecies} from '@/api/getData'
+    import {listCustomers,getCustomers,addCustomer,deleteCustomers} from '@/api/getData'
     export default {
         data(){
             return {
@@ -93,7 +107,7 @@
                 },
                 modalTitle:'',
                 selectTable:{},
-                speciesIds:[],
+                customerIds:[],
                 multipleSelection:[],
             }
         },
@@ -106,7 +120,7 @@
         methods: {
             async initData(){
                 try {
-                    this.getSpecies();
+                    this.getCustomer();
                 } catch (err) {
                     console.log('获取数据失败', err);
                 }
@@ -116,15 +130,15 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.getSpecies()
+                this.getCustomer()
             },
             handleEdit(row,type){
                 this.getSelectItemData(row);
                 this.dialogFormVisible = true;
                 if(type == 'edit'){
-                    this.modalTitle = '编辑食品分类';
+                    this.modalTitle = '编辑客户信息';
                 }else {
-                    this.modalTitle = '新增食品分类';
+                    this.modalTitle = '新增客户信息';
                 }
             },
             handleQuery(){
@@ -134,7 +148,7 @@
                 this.multipleSelection = val;
             },
             handleAdd(){
-                this.modalTitle = '新增食品分类';
+                this.modalTitle = '新增客户信息';
                 this.dialogFormVisible = true;
             },
             async handleBatchDel(){
@@ -142,50 +156,57 @@
                     if (this.multipleSelection.length <= 0){
                         this.$message({
                             type: 'warning',
-                            message: '请选择食品数据！'
+                            message: '请选择客户数据！'
                         });
                         return false;
                     }
                     this.multipleSelection.forEach((item, index) => {
-                        this.speciesIds.push(item.id);
+                        this.customerIds.push(item.id);
                     });
-                    const res = await deleteSpecies({
-                        speciesIds: this.speciesIds
+                    const res = await deleteCustomers({
+                        customerIds: this.customerIds
                     });
                     if (res.code == 200) {
                         this.$message({
                             type: 'success',
-                            message: '删除食品分类成功'
+                            message: '删除客户成功'
                         });
                         this.initData();
                     } else {
                         throw new Error(res.message)
                     }
                     this.multipleSelection = [];
-                    this.speciesIds = [];
+                    this.customerIds = [];
                 } catch (err) {
                     this.$message({
                         type: 'error',
                         message: err.message
                     });
-                    console.log('删除食品分类失败')
+                    console.log('删除客户失败')
                 }
             },
             async getSelectItemData(row){
                 this.selectTable = row;
                 this.tableData.splice(row.index, 1, {...this.selectTable});
             },
-            async updateSpecies(){
+            async updateCustomer(){
                 try {
-                    const speciesData = this.selectTable;
-                    const res = await addSpecies(speciesData)
+                    const customerData = this.selectTable;
+                    const res = await addCustomer(customerData)
                     if (res.code == 200) {
                         this.dialogFormVisible = false;
                         this.$message({
                             type: 'success',
-                            message: '更新食品分类信息成功'
+                            message: '更新客户信息成功'
                         });
-                        this.getSpecies();
+                        this.selectTable = {
+                            id: null,
+                            name: '',
+                            remarks: '',
+                            phone: '',
+                            address: '',
+                        }
+                        this.getCustomer();
                     } else {
                         this.$message({
                             type: 'error',
@@ -193,37 +214,36 @@
                         });
                     }
                 } catch (err) {
-                    console.log('更新食品分类信息失败', err);
+                    console.log('更新客户信息失败', err);
                 }
             },
             async handleDelete(index, row) {
                 try {
-                    this.speciesIds.push(row.id);
-                    console.log(this.speciesIds);
-                    const res = await deleteSpecies({
-                        speciesIds: this.speciesIds
+                    this.customerIds.push(row.id);
+                    const res = await deleteCustomers({
+                        customerIds: this.customerIds
                     });
                     if (res.code == 200) {
                         this.$message({
                             type: 'success',
-                            message: '删除食品分类成功'
+                            message: '删除客户成功'
                         });
                         this.tableData.splice(index, 1);
                     } else {
                         throw new Error(res.message)
                     }
-                    this.speciesIds = [];
+                    this.customerIds = [];
                 } catch (err) {
                     this.$message({
                         type: 'error',
                         message: err.message
                     });
-                    console.log('删除食品分类失败')
+                    console.log('删除客户失败')
                 }
             },
-            async getSpecies(){
+            async getCustomer(){
                 try {
-                    const res = await getSpeciesList({pageNo: this.currentPage, pageSize: this.limit,name:this.queryForm.name});
+                    const res = await listCustomers({pageNo: this.currentPage, pageSize: this.limit,name:this.queryForm.name});
                     if (res.code == 200) {
                         this.count = res.data.total;
                         this.tableData = [];
@@ -232,6 +252,8 @@
                                 id: item.id,
                                 name: item.name,
                                 remarks: item.remarks,
+                                phone: item.phone,
+                                address: item.address,
                                 index: index
                             }
                             this.tableData.push(tableItem);
@@ -241,7 +263,7 @@
                         throw new Error(res.message)
                     }
                 } catch (err) {
-                    console.log('获取数据失败', err);
+                    console.log('获取客户数据失败', err);
                 }
             }
         },

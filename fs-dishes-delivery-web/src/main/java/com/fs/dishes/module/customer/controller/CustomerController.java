@@ -11,10 +11,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +33,8 @@ public class CustomerController extends AbstractController {
      * 所有客户列表
      */
     @ApiOperation(value = "客户列表接口", notes = "客户列表接口", httpMethod = "POST")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @RequiresPermissions("customer:list")
+    @RequestMapping(value = "/listMenu", method = RequestMethod.GET)
+//    @RequiresPermissions("customer:list")
     public ResResult list() {
         return plsCustomerService.listCustomer();
     }
@@ -51,8 +51,8 @@ public class CustomerController extends AbstractController {
             @ApiImplicitParam(name = "status", value = "状态", dataType = "Integer", paramType = "query")
     })
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    @RequiresPermissions("customer:list")
-    public ResResult page(@RequestParam Map<String, Object> params) {
+//    @RequiresPermissions("customer:list")
+    public ResResult page(@RequestBody Map<String, Object> params) {
         return plsCustomerService.pageCustomer(params);
     }
 
@@ -82,7 +82,7 @@ public class CustomerController extends AbstractController {
     })
     @LogManage("保存以及更新客户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @RequiresPermissions("customer:save")
+//    @RequiresPermissions("customer:save")
     public ResResult save(@RequestBody PlsCustomer customer) {
         ValidatorUtils.validateEntity(customer, AddGroup.class);
         return plsCustomerService.modifyCustomer(customer);
@@ -98,8 +98,9 @@ public class CustomerController extends AbstractController {
     })
     @LogManage("删除客户信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @RequiresPermissions("customer:delete")
-    public ResResult delete(@RequestBody Long[] customerIds) {
-        return plsCustomerService.delCustomers(customerIds);
+//    @RequiresPermissions("customer:delete")
+    public ResResult delete(@RequestBody Map<String, Object> params) {
+        List<Long> customerIdList = (List) params.get("customerIds");
+        return plsCustomerService.delCustomers(customerIdList);
     }
 }

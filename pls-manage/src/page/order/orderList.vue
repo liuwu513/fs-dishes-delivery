@@ -2,97 +2,175 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <div class="demo-input-size">
+                <el-row class="category_select3">
+                    <el-input v-model="queryForm.name" placeholder="主单号/名称" style="width:200px;"></el-input>
+                    <el-date-picker
+                        v-model="queryForm.startTime"
+                        type="datetime"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择开始日期">
+                    </el-date-picker>
+                    <el-date-picker
+                        v-model="queryForm.endTime"
+                        type="datetime"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择结束日期">
+                    </el-date-picker>
+                    <el-button @click="handleQuery" type="primary">查询</el-button>
+                </el-row>
+            </div>
+            <div style="margin-bottom: 10px">
+                <el-button @click="handleAdd" type="primary">新增</el-button>
+            </div>
             <el-table
-			    :data="tableData"
-			    @expand='expand'
-                :expand-row-keys='expendRow'
-                :row-key="row => row.index"
-			    style="width: 100%">
-			    <el-table-column type="expand">
-			      <template scope="props">
-			        <el-form label-position="left" inline class="demo-table-expand">
-			          <el-form-item label="用户名" >
-			            <span>{{ props.row.user_name }}</span>
-			          </el-form-item>
-			          <el-form-item label="店铺名称">
-			            <span>{{ props.row.restaurant_name }}</span>
-			          </el-form-item>
-			          <el-form-item label="收货地址">
-			            <span>{{ props.row.address }}</span>
-			          </el-form-item>
-			          <el-form-item label="店铺 ID">
-			            <span>{{ props.row.restaurant_id }}</span>
-			          </el-form-item>
-			          <el-form-item label="店铺地址">
-			            <span>{{ props.row.restaurant_address }}</span>
-			          </el-form-item>
-			        </el-form>
-			      </template>
-			    </el-table-column>
-			    <el-table-column
-			      label="订单 ID"
-			      prop="id">
-			    </el-table-column>
-			    <el-table-column
-			      label="总价格"
-			      prop="total_amount">
-			    </el-table-column>
-			    <el-table-column
-			      label="订单状态"
-			      prop="status">
-			    </el-table-column>
-			</el-table>
+                :data="tableData"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+                <el-table-column
+                    type="selection"
+                    width="55">
+                </el-table-column>
+                <el-table-column
+                    property="id"
+                    label="主订单号">
+                </el-table-column>
+                <el-table-column
+                    property="orderDesc"
+                    label="主订单名称">
+                </el-table-column>
+                <el-table-column
+                    property="totalAmount"
+                    label="总金额">
+                </el-table-column>
+                <el-table-column
+                    property="discountAmount"
+                    label="总优惠金额">
+                </el-table-column>
+                <el-table-column
+                    property="createTime"
+                    label="创建时间"
+                    :formatter="dateFormat">
+                </el-table-column>
+                <el-table-column
+                    property="payStatus"
+                    label="付款状态"
+                    :formatter="formatterPayStatus">
+                </el-table-column>
+                <el-table-column label="操作" width="200">
+                    <template scope="scope">
+                        <el-button
+                            size="small"
+                            @click="handleEdit(scope.row,'edit')">编辑
+                        </el-button>
+                        <el-button
+                            size="small"
+                            @click="handleEdit(scope.row,'edit')">分单
+                        </el-button>
+                        <el-button
+                            size="small"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="20"
-                  layout="total, prev, pager, next"
-                  :total="count">
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-size="10"
+                    layout="total, prev, pager, next"
+                    :total="count">
                 </el-pagination>
             </div>
+            <el-dialog :title="modalTitle" v-model="dialogFormVisible">
+                <el-form :model="selectTable">
+                    <el-form-item label="主单名称" label-width="100px">
+                        <el-input v-model="selectTable.orderDesc" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="总金额" label-width="100px">
+                        <el-input v-model="selectTable.totalAmount" readonly></el-input>
+                    </el-form-item>
+                    <el-form-item label="优惠金额" label-width="100px">
+                        <el-input v-model="selectTable.discountAmount" readonly></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" label-width="100px">
+                        <el-input v-model="selectTable.details"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="updateMainOrder">确 定</el-button>
+                </div>
+            </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
     import headTop from '../../components/headTop'
-    import {getOrderList, getOrderCount, getResturantDetail, getUserInfo, getAddressById} from '@/api/getData'
+    import {moment} from '@/config/moment'
+    import {listMainOrder,addMainOrder,deleteMainOrders} from '@/api/getData'
     export default {
         data(){
             return {
                 tableData: [],
                 currentRow: null,
-                offset: 0,
-                limit: 20,
+                limit: 10,
                 count: 0,
                 currentPage: 1,
-                restaurant_id: null,
-                expendRow: [],
+                dialogFormVisible: false,
+                name:null,
+                queryForm:{
+                    name:'',
+                    startTime:'',
+                    endTime:''
+                },
+                modalTitle:'',
+                selectTable:{
+                    totalAmount: 0.00,
+                    discountAmount: 0.00,
+                },
+                mainOrderIds:[],
+                multipleSelection:[],
             }
         },
-    	components: {
-    		headTop,
-    	},
+        components: {
+            headTop,
+        },
         created(){
-        	this.restaurant_id = this.$route.query.restaurant_id;
             this.initData();
         },
-        mounted(){
-
-        },
         methods: {
+            formatterPayStatus(row, column){
+                var statusDesc = "";
+                switch (row.payStatus){
+                    case 1:
+                        statusDesc = "未付款";
+                        break;
+                    case 2:
+                        statusDesc = "付款中";
+                        break;
+                    case 3:
+                        statusDesc = "已付款";
+                    break;
+                }
+                return statusDesc;
+            },
+            //时间格式化
+            dateFormat:function(row, column) {
+                var date = row[column.property];
+                if (date == undefined) {
+                    return "";
+                }
+                return moment(date).format("YYYY-MM-DD HH:mm:ss");
+            },
             async initData(){
-                try{
-                    const countData = await getOrderCount({restaurant_id: this.restaurant_id});
-                    if (countData.status == 1) {
-                        this.count = countData.count;
-                    }else{
-                        throw new Error('获取数据失败');
-                    }
-                    this.getOrders();
-                }catch(err){
+                try {
+                    this.getMainOrder();
+                } catch (err) {
                     console.log('获取数据失败', err);
                 }
             },
@@ -101,58 +179,139 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.offset = (val - 1)*this.limit;
-                this.getOrders()
+                this.getMainOrder()
             },
-            async getOrders(){
-                const Orders = await getOrderList({offset: this.offset, limit: this.limit, restaurant_id: this.restaurant_id});
-                this.tableData = [];
-                Orders.forEach((item, index) => {
-                    const tableData = {};
-                    tableData.id = item.id;
-                    tableData.total_amount = item.total_amount;
-                    tableData.status = item.status_bar.title;
-                    tableData.user_id = item.user_id;
- 					tableData.restaurant_id = item.restaurant_id;
- 					tableData.address_id = item.address_id;
-                    tableData.index = index;
-                    this.tableData.push(tableData);
-                })
-            },
-            async expand(row, status){
-            	if (status) {
-            		const restaurant = await getResturantDetail(row.restaurant_id);
-	            	const userInfo = await getUserInfo(row.user_id);
-	            	const addressInfo = await getAddressById(row.address_id);
-
-	                this.tableData.splice(row.index, 1, {...row, ...{restaurant_name: restaurant.name, restaurant_address: restaurant.address, address: addressInfo.address, user_name: userInfo.username}});
-                    this.$nextTick(() => {
-                        this.expendRow.push(row.index);
-                    })
-	            }else{
-                    const index = this.expendRow.indexOf(row.index);
-                    this.expendRow.splice(index, 1)
+            handleEdit(row,type){
+                this.getSelectItemData(row);
+                this.dialogFormVisible = true;
+                if(type == 'edit'){
+                    this.modalTitle = '编辑主单信息';
+                }else {
+                    this.modalTitle = '新增主单信息';
                 }
             },
+            handleQuery(){
+                this.initData();
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            handleAdd(){
+                this.selectTable = {
+                    id: null,
+                    name: '',
+                    details: '',
+                    phone: '',
+                    address: '',
+                }
+                this.modalTitle = '新增主单信息';
+                this.dialogFormVisible = true;
+            },
+            async getSelectItemData(row){
+                this.selectTable = row;
+                this.tableData.splice(row.index, 1, {...this.selectTable});
+            },
+            async updateMainOrder(){
+                try {
+                    const MainOrderData = this.selectTable;
+                    const res = await addMainOrder(MainOrderData)
+                    if (res.code == 200) {
+                        this.dialogFormVisible = false;
+                        this.$message({
+                            type: 'success',
+                            message: '更新主单信息成功'
+                        });
+                        this.selectTable = {
+                            id: null,
+                            name: '',
+                            details: '',
+                            phone: '',
+                            address: '',
+                        }
+                        this.getMainOrder();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: res.message
+                        });
+                    }
+                } catch (err) {
+                    console.log('更新主单信息失败', err);
+                }
+            },
+            async handleDelete(index, row) {
+                try {
+                    this.mainOrderIds.push(row.id);
+                    const res = await deleteMainOrders({
+                        mainOrderIds: this.mainOrderIds
+                    });
+                    if (res.code == 200) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除主单成功'
+                        });
+                        this.tableData.splice(index, 1);
+                    } else {
+                        throw new Error(res.message)
+                    }
+                    this.mainOrderIds = [];
+                } catch (err) {
+                    this.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                    console.log('删除主单失败')
+                }
+            },
+            async getMainOrder(){
+                try {
+                    const res = await listMainOrder({
+                            pageNo: this.currentPage,
+                            pageSize: this.limit,
+                            name:this.queryForm.name,
+                            startTime: this.queryForm.startTime,
+                            endTime: this.queryForm.endTime
+                        });
+                    if (res.code == 200) {
+                        this.count = res.data.total;
+                        this.tableData = [];
+                        res.data.list.forEach((item,index) => {
+                            const tableItem = {
+                                id: item.id,
+                                orderDesc: item.orderDesc,
+                                totalAmount: item.totalAmount,
+                                discountAmount: item.discountAmount,
+                                createTime: item.createTime,
+                                payStatus: item.payStatus,
+                                index: index
+                            }
+                            this.tableData.push(tableItem);
+                        })
+                        console.log(this.tableData);
+                    } else {
+                        throw new Error(res.message)
+                    }
+                } catch (err) {
+                    console.log('获取主单数据失败', err);
+                }
+            }
         },
     }
 </script>
 
 <style lang="less">
-	@import '../../style/mixin';
-    .table_container{
+    @import '../../style/mixin';
+
+    .table_container {
         padding: 20px;
     }
-    .demo-table-expand {
-	    font-size: 0;
-	}
-	.demo-table-expand label {
-	    width: 90px;
-	    color: #99a9bf;
-	}
-	.demo-table-expand .el-form-item {
-	    margin-right: 0;
-	    margin-bottom: 0;
-	    width: 50%;
-	}
+    .category_select3{
+        width: 750px;
+        border: 1px solid #eaeefb;
+        padding: 10px 30px 10px 10px;
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+    }
 </style>
+
+

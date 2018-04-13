@@ -4,6 +4,10 @@ import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * 配送主单
  * Created by liuwu on 2018/4/2 0002.
@@ -11,6 +15,8 @@ import lombok.ToString;
 @ToString
 @Data
 public class PlsMainOrder extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;        //主键ID
     private String orderDesc;//主单描述(名称后+日期 yyyy-MM-dd)
     private String details;    //主单详情

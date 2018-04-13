@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * 食品种类品种管理
@@ -52,7 +53,7 @@ public class FoodSpeciesController extends AbstractController {
     })
     @RequestMapping(value = "/list", method = RequestMethod.POST)
 //    @RequiresPermissions("species:list")
-    public ResResult list(@RequestParam Map<String, Object> params) {
+    public ResResult list(@RequestBody Map<String, Object> params) {
         return foodSpeciesService.pageSpecies(params);
     }
 
@@ -95,8 +96,9 @@ public class FoodSpeciesController extends AbstractController {
     })
     @LogManage("删除食品种类信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @RequiresPermissions("species:delete")
-    public ResResult delete(@RequestBody Long[] speciesIds) {
-        return foodSpeciesService.delSpecies(speciesIds);
+//    @RequiresPermissions("species:delete")
+    public ResResult delete(@RequestBody Map<String, Object> params) {
+        List<Long> speciesIdList = (List) params.get("speciesIds");
+        return foodSpeciesService.delSpecies(speciesIdList);
     }
 }

@@ -3,6 +3,9 @@ package com.fs.dishes.module.order.entity;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,7 +18,8 @@ import java.math.BigDecimal;
 @Data
 @Table(name = "pls_order_food")
 public class PlsOrderFood implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id; // 主键ID
     private String mainOrderId;// 主单ID
     private String subOrderId; // 子单ID

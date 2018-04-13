@@ -116,4 +116,26 @@ public class Constant {
         }
     }
 
+    /**
+     * 支付状态
+     */
+    public enum PayState {
+
+        UN_PAY(1, "尚未支付"), PAYING(2, "支付中"), PAID(3, "已支付");
+
+        private int value;
+
+        private String desc;
+
+        private PayState(int value, String desc) {
+            this.value = value;
+            this.desc = desc;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+
 }

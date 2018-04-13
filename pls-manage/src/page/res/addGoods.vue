@@ -43,7 +43,7 @@
 					</el-form-item>
                     <el-form-item label="食品价格" prop="price">
                         <el-input placeholder="食品价格参考：5.00" v-model="foodForm.price">
-                            <el-select slot="append" v-model="foodForm.unitId"  style="width: 100px;">
+                            <el-select slot="append" v-model="foodForm.unitId" :placeholder="categoryForm.unitSelect.label"  style="width: 100px;">
                                 <el-option
                                     v-for="item in categoryForm.unitList"
                                     :key="item.value"
@@ -87,25 +87,25 @@
     			categoryForm: {
     				categoryList: [],
                     unitList:[{
-                        value: '1',
+                        value: 1,
                         label: '元/斤'
                     }, {
-                        value: '2',
+                        value: 2,
                         label: '元/瓶'
                     },{
-                        value: '3',
+                        value: 3,
                         label: '元/袋'
                     },{
-                        value: '4',
+                        value: 4,
                         label: '元/只'
                     },{
-                        value: '5',
+                        value: 5,
                         label: '元/个'
                     }],
                     unitValue:'',
-                    categorySelect: '',
+                    categorySelect: 1,
                     unitSelect: {
-                        value: '1',
+                        value: 1,
                         label: '元/斤'
                     },
     				name: '',
@@ -123,7 +123,7 @@
     				speciesId: '',
     				feature: '',
     				price: null,
-                    unitId: null
+                    unitId: 1
     			},
     			foodRules: {
 
@@ -245,7 +245,7 @@
 						}
 						try{
 							const result = await addFood(params);
-							if (result.status == 1) {
+							if (result.code == 200) {
 								console.log(result)
 								this.$message({
 					            	type: 'success',
@@ -258,6 +258,7 @@
                                     speciesId: '',
                                     feature: '',
 				    				price: 0.00,
+                                    unitId: 1
 				    			}
                                 this.$router.push('foodList');
 							}else{

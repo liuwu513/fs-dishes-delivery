@@ -4,6 +4,9 @@ import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -15,6 +18,8 @@ import javax.persistence.Table;
 @Table(name = "pls_customer")
 public class PlsCustomer extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //主键ID
 
     private String name; //客户名称

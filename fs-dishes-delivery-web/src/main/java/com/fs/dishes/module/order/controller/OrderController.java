@@ -43,8 +43,8 @@ public class OrderController extends AbstractController {
             @ApiImplicitParam(name = "status", value = "状态", dataType = "Integer", paramType = "query")
     })
     @RequestMapping(value = "/main/list", method = RequestMethod.POST)
-    @RequiresPermissions("order:main:list")
-    public ResResult list(@RequestParam Map<String, Object> params) {
+//    @RequiresPermissions("order:main:list")
+    public ResResult list(@RequestBody Map<String, Object> params) {
         return plsOrderService.pageMainOrder(params);
     }
 
@@ -59,7 +59,7 @@ public class OrderController extends AbstractController {
             @ApiImplicitParam(name = "status", value = "状态", dataType = "Integer", paramType = "query")
     })
     @RequestMapping(value = "/sub/list", method = RequestMethod.POST)
-    @RequiresPermissions("order:sub:list")
+//    @RequiresPermissions("order:sub:list")
     public ResResult sublist(@RequestParam Map<String, Object> params) {
         return plsOrderService.pageSubOrder(params);
     }
@@ -103,7 +103,7 @@ public class OrderController extends AbstractController {
     })
     @LogManage("保存以及修改主单信息")
     @RequestMapping(value = "/main/save", method = RequestMethod.POST)
-    @RequiresPermissions("main:order:save")
+//    @RequiresPermissions("main:order:save")
     public ResResult save(@RequestBody PlsMainOrder mainOrder) {
         ValidatorUtils.validateEntity(mainOrder, AddGroup.class);
         return plsOrderService.createMainOrder(mainOrder);
@@ -123,7 +123,7 @@ public class OrderController extends AbstractController {
     })
     @LogManage("保存以及修改子单信息")
     @RequestMapping(value = "/sub/save", method = RequestMethod.POST)
-    @RequiresPermissions("sub:order:save")
+//    @RequiresPermissions("sub:order:save")
     public ResResult save(@RequestBody PlsSubOrder subOrder) {
         ValidatorUtils.validateEntity(subOrder, AddGroup.class);
         return plsOrderService.createSubOrder(subOrder);
@@ -144,7 +144,7 @@ public class OrderController extends AbstractController {
     })
     @LogManage("选择子单商品")
     @RequestMapping(value = "/sub/choice", method = RequestMethod.POST)
-    @RequiresPermissions("sub:order:choice")
+//    @RequiresPermissions("sub:order:choice")
     public ResResult choice(@RequestBody List<PlsOrderFood> list) {
         ValidatorUtils.validateEntity(list, AddGroup.class);
         return plsOrderService.choiceOrderFood(list);
@@ -160,9 +160,10 @@ public class OrderController extends AbstractController {
     })
     @LogManage("删除主单信息")
     @RequestMapping(value = "/main/delete", method = RequestMethod.POST)
-    @RequiresPermissions("main:order:delete")
-    public ResResult deleteByMain(@RequestBody String[] orderIds) {
-        return plsOrderService.deleteByMain(orderIds);
+//    @RequiresPermissions("main:order:delete")
+    public ResResult deleteByMain(@RequestBody Map<String,Object> params) {
+        List<String> orderIdList = (List)params.get("mainOrderIds");
+        return plsOrderService.deleteByMain(orderIdList);
     }
 
     /**
@@ -174,7 +175,7 @@ public class OrderController extends AbstractController {
     })
     @LogManage("删除子单信息")
     @RequestMapping(value = "/sub/delete", method = RequestMethod.POST)
-    @RequiresPermissions("sub:order:delete")
+//    @RequiresPermissions("sub:order:delete")
     public ResResult deleteBySub(@RequestBody String[] orderIds) {
         return plsOrderService.deleteBySub(orderIds);
     }

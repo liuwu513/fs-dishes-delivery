@@ -51,7 +51,7 @@
         <where>
             status = #{status}
             <if test="idList != null and idList.size()>0 ">
-                customer_id IN
+                AND customer_id IN
                 <foreach collection="idList" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
@@ -63,10 +63,12 @@
     <update id="batchDel">
         UPDATE pls_sub_order SET status = #{status}
         <where>
-            id IN
-            <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+            <if test="idList != null and idList.size()> 0">
+                AND id IN
+                <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </update>
 </mapper>

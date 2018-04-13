@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,9 +96,9 @@ public class PlsCustomerService extends BaseService {
      * @param ids 客户ID数组
      * @return
      */
-    public ResResult delCustomers(Long[] ids) {
+    public ResResult delCustomers(List<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("idList", Arrays.asList(ids));
+        params.put("idList", ids);
         params.put("status", Constant.DataState.NORMAL.getValue());
         List<PlsCustomer> customerList = plsCustomerDao.queryList(params);
         Boolean flag = Boolean.TRUE;
@@ -115,8 +116,8 @@ public class PlsCustomerService extends BaseService {
                 errorMsg.append("已存在下单信息，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
-                flag = plsCustomerDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
-                logger.info("客戶ids：{},共{}个,删除成功！", ids, ids.length);
+                flag = plsCustomerDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
+                logger.info("客戶ids：{},共{}个,删除成功！", ids, ids.size());
             }
         }
         if (flag) {
@@ -137,9 +138,16 @@ public class PlsCustomerService extends BaseService {
         if (isExists) {
             return ResResult.error(300, "客户名称已存在，请重新输入！");
         }
+        plsCustomer.setStatus(Constant.DataState.NORMAL.getValue());
         if (plsCustomer.getId() != null) {
-            plsCustomerDao.updateByPrimaryKey(plsCustomer);
+            plsCustomer.setModifyBy(getUserId());
+            plsCustomer.setModifyTime(new Date());
+            plsCustomerDao.updateByPrimaryKeySelective(plsCustomer);
         } else {
+            //默认为1
+            plsCustomer.setLevel(1);
+            plsCustomer.setCreateBy(getUserId());
+            plsCustomer.setCreateTime(new Date());
             plsCustomerDao.insert(plsCustomer);
         }
         return ResResult.ok().withData(Boolean.TRUE);

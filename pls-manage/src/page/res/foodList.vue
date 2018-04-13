@@ -3,7 +3,7 @@
         <head-top></head-top>
         <div class="table_container">
             <div class="demo-input-size">
-                <el-row class="category_select">
+                <el-row class="category_select2">
                     <el-input v-model="queryForm.name" placeholder="食品名称" style="width:200px;"></el-input>
                     <el-select v-model="queryForm.speciesId" placeholder="请选择食品分类" style="width:200px;">
                         <el-option
@@ -18,7 +18,7 @@
             </div>
             <div style="margin-bottom: 10px">
                 <el-button @click="handleAdd" type="primary">新增</el-button>
-                <el-button @click="handleRemove" type="primary">批量删除</el-button>
+                <el-button @click="handleBatchDel" type="primary">批量删除</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -81,7 +81,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-size="20"
+                    :page-size="10"
                     layout="total, prev, pager, next"
                     :total="count">
                 </el-pagination>
@@ -145,8 +145,7 @@
         data(){
             return {
                 baseUrl,
-                offset: 1,
-                limit: 20,
+                limit: 10,
                 count: 0,
                 tableData: [],
                 currentPage: 1,
@@ -157,6 +156,7 @@
                 selectMenu: {},
                 selectUnitMenu:{},
                 selectIndex: null,
+                selectItems:[],
                 name: null,
                 speciesId: null,
                 expendRow: [],
@@ -230,7 +230,7 @@
             },
             async getFoods(){
                 const Foods = await getFoods({
-                    pageNo: this.offset,
+                    pageNo: this.currentPage,
                     pageSize: this.limit,
                     speciesId: this.queryForm.speciesId,
                     name: this.queryForm.name
@@ -275,7 +275,6 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.offset = (val - 1) * this.limit;
                 this.getFoods()
             },
             expand(row, status){
@@ -284,6 +283,40 @@
                 } else {
                     const index = this.expendRow.indexOf(row.index);
                     this.expendRow.splice(index, 1)
+                }
+            },
+            async handleBatchDel(){
+                try {
+                    if (this.multipleSelection.length <= 0){
+                        this.$message({
+                            type: 'warning',
+                            message: '请选择食品数据！'
+                        });
+                        return false;
+                    }
+                    this.multipleSelection.forEach((item, index) => {
+                        this.foodIds.push(item.id);
+                    });
+                    const res = await deleteFood({
+                        foodIds: this.foodIds
+                    });
+                    if (res.code == 200) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除食品成功'
+                        });
+                        this.initData();
+                    } else {
+                        throw new Error(res.message)
+                    }
+                    this.multipleSelection = [];
+                    this.foodIds = [];
+                } catch (err) {
+                    this.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                    console.log('删除食品失败')
                 }
             },
             handleAdd(){
@@ -316,6 +349,7 @@
                     } else {
                         throw new Error(res.message)
                     }
+                    this.foodIds = [];
                 } catch (err) {
                     this.$message({
                         type: 'error',
@@ -411,8 +445,8 @@
         border-color: #20a0ff;
     }
 
-    .category_select{
-        width: 550px;
+    .category_select2{
+        width: 600px;
         border: 1px solid #eaeefb;
         padding: 10px 30px 10px 10px;
         border-top-right-radius: 6px;

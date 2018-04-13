@@ -9,13 +9,20 @@
                 AND status = #{status}
             </if>
             <if test="name != null and name !='' ">
-                AND order_desc LIKE CONCAT('%', #{name}, '%')
+                AND (order_desc LIKE CONCAT('%', #{name}, '%')
+                OR id LIKE CONCAT('%', #{name}, '%'))
             </if>
             <if test="payStatus">
                 AND pay_status = #{payStatus}
             </if>
+            <if test="startTime != null and startTime != '' ">
+                AND create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and startTime != '' ">
+                AND create_time &lt;= #{endTime}
+            </if>
             <if test="idList != null and idList.size() > 0">
-                id IN
+                AND id IN
                 <foreach collection="idList" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
@@ -26,10 +33,12 @@
     <update id="batchDel">
         UPDATE pls_main_order SET status = #{status}
         <where>
-            id IN
-            <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+            <if test="idList != null and idList.size() > 0">
+              AND id IN
+              <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
                 #{item}
-            </foreach>
+              </foreach>
+            </if>
         </where>
     </update>
 </mapper>

@@ -65,6 +65,70 @@ export const deleteSpecies = data => fetch('/api/species/delete',data,'POST');
  */
 export const addSpecies = data => fetch('/api/species/save', data, 'POST');
 
+
+/**
+ * 客户分页查询
+ * @param data
+ */
+export const listCustomers = data => fetch('/api/customer/list', data, 'POST');
+
+/**
+ * 客户数据
+ * @param data
+ */
+export const getCustomers = data => fetch('/api/customer/listMenu', data, 'POST');
+
+/**
+ * 删除客户信息
+ * @param data
+ */
+export const deleteCustomers = data => fetch('/api/customer/delete', data, 'POST');
+
+/**
+ * 添加或者更新客户
+ * @param data
+ */
+export const addCustomer = data => fetch('/api/customer/save', data, 'POST');
+
+
+/**
+ * 主单分页查询
+ * @param data
+ */
+export const listMainOrder = data => fetch('/api/order/main/list', data, 'POST');
+
+/**
+ * 删除主单信息
+ * @param data
+ */
+export const deleteMainOrders = data => fetch('/api/order/main/delete', data, 'POST');
+
+/**
+ * 添加或者更新主单信息
+ * @param data
+ */
+export const addMainOrder = data => fetch('/api/order/main/save', data, 'POST');
+
+
+/**
+ * 子单分页查询
+ * @param data
+ */
+export const listSubOrder = data => fetch('/api/order/sub/list', data, 'POST');
+
+/**
+ * 删除子单信息
+ * @param data
+ */
+export const deleteMainOrder = data => fetch('/api/order/sub/delete', data, 'POST');
+
+/**
+ * 添加或者更新子单信息
+ * @param data
+ */
+export const addSubOrder = data => fetch('/api/order/sub/save', data, 'POST');
+
+
 /**
  * 添加商铺
  */

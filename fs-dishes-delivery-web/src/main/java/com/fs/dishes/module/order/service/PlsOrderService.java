@@ -113,6 +113,7 @@ public class PlsOrderService extends BaseService {
      * @return
      */
     public ResResult createMainOrder(PlsMainOrder mainOrder) {
+        mainOrder.setStatus(Constant.DataState.NORMAL.getValue());
         if (StringUtils.isNotBlank(mainOrder.getId())) {
             mainOrder.setModifyTime(new Date());
             mainOrder.setModifyBy(getUserId());
@@ -201,9 +202,9 @@ public class PlsOrderService extends BaseService {
      * @param ids
      * @return
      */
-    public ResResult deleteByMain(String[] ids) {
+    public ResResult deleteByMain(List<String> ids) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("idList", Arrays.asList(ids));
+        params.put("idList", ids);
         params.put("status", Constant.DataState.NORMAL.getValue());
         List<PlsMainOrder> mainOrderList = plsMainOrderDao.queryList(params);
         Boolean flag = Boolean.TRUE;
@@ -221,8 +222,8 @@ public class PlsOrderService extends BaseService {
                 errorMsg.append("已存在子单信息，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
-                flag = plsMainOrderDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
-                logger.info("主单ids：{},共{}个,删除成功！", ids, ids.length);
+                flag = plsMainOrderDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
+                logger.info("主单ids：{},共{}个,删除成功！", ids, ids.size());
             }
         }
         if (flag) {

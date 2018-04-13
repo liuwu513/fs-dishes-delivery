@@ -90,10 +90,10 @@ public class FoodSpeciesService extends BaseService {
         return ResResult.ok().withData(Boolean.TRUE);
     }
 
-    public ResResult delSpecies(Long[] ids) {
+    public ResResult delSpecies(List<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("status", Constant.DataState.NORMAL);
-        params.put("idList", Arrays.asList(ids));
+        params.put("status", Constant.DataState.NORMAL.getValue());
+        params.put("idList", ids);
         Boolean flag = Boolean.TRUE;
         StringBuilder errorMsg = new StringBuilder();
         List<PlsFoodSpecies> speciesList = plsFoodSpeciesDao.queryList(params);
@@ -110,8 +110,8 @@ public class FoodSpeciesService extends BaseService {
                 errorMsg.append("已存在食品信息中，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
-                flag = plsFoodSpeciesDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
-                logger.info("食品种类ids：{},共{}个,删除成功！", ids, ids.length);
+                flag = plsFoodSpeciesDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
+                logger.info("食品种类ids：{},共{}个,删除成功！", ids, ids.size());
             }
         }
         if (flag) {
