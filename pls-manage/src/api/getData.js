@@ -117,10 +117,16 @@ export const addMainOrder = data => fetch('/api/order/main/save', data, 'POST');
 export const listSubOrder = data => fetch('/api/order/sub/list', data, 'POST');
 
 /**
+ * 获取子订单详情
+ * @param data
+ */
+export const getSubOrder = data => fetch('/api/order/sub/info', data, 'POST');
+
+/**
  * 删除子单信息
  * @param data
  */
-export const deleteMainOrder = data => fetch('/api/order/sub/delete', data, 'POST');
+export const deleteSubOrders = data => fetch('/api/order/sub/delete', data, 'POST');
 
 /**
  * 添加或者更新子单信息

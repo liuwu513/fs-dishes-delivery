@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -84,9 +85,10 @@ public class OrderController extends AbstractController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderId", value = "配送单ID", dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/sub/info/{orderId}", method = RequestMethod.POST)
-    public ResResult subInfo(@PathVariable("orderId") String orderId) {
-        return plsOrderService.getSubById(orderId);
+    @RequestMapping(value = "/sub/info", method = RequestMethod.POST)
+    public ResResult subInfo(@RequestBody Map<String,Object> params) {
+        Long subOrderId = MapUtils.getLong(params,"subOrderId");
+        return plsOrderService.getSubById(subOrderId);
     }
 
     /**
@@ -147,7 +149,8 @@ public class OrderController extends AbstractController {
 //    @RequiresPermissions("sub:order:choice")
     public ResResult choice(@RequestBody List<PlsOrderFood> list) {
         ValidatorUtils.validateEntity(list, AddGroup.class);
-        return plsOrderService.choiceOrderFood(list);
+//        return plsOrderService.choiceOrderFood(list);
+        return new ResResult().ok();
     }
 
 
@@ -162,7 +165,7 @@ public class OrderController extends AbstractController {
     @RequestMapping(value = "/main/delete", method = RequestMethod.POST)
 //    @RequiresPermissions("main:order:delete")
     public ResResult deleteByMain(@RequestBody Map<String,Object> params) {
-        List<String> orderIdList = (List)params.get("mainOrderIds");
+        List<Long> orderIdList = (List)params.get("mainOrderIds");
         return plsOrderService.deleteByMain(orderIdList);
     }
 
@@ -176,7 +179,8 @@ public class OrderController extends AbstractController {
     @LogManage("删除子单信息")
     @RequestMapping(value = "/sub/delete", method = RequestMethod.POST)
 //    @RequiresPermissions("sub:order:delete")
-    public ResResult deleteBySub(@RequestBody String[] orderIds) {
-        return plsOrderService.deleteBySub(orderIds);
+    public ResResult deleteBySub(@RequestBody Map<String,Object> params) {
+        List<Long> orderIdList = (List)params.get("subOrderIds");
+        return plsOrderService.deleteBySub(orderIdList);
     }
 }

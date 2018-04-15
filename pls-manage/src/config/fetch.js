@@ -1,6 +1,7 @@
 import {baseUrl} from './env'
 import {setStore, getStore, removeStore} from '@/config/mUtils'
 
+
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
     url = baseUrl + url;
@@ -39,6 +40,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
         try {
             const response = await fetch(url, requestConfig);
             const responseJson = await response.json();
+            if(responseJson.code == 401){
+                removeStore('token');
+            }
             return responseJson
         } catch (error) {
             throw new Error(error)

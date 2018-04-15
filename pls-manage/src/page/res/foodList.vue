@@ -122,8 +122,8 @@
                             :action="baseUrl + '/api/upload/img'"
                             :show-file-list="false"
                             :on-success="handleServiceAvatarScucess"
-                            :before-upload="beforeAvatarUpload">
-                            <img v-if="selectTable.imgLink" :src="selectTable.imgLink" class="avatar">
+                            :before-upload="beforeAvatarUpload" name="imgFile">
+                            <img v-if="selectTable.imgLink" :src="baseUrl + selectTable.imgLink" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -328,10 +328,21 @@
                 this.dialogFormVisible = true;
             },
             async getSelectItemData(row){
-                this.selectTable = row;
+                this.selectTable = {
+                    id: row.id,
+                    name: row.name,
+                    speciesId: row.speciesId,
+                    speciesName: row.speciesName,
+                    details: row.details,
+                    imgLink: row.imgLink,
+                    price: row.price,
+                    unitId: row.unitId,
+                };
+                if(this.selectTable.imgLink && this.selectTable.imgLink != null){
+                    this.selectTable.imgLink = this.selectTable.imgLink.replace(this.baseUrl,'');
+                }
                 this.selectMenu = {label: row.speciesName, value: row.speciesId}
                 this.selectUnitMenu = this.unitList[row.unitId - 1];
-                this.tableData.splice(row.index, 1, {...this.selectTable});
             },
             async handleDelete(index, row) {
                 try {
@@ -360,7 +371,7 @@
             },
             handleServiceAvatarScucess(res, file) {
                 if (res.code == 200) {
-                    this.selectTable.imgLink = baseUrl + res.imgLink;
+                    this.selectTable.imgLink = res.data;
                 } else {
                     this.$message.error('上传图片失败！');
                 }
@@ -380,8 +391,6 @@
             async updateFood(){
                 try {
                     const foodData = this.selectTable;
-                    const url = foodData.imgLink.replace(this.baseUrl,'');
-                    foodData.imgLink = url;
                     const res = await addFood(foodData)
                     if (res.code == 200) {
                         this.dialogFormVisible = false;
@@ -391,7 +400,6 @@
                         });
                         this.getFoods();
                     } else {
-                        foodData.imgLink = this.baseUrl + foodData.imgLink;
                         this.$message({
                             type: 'error',
                             message: res.message

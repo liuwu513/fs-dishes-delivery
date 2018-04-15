@@ -42,5 +42,5 @@ public interface PlsSubOrderDao extends Mapper<PlsSubOrder>{
      * @param status
      * @return
      */
-    Boolean batchDel(@Param("idList") List<String> idList, @Param("status") Integer status);
+    Boolean batchDel(@Param("idList") List<Long> idList, @Param("status") Integer status);
 }

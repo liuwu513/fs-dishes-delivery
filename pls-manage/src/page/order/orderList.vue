@@ -33,7 +33,8 @@
                 </el-table-column>
                 <el-table-column
                     property="id"
-                    label="主订单号">
+                    label="主订单号"
+                    width="155">
                 </el-table-column>
                 <el-table-column
                     property="orderDesc"
@@ -57,7 +58,7 @@
                     label="付款状态"
                     :formatter="formatterPayStatus">
                 </el-table-column>
-                <el-table-column label="操作" width="200">
+                <el-table-column label="操作" width="250">
                     <template scope="scope">
                         <el-button
                             size="small"
@@ -65,7 +66,7 @@
                         </el-button>
                         <el-button
                             size="small"
-                            @click="handleEdit(scope.row,'edit')">分单
+                            @click="handleSub(scope.row)">分单管理
                         </el-button>
                         <el-button
                             size="small"
@@ -131,7 +132,7 @@
                 modalTitle:'',
                 selectTable:{
                     totalAmount: 0.00,
-                    discountAmount: 0.00,
+                    discountAmount: 0.00
                 },
                 mainOrderIds:[],
                 multipleSelection:[],
@@ -190,6 +191,9 @@
                     this.modalTitle = '新增主单信息';
                 }
             },
+            handleSub(row){
+                this.$router.push({ path: 'subOrderList', query: { mainOrderId : row.id }});
+            },
             handleQuery(){
                 this.initData();
             },
@@ -199,10 +203,9 @@
             handleAdd(){
                 this.selectTable = {
                     id: null,
-                    name: '',
-                    details: '',
-                    phone: '',
-                    address: '',
+                    totalAmount: 0.00,
+                    discountAmount: 0.00,
+                    details: null
                 }
                 this.modalTitle = '新增主单信息';
                 this.dialogFormVisible = true;
@@ -282,6 +285,7 @@
                                 totalAmount: item.totalAmount,
                                 discountAmount: item.discountAmount,
                                 createTime: item.createTime,
+                                details: item.details,
                                 payStatus: item.payStatus,
                                 index: index
                             }

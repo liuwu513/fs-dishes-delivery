@@ -6,7 +6,7 @@
   				<header class="form_header">选择食品分类</header>
 	  			<el-form :model="categoryForm" :rules="categoryRules" ref="categoryForm" label-width="110px" class="form">
 		  			<el-row class="species_select">
-		  				<el-form-item label="食品分类">
+		  				<el-form-item label="食品分类" prop="speciesId">
 			  				<el-select v-model="categoryForm.categorySelect" :placeholder="selectValue.label" style="width:100%;">
 							    <el-option
 							      	v-for="item in categoryForm.categoryList"

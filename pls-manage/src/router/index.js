@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
 const login = r => require.ensure([], () => r(require('@/page/sys/login')), 'login');
 const manage = r => require.ensure([], () => r(require('@/page/sys/manage')), 'manage');
@@ -15,59 +15,110 @@ const foodList = r => require.ensure([], () => r(require('@/page/res/foodList'))
 const speciesList = r => require.ensure([], () => r(require('@/page/res/speciesList')), 'speciesList');
 const customerList = r => require.ensure([], () => r(require('@/page/res/customerList')), 'customerList');
 const orderList = r => require.ensure([], () => r(require('@/page/order/orderList')), 'orderList');
+const subOrderList = r => require.ensure([], () => r(require('@/page/order/subOrderList')), 'subOrderList');
+const addSubOrder = r => require.ensure([], () => r(require('@/page/order/addSubOrder')), 'addSubOrder');
 const uploadImg = r => require.ensure([], () => r(require('@/page/common/uploadImg')), 'uploadImg');
 const adminSet = r => require.ensure([], () => r(require('@/page/sys/adminSet')), 'adminSet');
 
 const routes = [
 	{
 		path: '/',
-		component: login
+		component: login,
+        meta: {
+		    auth:false
+        }
 	},
 	{
 		path: '/manage',
 		component: manage,
 		name: '',
+        meta: {
+            auth:true
+        },
 		children: [{
 			path: '',
 			component: home,
-			meta: [],
+            meta: {
+                auth:true,
+                nabs: []
+            }
 		},{
 			path: '/adminList',
 			component: adminList,
-			meta: ['系统管理', '管理员列表'],
+            meta: {
+                auth:true,
+                nabs: ['系统管理', '管理员列表']
+            }
 		},{
 			path: '/speciesList',
 			component: speciesList,
-			meta: ['资源管理', '食品分类'],
+            meta: {
+                auth:true,
+                nabs: ['资源管理', '食品分类']
+            }
 		},{
 			path: '/foodList',
 			component: foodList,
-			meta: ['资源管理', '食品列表'],
+            meta: {
+                auth:true,
+                nabs: ['资源管理', '食品列表']
+            }
 		},{
             path: '/addGoods',
             component: addGoods,
-            meta: ['资源管理','食品列表', '添加食品'],
+            meta: {
+                auth:true,
+                nabs: ['资源管理','食品列表', '添加食品']
+            }
         },{
             path: '/customerList',
             component: customerList,
-            meta: ['资源管理','客户列表'],
+            meta: {
+                auth:true,
+                nabs: ['资源管理','客户列表']
+            }
         },{
 			path: '/orderList',
 			component: orderList,
-			meta: ['配送管理', '配送单列表'],
+            meta: {
+                auth:true,
+                nabs: ['配送管理', '配送单列表']
+            }
 		},{
-			path: '/uploadImg',
-			component: uploadImg,
-			meta: ['文本编辑', 'MarkDown'],
-		},{
-			path: '/adminSet',
-			component: adminSet,
-			meta: ['设置', '管理员设置'],
-		}]
+            path: '/subOrderList',
+            component: subOrderList,
+            meta: {
+                auth:true,
+                nabs: ['配送管理', '配送单分单管理']
+            }
+        },{
+            path: '/addSubOrder',
+            component: addSubOrder,
+            meta: {
+                auth:true,
+                nabs: ['配送管理', '添加配送分单']
+            }
+        }]
 	}
 ]
 
-export default new Router({
-	routes,
-	strict: process.env.NODE_ENV !== 'production',
+const router = new VueRouter({
+    routes: routes,
+    strict: process.env.NODE_ENV !== 'production',
 })
+
+router.beforeEach((to, from, next) => {
+    let token = window.localStorage.getItem('token')
+    if (to.matched.some(record => record.meta.auth) && (!token || token === null)) {
+        next({
+            path: '/',
+            query: { redirect: to.fullPath }
+        })
+    } else {
+        next(()=>{
+            window.location.reload()
+        })
+    }
+})
+
+export default router

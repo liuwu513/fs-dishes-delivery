@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fs.dishes.module.order.dao.PlsOrderFoodDao">
     <select id="queryList" parameterType="map" resultType="com.fs.dishes.module.order.entity.PlsOrderFood">
-        select * from pls_main_food
+        select * from pls_order_food
         <where>
             1=1
             <if test="mainOrderId != null and mainOrderId !='' ">
@@ -20,16 +20,16 @@
     <insert id="batchAdd">
         INSERT INTO pls_order_food (id,main_order_id,sub_order_id,food_id,number,unit_price,amount)
         VALUES
-        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+        <foreach collection="list" item="item" index="index" open="" separator="," close="">
             (replace(uuid(),'-',''),#{item.mainOrderId,jdbcType=VARCHAR},#{item.subOrderId,jdbcType=VARCHAR},
             #{item.foodId,jdbcType=BIGINT},#{item.number,jdbcType=DECIMAL},#{item.unitPrice,jdbcType=DECIMAL},
-            ,#{item.amount,jdbcType=DECIMAL}
+            #{item.amount,jdbcType=DECIMAL})
         </foreach>
     </insert>
 
     <!-- 批量删除-->
     <delete id="batchDel">
-        DELETE FROM pls_main_food WHERE id IN
+        DELETE FROM pls_order_food WHERE id IN
         <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>

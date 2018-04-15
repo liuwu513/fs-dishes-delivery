@@ -4,7 +4,7 @@
         <div class="table_container">
             <div class="demo-input-size">
                 <el-row class="category_select3">
-                    <el-input v-model="queryForm.name" placeholder="主单号/名称" style="width:200px;"></el-input>
+                    <el-input v-model="queryForm.name" placeholder="子单号/名称" style="width:200px;"></el-input>
                     <el-date-picker
                         v-model="queryForm.startTime"
                         type="datetime"
@@ -33,16 +33,20 @@
                 </el-table-column>
                 <el-table-column
                     property="id"
-                    label="主订单号"
-                    width="185">
+                    label="子单号"
+                    width="155">
                 </el-table-column>
                 <el-table-column
-                    property="orderDesc"
-                    label="主订单名称">
+                    property="name"
+                    label="子单名称">
+                </el-table-column>
+                <el-table-column
+                    property="customerName"
+                    label="客户名称">
                 </el-table-column>
                 <el-table-column
                     property="totalAmount"
-                    label="总金额">
+                    label="总金额(元)">
                 </el-table-column>
                 <el-table-column
                     property="discountAmount"
@@ -62,11 +66,11 @@
                     <template scope="scope">
                         <el-button
                             size="small"
-                            @click="handleEdit(scope.row,'edit')">编辑
+                            @click="handleEdit(scope.row)">编辑
                         </el-button>
                         <el-button
                             size="small"
-                            @click="handleEdit(scope.row,'edit')">分单管理
+                            @click="handleDetails(scope.row)">查看详情
                         </el-button>
                         <el-button
                             size="small"
@@ -86,26 +90,6 @@
                     :total="count">
                 </el-pagination>
             </div>
-            <el-dialog :title="modalTitle" v-model="dialogFormVisible">
-                <el-form :model="selectTable">
-                    <el-form-item label="主单名称" label-width="100px">
-                        <el-input v-model="selectTable.orderDesc" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="总金额" label-width="100px">
-                        <el-input v-model="selectTable.totalAmount" readonly></el-input>
-                    </el-form-item>
-                    <el-form-item label="优惠金额" label-width="100px">
-                        <el-input v-model="selectTable.discountAmount" readonly></el-input>
-                    </el-form-item>
-                    <el-form-item label="备注" label-width="100px">
-                        <el-input v-model="selectTable.details"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="updateMainOrder">确 定</el-button>
-                </div>
-            </el-dialog>
         </div>
     </div>
 </template>
@@ -113,7 +97,7 @@
 <script>
     import headTop from '../../components/headTop'
     import {moment} from '@/config/moment'
-    import {listMainOrder,addMainOrder,deleteMainOrders} from '@/api/getData'
+    import {listSubOrder,addSubOrder,deleteSubOrders} from '@/api/getData'
     export default {
         data(){
             return {
@@ -130,11 +114,16 @@
                     endTime:''
                 },
                 modalTitle:'',
+                selectValue:{
+                },
+                customerList:{
+
+                },
                 selectTable:{
                     totalAmount: 0.00,
                     discountAmount: 0.00
                 },
-                mainOrderIds:[],
+                subOrderIds:[],
                 multipleSelection:[],
             }
         },
@@ -170,7 +159,7 @@
             },
             async initData(){
                 try {
-                    this.getMainOrder();
+                    this.getSubOrder();
                 } catch (err) {
                     console.log('获取数据失败', err);
                 }
@@ -180,81 +169,43 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.getMainOrder()
-            },
-            handleEdit(row,type){
-                this.getSelectItemData(row);
-                this.dialogFormVisible = true;
-                if(type == 'edit'){
-                    this.modalTitle = '编辑主单信息';
-                }else {
-                    this.modalTitle = '新增主单信息';
-                }
+                this.getSubOrder()
             },
             handleQuery(){
                 this.initData();
             },
+            handleAdd(){
+                this.$router.push({ path: 'addSubOrder', query: { mainOrderId : this.$route.query.mainOrderId }});
+            },
+            handleEdit(row){
+                this.$router.push({ path: 'addSubOrder', query: { sku: Math.random(),mainOrderId : this.$route.query.mainOrderId,subOrderId: row.id }});
+            },
+            handleDetails(row){
+
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-            },
-            handleAdd(){
-                this.selectTable = {
-                    id: null,
-                    totalAmount: 0.00,
-                    discountAmount: 0.00,
-                    details: null
-                }
-                this.modalTitle = '新增主单信息';
-                this.dialogFormVisible = true;
             },
             async getSelectItemData(row){
                 this.selectTable = row;
                 this.tableData.splice(row.index, 1, {...this.selectTable});
             },
-            async updateMainOrder(){
-                try {
-                    const MainOrderData = this.selectTable;
-                    const res = await addMainOrder(MainOrderData)
-                    if (res.code == 200) {
-                        this.dialogFormVisible = false;
-                        this.$message({
-                            type: 'success',
-                            message: '更新主单信息成功'
-                        });
-                        this.selectTable = {
-                            id: null,
-                            name: '',
-                            details: '',
-                            phone: '',
-                            address: '',
-                        }
-                        this.getMainOrder();
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.message
-                        });
-                    }
-                } catch (err) {
-                    console.log('更新主单信息失败', err);
-                }
-            },
             async handleDelete(index, row) {
                 try {
-                    this.mainOrderIds.push(row.id);
-                    const res = await deleteMainOrders({
-                        mainOrderIds: this.mainOrderIds
+                    this.subOrderIds.push(row.id);
+                    const res = await deleteSubOrders({
+                        subOrderIds: this.subOrderIds
                     });
                     if (res.code == 200) {
                         this.$message({
                             type: 'success',
-                            message: '删除主单成功'
+                            message: '删除子单成功'
                         });
                         this.tableData.splice(index, 1);
                     } else {
                         throw new Error(res.message)
                     }
-                    this.mainOrderIds = [];
+                    this.subOrderIds = [];
                 } catch (err) {
                     this.$message({
                         type: 'error',
@@ -263,9 +214,9 @@
                     console.log('删除主单失败')
                 }
             },
-            async getMainOrder(){
+            async getSubOrder(){
                 try {
-                    const res = await listMainOrder({
+                    const res = await listSubOrder({
                             pageNo: this.currentPage,
                             pageSize: this.limit,
                             name:this.queryForm.name,
@@ -278,7 +229,8 @@
                         res.data.list.forEach((item,index) => {
                             const tableItem = {
                                 id: item.id,
-                                orderDesc: item.orderDesc,
+                                name: item.name,
+                                customerName: item.customerName,
                                 totalAmount: item.totalAmount,
                                 discountAmount: item.discountAmount,
                                 createTime: item.createTime,

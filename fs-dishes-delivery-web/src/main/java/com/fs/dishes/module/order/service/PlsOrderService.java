@@ -3,6 +3,8 @@ package com.fs.dishes.module.order.service;
 import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
+import com.fs.dishes.base.utils.IdGen;
+import com.fs.dishes.module.customer.dao.PlsCustomerDao;
 import com.fs.dishes.module.customer.entity.PlsCustomer;
 import com.fs.dishes.module.order.dao.PlsMainOrderDao;
 import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
@@ -21,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +49,9 @@ public class PlsOrderService extends BaseService {
 
     @Autowired
     private PlsFoodDao plsFoodDao;
+
+    @Autowired
+    private PlsCustomerDao plsCustomerDao;
 
 
     /**
@@ -76,6 +82,22 @@ public class PlsOrderService extends BaseService {
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsSubOrder> list = plsSubOrderDao.queryList(params);
         PageInfo<PlsSubOrder> page = new PageInfo<>(list);
+        List<PlsSubOrder> subOrderList = page.getList();
+        if (CollectionUtils.isNotEmpty(subOrderList)) {
+            List<Long> speciesIdList = subOrderList.stream().map(PlsSubOrder::getCustomerId).collect(Collectors.toList());
+            List<Long> distinctSpeciesIdList = speciesIdList.stream().distinct().collect(Collectors.toList());
+
+            Map<String, Object> query = Maps.newHashMap();
+            query.put("idList", distinctSpeciesIdList);
+            query.put("status", Constant.DataState.NORMAL.getValue());
+            List<PlsCustomer> customerList = plsCustomerDao.queryList(query);
+            if (CollectionUtils.isNotEmpty(customerList)) {
+                Map<Long, String> customerMap = customerList.stream().collect(Collectors.toMap(PlsCustomer::getId, PlsCustomer::getName));
+                subOrderList.forEach(item -> {
+                    item.setCustomerName(customerMap.get(item.getCustomerId()));
+                });
+            }
+        }
         logger.info("搜索条件：{}，搜索到的子单信息共{}条", params, page.getTotal());
         return ResResult.ok().withData(page);
     }
@@ -97,13 +119,30 @@ public class PlsOrderService extends BaseService {
      * @param orderId
      * @return
      */
-    public ResResult getSubById(String orderId) {
+    public ResResult getSubById(Long orderId) {
         PlsSubOrder subOrder = plsSubOrderDao.selectByPrimaryKey(orderId);
         Map<String, Object> params = Maps.newHashMap();
         params.put("subOrderId", orderId);
         List<PlsOrderFood> list = plsOrderFoodDao.queryList(params);
+        if (CollectionUtils.isNotEmpty(list)) {
+            List<String> foodIdList = list.stream().map(PlsOrderFood::getFoodId).collect(Collectors.toList());
+            Map<String,Object> foodParams = Maps.newHashMap();
+            foodParams.put("idList", foodIdList);
+            foodParams.put("status", Constant.DataState.NORMAL.getValue());
+            List<PlsFood> foodList = plsFoodDao.queryList(foodParams);
+            if (CollectionUtils.isNotEmpty(foodList)) {
+                Map<String,PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item->item.getId(),item->item));
+                for (PlsOrderFood plsOrderFood : list) {
+                    PlsFood plsFood = foodMap.get(plsOrderFood.getFoodId());
+                    if (plsFood != null){
+                        plsOrderFood.setName(plsFood.getName());
+                        plsOrderFood.setUnitId(plsFood.getUnitId());
+                    }
+                }
+            }
+        }
         subOrder.setList(list);
-        return ResResult.ok().withData(orderId);
+        return ResResult.ok().withData(subOrder);
     }
 
     /**
@@ -114,12 +153,14 @@ public class PlsOrderService extends BaseService {
      */
     public ResResult createMainOrder(PlsMainOrder mainOrder) {
         mainOrder.setStatus(Constant.DataState.NORMAL.getValue());
-        if (StringUtils.isNotBlank(mainOrder.getId())) {
+        if (mainOrder.getId() != null) {
             mainOrder.setModifyTime(new Date());
             mainOrder.setModifyBy(getUserId());
             plsMainOrderDao.updateByPrimaryKey(mainOrder);
             logger.info("主单名称:{}，更新成功", mainOrder.getOrderDesc());
         } else {
+            mainOrder.setId(IdGen.nextId());
+            mainOrder.setPayStatus(Constant.PayState.UN_PAY.getValue());
             mainOrder.setCreateTime(new Date());
             mainOrder.setCreateBy(getUserId());
             plsMainOrderDao.insert(mainOrder);
@@ -135,16 +176,33 @@ public class PlsOrderService extends BaseService {
      * @return
      */
     public ResResult createSubOrder(PlsSubOrder subOrder) {
-        if (StringUtils.isNotBlank(subOrder.getId())) {
+        if (subOrder.getId() != null) {
             subOrder.setModifyTime(new Date());
             subOrder.setModifyBy(getUserId());
-            plsSubOrderDao.updateByPrimaryKey(subOrder);
+            plsSubOrderDao.updateByPrimaryKeySelective(subOrder);
             logger.info("子单名称:{}，更新成功", subOrder.getName());
         } else {
+            subOrder.setPayStatus(Constant.PayState.UN_PAY.getValue());
+            subOrder.setId(IdGen.nextId());
             subOrder.setCreateTime(new Date());
             subOrder.setCreateBy(getUserId());
+            subOrder.setStatus(Constant.DataState.NORMAL.getValue());
             plsSubOrderDao.insert(subOrder);
             logger.info("子单名称:{}，新增成功", subOrder.getName());
+        }
+        Long subOrderId = subOrder.getId();
+        if (subOrderId != null) {
+            List<PlsOrderFood> orderFoodList = subOrder.getList();
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            for (PlsOrderFood plsOrderFood : orderFoodList) {
+                plsOrderFood.setSubOrderId(subOrderId);
+                plsOrderFood.setAmount(plsOrderFood.getNumber().multiply(plsOrderFood.getUnitPrice()));
+                totalAmount = totalAmount.add(plsOrderFood.getAmount());
+            }
+            subOrder.setTotalAmount(totalAmount);
+            subOrder.setDiscountAmount(BigDecimal.ZERO);
+            plsSubOrderDao.updateByPrimaryKeySelective(subOrder);
+            return choiceOrderFood(orderFoodList, subOrder.getMainOrderId(), subOrderId);
         }
         return ResResult.ok().withData(Boolean.TRUE);
     }
@@ -155,10 +213,8 @@ public class PlsOrderService extends BaseService {
      * @param orderFoodList
      * @return
      */
-    public ResResult choiceOrderFood(List<PlsOrderFood> orderFoodList) {
+    public ResResult choiceOrderFood(List<PlsOrderFood> orderFoodList, Long mainOrderId, Long subOrderId) {
         if (CollectionUtils.isNotEmpty(orderFoodList)) {
-            String mainOrderId = orderFoodList.get(0).getMainOrderId();
-            String subOrderId = orderFoodList.get(0).getSubOrderId();
             Map<String, Object> params = Maps.newHashMap();
             params.put("mainOrderId", mainOrderId);
             params.put("subOrderId", subOrderId);
@@ -202,7 +258,7 @@ public class PlsOrderService extends BaseService {
      * @param ids
      * @return
      */
-    public ResResult deleteByMain(List<String> ids) {
+    public ResResult deleteByMain(List<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("idList", ids);
         params.put("status", Constant.DataState.NORMAL.getValue());
@@ -233,9 +289,9 @@ public class PlsOrderService extends BaseService {
         }
     }
 
-    public ResResult deleteBySub(String[] ids) {
+    public ResResult deleteBySub(List<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("idList", Arrays.asList(ids));
+        params.put("idList",ids);
         params.put("status", Constant.DataState.NORMAL.getValue());
         List<PlsSubOrder> subOrderList = plsSubOrderDao.queryList(params);
 
@@ -254,8 +310,8 @@ public class PlsOrderService extends BaseService {
                     logger.info(errorMsg.toString());
                 }
             } else {
-                flag = plsSubOrderDao.batchDel(Arrays.asList(ids), Constant.DataState.FAKE_DEL.getValue());
-                logger.info("子单ids：{},共{}个,删除成功！", ids, ids.length);
+                flag = plsSubOrderDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
+                logger.info("子单ids：{},共{}个,删除成功！", ids, ids.size());
             }
         }
         if (flag) {

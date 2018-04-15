@@ -15,7 +15,7 @@
                 AND pay_status = #{payStatus}
             </if>
             <if test="idList != null and idList.size() > 0">
-                id IN
+                AND id IN
                 <foreach collection="idList" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>

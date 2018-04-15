@@ -33,7 +33,7 @@ public class CustomerController extends AbstractController {
      * 所有客户列表
      */
     @ApiOperation(value = "客户列表接口", notes = "客户列表接口", httpMethod = "POST")
-    @RequestMapping(value = "/listMenu", method = RequestMethod.GET)
+    @RequestMapping(value = "/listMenu", method = RequestMethod.POST)
 //    @RequiresPermissions("customer:list")
     public ResResult list() {
         return plsCustomerService.listCustomer();

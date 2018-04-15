@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * 配送主单
@@ -14,10 +15,11 @@ import javax.persistence.Id;
  */
 @ToString
 @Data
+@Table(name = "pls_main_order")
 public class PlsMainOrder extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;        //主键ID
+    private Long id;        //主键ID
     private String orderDesc;//主单描述(名称后+日期 yyyy-MM-dd)
     private String details;    //主单详情
     private Integer status;      //数据状态
