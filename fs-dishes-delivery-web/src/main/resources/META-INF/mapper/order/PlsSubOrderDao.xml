@@ -11,6 +11,9 @@
             <if test="name != null and name !='' ">
                 AND name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="mainOrderId != null">
+                AND main_order_id = #{mainOrderId}
+            </if>
             <if test="payStatus">
                 AND pay_status = #{payStatus}
             </if>
@@ -19,6 +22,16 @@
                 <foreach collection="idList" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryAllPayStatus" resultType="java.util.List">
+        SELECT DISTINCT pay_status FROM pls_sub_order
+        <where>
+            1 = 1
+            <if test="mainOrderId != null and mainOrderId !='' ">
+                main_order_id =#{mainOrderId}
             </if>
         </where>
     </select>
@@ -62,6 +75,18 @@
 
     <update id="batchDel">
         UPDATE pls_sub_order SET status = #{status}
+        <where>
+            <if test="idList != null and idList.size()> 0">
+                AND id IN
+                <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <update id="batchUpdatePayStatus">
+        UPDATE pls_sub_order SET payStatus = #{payStatus}
         <where>
             <if test="idList != null and idList.size()> 0">
                 AND id IN

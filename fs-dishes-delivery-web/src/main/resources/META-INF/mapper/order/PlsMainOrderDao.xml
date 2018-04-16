@@ -34,11 +34,16 @@
         UPDATE pls_main_order SET status = #{status}
         <where>
             <if test="idList != null and idList.size() > 0">
-              AND id IN
-              <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
-                #{item}
-              </foreach>
+                AND id IN
+                <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
+    </update>
+
+    <update id="updatePayStatusById">
+        UPDATE pls_main_order SET payStatus = #{payStatus}
+        WHERE id = #{mainOrderId}
     </update>
 </mapper>

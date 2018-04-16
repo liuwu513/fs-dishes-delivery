@@ -61,7 +61,7 @@ public class OrderController extends AbstractController {
     })
     @RequestMapping(value = "/sub/list", method = RequestMethod.POST)
 //    @RequiresPermissions("order:sub:list")
-    public ResResult sublist(@RequestParam Map<String, Object> params) {
+    public ResResult sublist(@RequestBody Map<String, Object> params) {
         return plsOrderService.pageSubOrder(params);
     }
 
@@ -86,8 +86,8 @@ public class OrderController extends AbstractController {
             @ApiImplicitParam(name = "orderId", value = "配送单ID", dataType = "String", paramType = "query")
     })
     @RequestMapping(value = "/sub/info", method = RequestMethod.POST)
-    public ResResult subInfo(@RequestBody Map<String,Object> params) {
-        Long subOrderId = MapUtils.getLong(params,"subOrderId");
+    public ResResult subInfo(@RequestBody Map<String, Object> params) {
+        Long subOrderId = MapUtils.getLong(params, "subOrderId");
         return plsOrderService.getSubById(subOrderId);
     }
 
@@ -164,8 +164,8 @@ public class OrderController extends AbstractController {
     @LogManage("删除主单信息")
     @RequestMapping(value = "/main/delete", method = RequestMethod.POST)
 //    @RequiresPermissions("main:order:delete")
-    public ResResult deleteByMain(@RequestBody Map<String,Object> params) {
-        List<Long> orderIdList = (List)params.get("mainOrderIds");
+    public ResResult deleteByMain(@RequestBody Map<String, Object> params) {
+        List<Long> orderIdList = (List) params.get("mainOrderIds");
         return plsOrderService.deleteByMain(orderIdList);
     }
 
@@ -179,8 +179,25 @@ public class OrderController extends AbstractController {
     @LogManage("删除子单信息")
     @RequestMapping(value = "/sub/delete", method = RequestMethod.POST)
 //    @RequiresPermissions("sub:order:delete")
-    public ResResult deleteBySub(@RequestBody Map<String,Object> params) {
-        List<Long> orderIdList = (List)params.get("subOrderIds");
+    public ResResult deleteBySub(@RequestBody Map<String, Object> params) {
+        List<Long> orderIdList = (List) params.get("subOrderIds");
         return plsOrderService.deleteBySub(orderIdList);
     }
+
+
+    @ApiOperation(value = "分单批量设置付款", notes = "分单批量设置付款", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "subOrderIds", value = "配送分单ID集合", paramType = "query"),
+    })
+    @LogManage("分单批量设置付款")
+    @RequestMapping(value = "/sub/payment", method = RequestMethod.POST)
+//    @RequiresPermissions("sub:order:payment")
+    public ResResult paymentBySub(@RequestBody Map<String, Object> params) {
+        Long mainOrderId = MapUtils.getLong(params, "mainOrderId");
+        List<Long> orderIdList = (List) params.get("subOrderIds");
+        Integer payStatus = MapUtils.getInteger(params, "payStatus", 1);
+        return plsOrderService.paymentBySub(mainOrderId, orderIdList, payStatus);
+    }
+
+
 }

@@ -134,6 +134,12 @@ export const deleteSubOrders = data => fetch('/api/order/sub/delete', data, 'POS
  */
 export const addSubOrder = data => fetch('/api/order/sub/save', data, 'POST');
 
+/**
+ * 更改子单付款状态
+ * @param data
+ */
+export const paymentSubOrder = data => fetch('/api/order/sub/payment', data, 'POST');
+
 
 /**
  * 添加商铺

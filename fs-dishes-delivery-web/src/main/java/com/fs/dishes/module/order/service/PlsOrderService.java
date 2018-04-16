@@ -126,15 +126,15 @@ public class PlsOrderService extends BaseService {
         List<PlsOrderFood> list = plsOrderFoodDao.queryList(params);
         if (CollectionUtils.isNotEmpty(list)) {
             List<String> foodIdList = list.stream().map(PlsOrderFood::getFoodId).collect(Collectors.toList());
-            Map<String,Object> foodParams = Maps.newHashMap();
+            Map<String, Object> foodParams = Maps.newHashMap();
             foodParams.put("idList", foodIdList);
             foodParams.put("status", Constant.DataState.NORMAL.getValue());
             List<PlsFood> foodList = plsFoodDao.queryList(foodParams);
             if (CollectionUtils.isNotEmpty(foodList)) {
-                Map<String,PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item->item.getId(),item->item));
+                Map<String, PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
                 for (PlsOrderFood plsOrderFood : list) {
                     PlsFood plsFood = foodMap.get(plsOrderFood.getFoodId());
-                    if (plsFood != null){
+                    if (plsFood != null) {
                         plsOrderFood.setName(plsFood.getName());
                         plsOrderFood.setUnitId(plsFood.getUnitId());
                     }
@@ -291,7 +291,7 @@ public class PlsOrderService extends BaseService {
 
     public ResResult deleteBySub(List<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("idList",ids);
+        params.put("idList", ids);
         params.put("status", Constant.DataState.NORMAL.getValue());
         List<PlsSubOrder> subOrderList = plsSubOrderDao.queryList(params);
 
@@ -319,6 +319,39 @@ public class PlsOrderService extends BaseService {
         } else {
             return ResResult.error(300, errorMsg.toString());
         }
+    }
+
+    /**
+     * 分单付款
+     *
+     * @param subOrderIdList
+     * @param payStatus
+     * @return
+     */
+    public ResResult paymentBySub(Long mainOrderId, List<Long> subOrderIdList, Integer payStatus) {
+        if (CollectionUtils.isNotEmpty(subOrderIdList)) {
+            return ResResult.error(300, "请选择分单信息！");
+        }
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("idList", subOrderIdList);
+        params.put("payStatus", payStatus);
+        plsSubOrderDao.batchUpdatePayStatus(params);
+
+        List<Integer> statusList = plsSubOrderDao.queryAllPayStatus(mainOrderId);
+        if (CollectionUtils.isNotEmpty(statusList)) {
+            Integer payStatusByMain = Constant.PayState.UN_PAY.getValue();
+            //子单已全部付款，更新主单付款状态
+            if (statusList.size() == 1) {
+                if (statusList.get(0) == Constant.PayState.PAID.getValue()) {
+                    payStatusByMain = Constant.PayState.PAID.getValue();
+                }
+            } else {
+                payStatusByMain = Constant.PayState.PAYING.getValue();
+            }
+
+            plsMainOrderDao.updatePayStatusById(mainOrderId, payStatusByMain);
+        }
+        return ResResult.ok();
     }
 
 

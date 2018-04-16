@@ -22,6 +22,8 @@
             </div>
             <div style="margin-bottom: 10px">
                 <el-button @click="handleAdd" type="primary">新增</el-button>
+                <el-button @click="handlePayment(3)" type="primary">付款</el-button>
+                <el-button @click="handlePayment(2)" type="primary">撤销付款</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -97,7 +99,7 @@
 <script>
     import headTop from '../../components/headTop'
     import {moment} from '@/config/moment'
-    import {listSubOrder,addSubOrder,deleteSubOrders} from '@/api/getData'
+    import {listSubOrder,addSubOrder,deleteSubOrders,paymentSubOrder} from '@/api/getData'
     export default {
         data(){
             return {
@@ -123,6 +125,7 @@
                     totalAmount: 0.00,
                     discountAmount: 0.00
                 },
+                mainOrderId:null,
                 subOrderIds:[],
                 multipleSelection:[],
             }
@@ -159,6 +162,7 @@
             },
             async initData(){
                 try {
+                    this.mainOrderId = this.$route.query.mainOrderId;
                     this.getSubOrder();
                 } catch (err) {
                     console.log('获取数据失败', err);
@@ -175,10 +179,47 @@
                 this.initData();
             },
             handleAdd(){
-                this.$router.push({ path: 'addSubOrder', query: { mainOrderId : this.$route.query.mainOrderId }});
+                this.$router.push({ path: 'addSubOrder', query: { mainOrderId : this.mainOrderId }});
+            },
+            async handlePayment(payStatus){
+                try {
+                    if (this.multipleSelection.length <= 0){
+                        this.$message({
+                            type: 'warning',
+                            message: '请选择分单数据！'
+                        });
+                        return false;
+                    }
+                    this.subOrderIds = [];
+                    this.multipleSelection.forEach((item, index) => {
+                        this.subOrderIds.push(item.id);
+                    });
+                    const res = await paymentSubOrder({
+                        mainOrderId:this.mainOrderId,
+                        subOrderIds: this.subOrderIds,
+                        payStatus: payStatus
+                    });
+                    if (res.code == 200) {
+                        this.$message({
+                            type: 'success',
+                            message: '更改付款状态成功'
+                        });
+                        this.initData();
+                    } else {
+                        throw new Error(res.message)
+                    }
+                    this.multipleSelection = [];
+                    this.subOrderIds = [];
+                } catch (err) {
+                    this.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                    console.log('更改付款状态失败')
+                }
             },
             handleEdit(row){
-                this.$router.push({ path: 'addSubOrder', query: { sku: Math.random(),mainOrderId : this.$route.query.mainOrderId,subOrderId: row.id }});
+                this.$router.push({ path: 'addSubOrder', query: { sku: Math.random(),mainOrderId : this.mainOrderId,subOrderId: row.id }});
             },
             handleDetails(row){
 
@@ -219,6 +260,7 @@
                     const res = await listSubOrder({
                             pageNo: this.currentPage,
                             pageSize: this.limit,
+                            mainOrderId: this.mainOrderId,
                             name:this.queryForm.name,
                             startTime: this.queryForm.startTime,
                             endTime: this.queryForm.endTime
