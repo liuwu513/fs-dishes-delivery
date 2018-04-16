@@ -56,17 +56,17 @@ public class PlsFoodService extends BaseService {
         PageInfo<PlsFood> page = new PageInfo<>(list);
         logger.info("搜索条件：{}，搜索到的食品信息共{}条", params, page.getTotal());
         List<PlsFood> foodList = page.getList();
-        if (CollectionUtils.isNotEmpty(foodList)){
+        if (CollectionUtils.isNotEmpty(foodList)) {
             List<Long> speciesIdList = foodList.stream().map(PlsFood::getSpeciesId).collect(Collectors.toList());
             List<Long> distinctSpeciesIdList = speciesIdList.stream().distinct().collect(Collectors.toList());
 
-            Map<String,Object> query = Maps.newHashMap();
-            query.put("idList",distinctSpeciesIdList);
-            query.put("status",Constant.DataState.NORMAL.getValue());
+            Map<String, Object> query = Maps.newHashMap();
+            query.put("idList", distinctSpeciesIdList);
+            query.put("status", Constant.DataState.NORMAL.getValue());
             List<PlsFoodSpecies> speciesList = plsFoodSpeciesDao.queryList(query);
-            if (CollectionUtils.isNotEmpty(speciesIdList)){
-                Map<Long,String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId,PlsFoodSpecies::getName));
-                foodList.forEach(item->{
+            if (CollectionUtils.isNotEmpty(speciesIdList)) {
+                Map<Long, String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId, PlsFoodSpecies::getName));
+                foodList.forEach(item -> {
                     item.setSpeciesName(speciesMap.get(item.getSpeciesId()));
                 });
             }
@@ -76,10 +76,11 @@ public class PlsFoodService extends BaseService {
 
     /**
      * 食品详情
+     *
      * @param foodId
      * @return
      */
-    public ResResult getById(String foodId){
+    public ResResult getById(String foodId) {
         PlsFood food = plsFoodDao.selectByPrimaryKey(foodId);
         return ResResult.ok().withData(food);
     }
@@ -102,12 +103,13 @@ public class PlsFoodService extends BaseService {
 
     /**
      * 删除食品信息
+     *
      * @param ids
      * @return
      */
-    public ResResult delFoods(List<String> ids){
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("status",Constant.DataState.NORMAL.getValue());
+    public ResResult delFoods(List<String> ids) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("status", Constant.DataState.NORMAL.getValue());
         params.put("idList", ids);
         List<PlsFood> foodList = plsFoodDao.queryList(params);
         Boolean flag = Boolean.TRUE;
@@ -117,12 +119,16 @@ public class PlsFoodService extends BaseService {
             if (CollectionUtils.isNotEmpty(foodIdList)) {
                 flag = Boolean.FALSE;
                 errorMsg.append("食品名称 [");
-                for (PlsFood food : foodList) {
+                for (int i = 0; i < foodList.size(); i++) {
+                    PlsFood food = foodList.get(i);
                     if (foodIdList.contains(food.getId())) {
-                        errorMsg.append(food.getName()+ "，");
+                        errorMsg.append(food.getName());
+                        if (i < foodList.size() - 1) {
+                            errorMsg.append("，");
+                        }
                     }
                 }
-                errorMsg.append("已存在子单信息中，请重新选择！");
+                errorMsg.append("]，已存在子单信息中，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
                 flag = plsFoodDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());

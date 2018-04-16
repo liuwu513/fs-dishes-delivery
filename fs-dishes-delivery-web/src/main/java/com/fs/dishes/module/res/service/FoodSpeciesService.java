@@ -102,12 +102,16 @@ public class FoodSpeciesService extends BaseService {
             if (CollectionUtils.isNotEmpty(speciesIdList)) {
                 flag = Boolean.FALSE;
                 errorMsg.append("食品种类名称 [");
-                for (PlsFoodSpecies foodSpecies : speciesList) {
+                for (int i = 0; i < speciesList.size(); i++) {
+                    PlsFoodSpecies foodSpecies = speciesList.get(i);
                     if (speciesIdList.contains(foodSpecies.getId())) {
-                        errorMsg.append(foodSpecies.getName() + "，");
+                        errorMsg.append(foodSpecies.getName());
+                        if (i < speciesList.size() - 1){
+                            errorMsg.append("，");
+                        }
                     }
                 }
-                errorMsg.append("已存在食品信息中，请重新选择！");
+                errorMsg.append("]，已存在食品信息中，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
                 flag = plsFoodSpeciesDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());

@@ -14,7 +14,7 @@
             <if test="mainOrderId != null">
                 AND main_order_id = #{mainOrderId}
             </if>
-            <if test="payStatus">
+            <if test="payStatus != null">
                 AND pay_status = #{payStatus}
             </if>
             <if test="idList != null and idList.size() > 0">
@@ -26,12 +26,12 @@
         </where>
     </select>
 
-    <select id="queryAllPayStatus" resultType="java.util.List">
+    <select id="queryAllPayStatus" resultType="java.lang.Integer">
         SELECT DISTINCT pay_status FROM pls_sub_order
         <where>
             1 = 1
             <if test="mainOrderId != null and mainOrderId !='' ">
-                main_order_id =#{mainOrderId}
+                AND main_order_id =#{mainOrderId}
             </if>
         </where>
     </select>
@@ -86,7 +86,7 @@
     </update>
 
     <update id="batchUpdatePayStatus">
-        UPDATE pls_sub_order SET payStatus = #{payStatus}
+        UPDATE pls_sub_order SET pay_status = #{payStatus}
         <where>
             <if test="idList != null and idList.size()> 0">
                 AND id IN

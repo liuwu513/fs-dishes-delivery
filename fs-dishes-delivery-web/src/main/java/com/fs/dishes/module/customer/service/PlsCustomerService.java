@@ -108,12 +108,16 @@ public class PlsCustomerService extends BaseService {
             if (CollectionUtils.isNotEmpty(customerIdList)) {
                 flag = Boolean.FALSE;
                 errorMsg.append("客户名称 [");
-                for (PlsCustomer customer : customerList) {
-                    if (customerList.contains(customer.getId())) {
-                        errorMsg.append(customer.getName() + "，");
+                for (int i = 0; i < customerList.size(); i++) {
+                    PlsCustomer customer = customerList.get(i);
+                    if (customerIdList.contains(customer.getId())) {
+                        errorMsg.append(customer.getName());
+                        if (i < customerList.size() - 1){
+                            errorMsg.append("，");
+                        }
                     }
                 }
-                errorMsg.append("已存在下单信息，请重新选择！");
+                errorMsg.append("],已存在下单信息，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
                 flag = plsCustomerDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());

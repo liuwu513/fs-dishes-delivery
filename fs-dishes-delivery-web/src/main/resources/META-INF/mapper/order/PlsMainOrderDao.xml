@@ -43,7 +43,7 @@
     </update>
 
     <update id="updatePayStatusById">
-        UPDATE pls_main_order SET payStatus = #{payStatus}
+        UPDATE pls_main_order SET pay_status = #{payStatus}
         WHERE id = #{mainOrderId}
     </update>
 </mapper>

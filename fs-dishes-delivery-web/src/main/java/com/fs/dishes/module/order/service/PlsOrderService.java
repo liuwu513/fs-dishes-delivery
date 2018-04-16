@@ -270,12 +270,16 @@ public class PlsOrderService extends BaseService {
             if (CollectionUtils.isNotEmpty(mainOrderIdList)) {
                 flag = Boolean.FALSE;
                 errorMsg.append("主单名称 [");
-                for (PlsMainOrder plsMainOrder : mainOrderList) {
-                    if (mainOrderIdList.contains(plsMainOrder.getId())) {
-                        errorMsg.append(plsMainOrder.getOrderDesc() + "，");
+                for (int i = 0; i < mainOrderList.size(); i++) {
+                    PlsMainOrder plsMainOrder = mainOrderList.get(i);
+                    if (mainOrderIdList.contains(plsMainOrder.getId().toString())) {
+                        errorMsg.append(plsMainOrder.getOrderDesc());
+                        if (i < mainOrderList.size() - 1) {
+                            errorMsg.append("，");
+                        }
                     }
                 }
-                errorMsg.append("已存在子单信息，请重新选择！");
+                errorMsg.append("],已存在子单信息，请重新选择！");
                 logger.info(errorMsg.toString());
             } else {
                 flag = plsMainOrderDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
@@ -302,13 +306,17 @@ public class PlsOrderService extends BaseService {
             if (CollectionUtils.isNotEmpty(subOrderIdList)) {
                 flag = Boolean.FALSE;
                 errorMsg.append("子单名称 [");
-                for (PlsSubOrder plsSubOrder : subOrderList) {
-                    if (subOrderIdList.contains(plsSubOrder.getId())) {
-                        errorMsg.append(plsSubOrder.getName() + "，");
+                for (int i = 0; i < subOrderList.size(); i++) {
+                    PlsSubOrder plsSubOrder = subOrderList.get(i);
+                    if (subOrderIdList.contains(plsSubOrder.getId().toString())) {
+                        errorMsg.append(plsSubOrder.getName());
+                        if (i < subOrderList.size() -1) {
+                            errorMsg.append("，");
+                        }
                     }
-                    errorMsg.append("已存在子单商品信息，请重新选择！");
-                    logger.info(errorMsg.toString());
                 }
+                errorMsg.append("]，已存在子单商品信息，请重新选择！");
+                logger.info(errorMsg.toString());
             } else {
                 flag = plsSubOrderDao.batchDel(ids, Constant.DataState.FAKE_DEL.getValue());
                 logger.info("子单ids：{},共{}个,删除成功！", ids, ids.size());
@@ -329,7 +337,7 @@ public class PlsOrderService extends BaseService {
      * @return
      */
     public ResResult paymentBySub(Long mainOrderId, List<Long> subOrderIdList, Integer payStatus) {
-        if (CollectionUtils.isNotEmpty(subOrderIdList)) {
+        if (CollectionUtils.isEmpty(subOrderIdList)) {
             return ResResult.error(300, "请选择分单信息！");
         }
         Map<String, Object> params = Maps.newHashMap();
@@ -339,16 +347,13 @@ public class PlsOrderService extends BaseService {
 
         List<Integer> statusList = plsSubOrderDao.queryAllPayStatus(mainOrderId);
         if (CollectionUtils.isNotEmpty(statusList)) {
-            Integer payStatusByMain = Constant.PayState.UN_PAY.getValue();
+            Integer payStatusByMain = Constant.PayState.PAYING.getValue();
             //子单已全部付款，更新主单付款状态
             if (statusList.size() == 1) {
                 if (statusList.get(0) == Constant.PayState.PAID.getValue()) {
                     payStatusByMain = Constant.PayState.PAID.getValue();
                 }
-            } else {
-                payStatusByMain = Constant.PayState.PAYING.getValue();
             }
-
             plsMainOrderDao.updatePayStatusById(mainOrderId, payStatusByMain);
         }
         return ResResult.ok();
