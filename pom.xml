@@ -40,6 +40,12 @@
         <fastjson.version>1.2.28</fastjson.version>
         <kaptcha.version>0.0.9</kaptcha.version>
         <lombok.version>1.16.20</lombok.version>
+        <jasperreports.version>6.0.0</jasperreports.version>
+        <itext-asian.version>5.2.0</itext-asian.version>
+        <itextpdf.version>5.5.0</itextpdf.version>
+        <itext.version>2.1.7</itext.version>
+        <groovy-all.version>2.4.3</groovy-all.version>
+        <poi.version>3.8</poi.version>
     </properties>
 
     <dependencyManagement>
@@ -205,6 +211,36 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jasperreports</groupId>
+                <artifactId>jasperreports</artifactId>
+                <version>${jasperreports.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jasperreports</groupId>
+                <artifactId>jasperreports-fonts</artifactId>
+                <version>${jasperreports.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itextpdf</artifactId>
+                <version>${itextpdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext-pdfa</artifactId>
+                <version>${itextpdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext-asian</artifactId>
+                <version>${itext-asian.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovy-all.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

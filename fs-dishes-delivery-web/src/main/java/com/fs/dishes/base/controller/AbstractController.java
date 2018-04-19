@@ -61,4 +61,12 @@ public abstract class AbstractController {
             }
         });
     }
+
+    /**
+     * 获取路径地址
+     * @return
+     */
+    protected String getRealPath(String folderName){
+        return this.getClass().getClassLoader().getResource(folderName).getPath();
+    }
 }

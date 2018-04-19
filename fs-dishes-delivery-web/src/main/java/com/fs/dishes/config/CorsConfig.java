@@ -1,7 +1,9 @@
 package com.fs.dishes.config;
 
+import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,6 +36,16 @@ public class CorsConfig {
         bean.setOrder(0);
         return bean;
     }
+
+    /**
+     * Jasper 使用
+     * @return
+     */
+    @Bean
+    public ServletRegistrationBean servletRegistrationBean() {
+        return new ServletRegistrationBean(new ImageServlet(), "/api/servlets/image","/servlets/image");
+    }
+
 
     @Bean
     public WebMvcConfigurer mvcConfigurer() {
