@@ -70,10 +70,11 @@
                             size="small"
                             @click="handleEdit(scope.row)">编辑
                         </el-button>
-                        <el-button
-                            size="small"
-                            @click="handleDetails(scope.row)">查看详情
-                        </el-button>
+                        <a :href="baseUrl + viewLink" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
+                        <!--<el-button-->
+                            <!--size="small"-->
+                            <!--@click="handleDetails(scope.row)">查看详情-->
+                        <!--</el-button>-->
                         <el-button
                             size="small"
                             type="danger"
@@ -99,10 +100,13 @@
 <script>
     import headTop from '../../components/headTop'
     import {moment} from '@/config/moment'
+    import {baseUrl} from '@/config/env'
     import {listSubOrder,addSubOrder,deleteSubOrders,paymentSubOrder} from '@/api/getData'
     export default {
         data(){
             return {
+                baseUrl,
+                viewLink: '/api/rpt/viewOrderDetail',
                 tableData: [],
                 currentRow: null,
                 limit: 10,
@@ -134,6 +138,8 @@
             headTop,
         },
         created(){
+        },
+        activated() {
             this.initData();
         },
         methods: {
@@ -306,6 +312,43 @@
         padding: 10px 30px 10px 10px;
         border-top-right-radius: 6px;
         border-top-left-radius: 6px;
+    }
+
+    .olive:hover {
+        background-color: #90A000;
+    }
+    .button:hover {
+        background-color: #777;
+    }
+    .olive {
+        background-color: #B0E000;
+        border: 1px outset #D0E000;
+        color: #FFF;
+        font-style: italic;
+        text-shadow: 0 2px 1px rgba(0,0,0,0.2);
+    }
+    .button {
+        padding: 5px 15px 5px 15px;
+        text-decoration: none;
+        display: inline-block;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        font-family: "Lucida Grande",Lucida,Verdana,sans-serif;
+        outline: none;
+        position: relative;
+        font-size: 12px;
+        margin: 10px;
+        background: transparent url(../../assets/img/buttonover.png) repeat-x top left;
+        white-space: nowrap;
+    }
+    user agent stylesheet
+    a:-webkit-any-link {
+        color: -webkit-link;
+        cursor: pointer;
+        text-decoration: underline;
     }
 </style>
 

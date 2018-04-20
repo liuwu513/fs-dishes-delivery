@@ -54,6 +54,12 @@ public class SysUser implements Serializable {
 	 */
 	private String mobile;
 
+	//公司名称
+	private String company;
+
+	//微信号
+	private String wechat;
+
 	/**
 	 * 状态  0：禁用   1：正常
 	 */

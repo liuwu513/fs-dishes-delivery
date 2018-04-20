@@ -139,6 +139,7 @@
                         </el-table>
                         <div align="center" style="margin:20px 10px;">
                             <el-button type="primary" @click="addSubOrder('subOrderForm')">保存</el-button>
+                            <el-button type="primary" @click="cancel()">取消</el-button>
                         </div>
   			</el-col>
   		</el-row>
@@ -210,8 +211,10 @@
     		headTop,
     	},
     	created(){
-    		this.initData();
     	},
+        activated() {
+            this.initData();
+        },
     	computed: {
     	},
     	methods: {
@@ -280,6 +283,9 @@
                     });
                 }
                 this.dialogFormVisible = !this.dialogFormVisible;
+            },
+            cancel(){
+                this.$router.push('subOrderList');
             },
             handleQuery(){
                 this.getFoods();

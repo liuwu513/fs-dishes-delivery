@@ -75,7 +75,7 @@ public class GradeDataSource implements JRDataSource {
 			{ "高一(8)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
 			{ "高一(9)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
 			{ "高一(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) } 
+			{ "高三(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) }
 			};
 
 	private int index = -1;
@@ -120,6 +120,8 @@ public class GradeDataSource implements JRDataSource {
 			value = data[index][6];
 		} else if ("badmintonNum".equals(fieldName)) {
 			value = data[index][7];
+		}else if ("pageNo".equals(fieldName)){
+			value = 1;
 		}
 		return value;
 	}

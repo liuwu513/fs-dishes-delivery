@@ -1,6 +1,7 @@
 package com.fs.dishes.module.common.report.controller;
 
 import com.fs.dishes.base.controller.AbstractController;
+import com.fs.dishes.base.view.HtmlReportView;
 import com.fs.dishes.base.view.PdfReportView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,13 @@ public class OrderReportController extends AbstractController {
     public ModelAndView viewHtml(HttpServletResponse response) throws Exception {
         GradeDataSource gradeDataSource = new GradeDataSource();
         return new ModelAndView(new PdfReportView("template/SecondReport.jasper", "professors"),
+                "", gradeDataSource);
+    }
+
+    @RequestMapping("viewOrderDetail1")
+    public ModelAndView viewHtml1(HttpServletResponse response) throws Exception {
+        GradeDataSource gradeDataSource = new GradeDataSource();
+        return new ModelAndView(new HtmlReportView("template/SecondReport.jasper", "professors"),
                 "", gradeDataSource);
     }
 

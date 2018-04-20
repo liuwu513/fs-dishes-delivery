@@ -185,6 +185,8 @@
             }
         },
         created(){
+        },
+        activated() {
             this.initData();
             this.getMenu();
         },

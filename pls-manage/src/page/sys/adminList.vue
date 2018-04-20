@@ -16,8 +16,13 @@
                     width="220">
                 </el-table-column>
                 <el-table-column
-                    property="email"
-                    label="邮箱"
+                    property="company"
+                    label="公司名称"
+                    width="220">
+                </el-table-column>
+                <el-table-column
+                    property="wechat"
+                    label="微信号"
                     width="220">
                 </el-table-column>
                 <el-table-column
@@ -62,6 +67,8 @@
             headTop,
         },
         created(){
+        },
+        activated() {
             this.initData();
         },
         methods: {
@@ -90,7 +97,9 @@
                             const tableItem = {
                                 username: item.username,
                                 email: item.email,
-                                mobile: item.mobile
+                                mobile: item.mobile,
+                                company: item.company,
+                                wechat: item.wechat
                             }
                             this.tableData.push(tableItem);
                         })

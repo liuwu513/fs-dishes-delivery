@@ -115,6 +115,8 @@
             headTop,
         },
         created(){
+        },
+        activated() {
             this.initData();
         },
         methods: {

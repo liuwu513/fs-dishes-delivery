@@ -3,22 +3,22 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const login = r => require.ensure([], () => r(require('@/page/sys/login')), 'login');
-const manage = r => require.ensure([], () => r(require('@/page/sys/manage')), 'manage');
-const home = r => require.ensure([], () => r(require('@/page/common/home')), 'home');
-const addShop = r => require.ensure([], () => r(require('@/page/res/addShop')), 'addShop');
-const addGoods = r => require.ensure([], () => r(require('@/page/res/addGoods')), 'addGoods');
-const adminList = r => require.ensure([], () => r(require('@/page/sys/adminList')), 'adminList');
-const userList = r => require.ensure([], () => r(require('@/page/sys/userList')), 'userList');
-const shopList = r => require.ensure([], () => r(require('@/page/res/shopList')), 'shopList');
-const foodList = r => require.ensure([], () => r(require('@/page/res/foodList')), 'foodList');
-const speciesList = r => require.ensure([], () => r(require('@/page/res/speciesList')), 'speciesList');
-const customerList = r => require.ensure([], () => r(require('@/page/res/customerList')), 'customerList');
-const orderList = r => require.ensure([], () => r(require('@/page/order/orderList')), 'orderList');
-const subOrderList = r => require.ensure([], () => r(require('@/page/order/subOrderList')), 'subOrderList');
-const addSubOrder = r => require.ensure([], () => r(require('@/page/order/addSubOrder')), 'addSubOrder');
-const uploadImg = r => require.ensure([], () => r(require('@/page/common/uploadImg')), 'uploadImg');
-const adminSet = r => require.ensure([], () => r(require('@/page/sys/adminSet')), 'adminSet');
+const login = resolve => require(['@/page/sys/login'], resolve)
+const manage = resolve => require(['@/page/sys/manage'], resolve)
+const home = resolve => require(['@/page/common/home'], resolve)
+const addShop = resolve => require(['@/page/res/addShop'], resolve)
+const addGoods = resolve => require(['@/page/res/addGoods'], resolve)
+const adminList = resolve => require(['@/page/sys/adminList'], resolve)
+const userList = resolve => require(['@/page/sys/userList'], resolve)
+const shopList =  resolve => require(['@/page/res/shopList'], resolve);
+const foodList =  resolve => require(['@/page/res/foodList'], resolve);
+const speciesList = resolve => require(['@/page/res/speciesList'], resolve)
+const customerList = resolve => require(['@/page/res/customerList'], resolve)
+const orderList = resolve => require(['@/page/order/orderList'], resolve)
+const subOrderList = resolve => require(['@/page/order/subOrderList'], resolve)
+const addSubOrder = resolve => require(['@/page/order/addSubOrder'], resolve)
+const uploadImg = resolve => require(['@/page/common/uploadImg'], resolve)
+const adminSet = resolve => require(['@/page/sys/adminSet'], resolve)
 
 const routes = [
 	{
@@ -59,6 +59,7 @@ const routes = [
 		},{
 			path: '/foodList',
 			component: foodList,
+            // component:import('@/page/res/foodList'),
             meta: {
                 auth:true,
                 nabs: ['资源管理', '食品列表']
@@ -103,8 +104,9 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    routes: routes,
-    strict: process.env.NODE_ENV !== 'production',
+    mode:'history',
+    routes: routes
+    // strict: process.env.NODE_ENV !== 'production',
 })
 
 router.beforeEach((to, from, next) => {
