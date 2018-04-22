@@ -53,7 +53,7 @@ compiler.plugin('compilation', function (compilation) {
 var context = config.dev.context
 
 switch(process.env.NODE_ENV){
-    case 'local': var proxypath = 'http://127.0.0.1:8080'; break;
+    case 'local': var proxypath = 'http://127.0.0.1:8080/manage'; break;
     case 'online': var proxypath = 'http://cangdu.org:8001'; break;
 }
 var options = {

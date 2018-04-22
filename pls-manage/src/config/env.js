@@ -9,9 +9,9 @@ let baseUrl = '';
 let routerMode = 'history';
 
 if (process.env.NODE_ENV == 'development') {
-    baseUrl = 'http://127.0.0.1:8080';
+    baseUrl = 'http://127.0.0.1:8080/manage';
 } else {
-    baseUrl = 'http://www.yuhandd.cn:8001';
+    baseUrl = 'http://yuhandd.cn/manage';
 }
 
 export {

@@ -161,7 +161,6 @@ public class PlsFoodService extends BaseService {
             plsFoodDao.updateByPrimaryKeySelective(plsFood);
             logger.info("食品名称:{}，更新成功", plsFood.getName());
         } else {
-            plsFood.setId(IdGen.uuid());
             plsFood.setCreateBy(getUserId());
             plsFood.setCreateTime(new Date());
             plsFood.setStatus(Constant.DataState.NORMAL.getValue());

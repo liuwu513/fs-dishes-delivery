@@ -12,8 +12,13 @@
                 </el-table-column>
                 <el-table-column
                     property="username"
+                    label="用户名"
+                    width="150">
+                </el-table-column>
+                <el-table-column
+                    property="nickname"
                     label="用户姓名"
-                    width="220">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     property="company"
@@ -23,11 +28,11 @@
                 <el-table-column
                     property="wechat"
                     label="微信号"
-                    width="220">
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     property="mobile"
-                    label="手机号">
+                    label="120">
                 </el-table-column>
                 <el-table-column
                     prop="admin"
@@ -96,6 +101,7 @@
                         res.data.list.forEach(item => {
                             const tableItem = {
                                 username: item.username,
+                                nickname: item.nickname,
                                 email: item.email,
                                 mobile: item.mobile,
                                 company: item.company,

@@ -35,7 +35,7 @@
 	export default {
 	    data(){
 			return {
-                captchaLink: baseUrl+ '/api/captcha.jpg',
+                captchaLink: baseUrl+ '/api/captcha',
 				loginForm: {
 					username: '',
 					password: '',
@@ -94,7 +94,7 @@
 				});
 			},
             editCaptcha () {
-                this.captchaLink = baseUrl + '/api/captcha.jpg?sign='+Math.random();
+                this.captchaLink = baseUrl + '/api/captcha?sign='+Math.random();
                 console.log(this.captchaLink);
             }
 		},

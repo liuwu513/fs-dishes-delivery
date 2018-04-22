@@ -64,7 +64,8 @@
 		insert into sys_user
 		(
 			`user_id`, 
-			`username`, 
+			`username`,
+			`nickname`,
 			`password`,
 			`salt`,
 			`email`, 
@@ -76,7 +77,8 @@
 		values
 		(
 			#{userId}, 
-			#{username}, 
+			#{username},
+			 #{nickname},
 			#{password},
 			#{salt},
 			#{email}, 

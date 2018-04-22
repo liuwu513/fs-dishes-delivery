@@ -23,77 +23,41 @@
  */
 package com.fs.dishes.module.common.report.controller;
 
+import com.fs.dishes.module.order.entity.PlsOrderFood;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 
-/**
- * @author Teodor Danciu (teodord@users.sourceforge.net)
- */
-public class GradeDataSource implements JRDataSource {
+import java.util.List;
+import java.util.Map;
 
-	/**
-	 *
-	 */
-	private Object[][] data = { 
-			{ "高一(1)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(2)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(3)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(4)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(5)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(6)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(7)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(8)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(9)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(1)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(2)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(3)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(4)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(5)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(6)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(7)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(8)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(9)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高二(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(1)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(2)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(3)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(4)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(5)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(6)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(7)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(8)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(9)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(1)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(2)班", new Integer(55), "化学", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(3)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(4)班", new Integer(55), "生物", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(5)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(6)班", new Integer(55), "物理", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(7)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(8)班", new Integer(55), "体育", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(9)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高一(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) },
-			{ "高三(10)班", new Integer(55), "美术", new Integer(22), new Integer(33), new Integer(20), new Integer(10), new Integer(25) }
-			};
+/**
+ * 刘武
+ */
+public class OrderDataSource implements JRDataSource {
+
+	private Map<String,Object> modelMap;
+
+	private List<PlsOrderFood> data;
 
 	private int index = -1;
 
-	/**
-	 *
-	 */
-	public GradeDataSource() {
-		
+	public OrderDataSource() {
 	}
 
 	/**
 	 *
 	 */
+	public OrderDataSource(Map<String,Object> modelMap) {
+		this.modelMap = modelMap;
+	}
+
+	/**
+	 * 获取下一个数据
+	 */
 	public boolean next() throws JRException {
 		index++;
-
-		return (index < data.length);
+		return (index < data.size());
 	}
 
 	/**
@@ -103,26 +67,6 @@ public class GradeDataSource implements JRDataSource {
 		Object value = null;
 
 		String fieldName = field.getName();
-
-		if ("grade".equals(fieldName)) {
-			value = data[index][0];
-		} else if ("grade_stu_num".equals(fieldName)) {
-			value = data[index][1];
-		} else if ("class".equals(fieldName)) {
-			value = data[index][2];
-		} else if ("boys".equals(fieldName)) {
-			value = data[index][3];
-		} else if ("girls".equals(fieldName)) {
-			value = data[index][4];
-		} else if ("basketballNum".equals(fieldName)) {
-			value = data[index][5];
-		} else if ("footballNum".equals(fieldName)) {
-			value = data[index][6];
-		} else if ("badmintonNum".equals(fieldName)) {
-			value = data[index][7];
-		}else if ("pageNo".equals(fieldName)){
-			value = 1;
-		}
 		return value;
 	}
 

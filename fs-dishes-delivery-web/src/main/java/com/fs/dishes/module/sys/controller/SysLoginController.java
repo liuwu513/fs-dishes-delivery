@@ -42,7 +42,7 @@ public class SysLoginController {
     private SysUserTokenService sysUserTokenService;
 
     @ApiOperation(value = "验证码图片", notes = "验证码图片", httpMethod = "GET")
-    @RequestMapping("captcha.jpg")
+    @RequestMapping("captcha")
     public void captcha(HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
         response.setContentType("image/jpeg");

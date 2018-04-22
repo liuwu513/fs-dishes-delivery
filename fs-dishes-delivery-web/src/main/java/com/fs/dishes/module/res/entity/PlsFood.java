@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class PlsFood extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;   //主键ID
+    private Long id;   //主键ID
     private String name;//食品名称
     private String details;//食品详情
     private Long speciesId;//食品种类ID

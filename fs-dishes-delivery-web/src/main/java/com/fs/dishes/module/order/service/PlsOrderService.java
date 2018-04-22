@@ -125,13 +125,13 @@ public class PlsOrderService extends BaseService {
         params.put("subOrderId", orderId);
         List<PlsOrderFood> list = plsOrderFoodDao.queryList(params);
         if (CollectionUtils.isNotEmpty(list)) {
-            List<String> foodIdList = list.stream().map(PlsOrderFood::getFoodId).collect(Collectors.toList());
+            List<Long> foodIdList = list.stream().map(PlsOrderFood::getFoodId).collect(Collectors.toList());
             Map<String, Object> foodParams = Maps.newHashMap();
             foodParams.put("idList", foodIdList);
             foodParams.put("status", Constant.DataState.NORMAL.getValue());
             List<PlsFood> foodList = plsFoodDao.queryList(foodParams);
             if (CollectionUtils.isNotEmpty(foodList)) {
-                Map<String, PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
+                Map<Long, PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
                 for (PlsOrderFood plsOrderFood : list) {
                     PlsFood plsFood = foodMap.get(plsOrderFood.getFoodId());
                     if (plsFood != null) {

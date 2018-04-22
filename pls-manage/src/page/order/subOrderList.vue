@@ -70,7 +70,7 @@
                             size="small"
                             @click="handleEdit(scope.row)">编辑
                         </el-button>
-                        <a :href="baseUrl + viewLink" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
+                        <a :href="baseUrl + viewLink + scope.row.id + token" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
                         <!--<el-button-->
                             <!--size="small"-->
                             <!--@click="handleDetails(scope.row)">查看详情-->
@@ -101,12 +101,14 @@
     import headTop from '../../components/headTop'
     import {moment} from '@/config/moment'
     import {baseUrl} from '@/config/env'
+    import {setStore, getStore, removeStore} from '@/config/mUtils'
     import {listSubOrder,addSubOrder,deleteSubOrders,paymentSubOrder} from '@/api/getData'
     export default {
         data(){
             return {
                 baseUrl,
-                viewLink: '/api/rpt/viewOrderDetail',
+                token: '?token='+ getStore('token'),
+                viewLink: '/api/rpt/viewOrderDetail/',
                 tableData: [],
                 currentRow: null,
                 limit: 10,

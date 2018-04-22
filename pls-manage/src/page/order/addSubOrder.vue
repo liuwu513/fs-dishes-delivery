@@ -291,6 +291,15 @@
                 this.getFoods();
             },
     		async initData(){
+                this.subOrderForm = {
+                    id: null,
+                    name: '',
+                    customerId: '',
+                    remarks: '',
+                    mainOrderId: null
+                };
+                this.tableFoodData = [];
+
                 this.getCustomers();
                 this.getMenu();
                 this.getFoods();

@@ -31,6 +31,8 @@ public class SysUser implements Serializable {
 	@NotBlank(message="用户名不能为空", groups = {AddGroup.class, UpdateGroup.class})
 	private String username;
 
+	private String nickname;
+
 	/**
 	 * 密码
 	 */
