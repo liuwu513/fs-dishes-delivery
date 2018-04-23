@@ -4,6 +4,7 @@ import com.fs.dishes.base.common.Constant;
 import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
 import com.fs.dishes.base.utils.IdGen;
+import com.fs.dishes.module.order.dao.PlsMainOrderDao;
 import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
 import com.fs.dishes.module.order.entity.PlsMainOrder;
 import com.fs.dishes.module.order.entity.PlsOrderFood;
@@ -19,6 +20,7 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +55,17 @@ public class PlsFoodService extends BaseService {
         params.put("status", status);
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsFood> list = plsFoodDao.queryList(params);
+
+        Map<Long, BigDecimal> priceMap = Maps.newHashMap();
+        Long mainOrderId = MapUtils.getLong(params, "mainOrderId");
+        if (mainOrderId != null) {
+            List<Map<String, Object>> orderFoodMapList = plsOrderFoodDao.queryPriceByMainOrderId(mainOrderId);
+            if (CollectionUtils.isEmpty(orderFoodMapList)) {
+                priceMap = orderFoodMapList.stream().collect(Collectors.toMap(item -> Long.valueOf(item.get("food_id").toString()),
+                        item -> BigDecimal.valueOf(Double.valueOf(item.get("unit_price").toString()))));
+            }
+        }
+
         PageInfo<PlsFood> page = new PageInfo<>(list);
         logger.info("搜索条件：{}，搜索到的食品信息共{}条", params, page.getTotal());
         List<PlsFood> foodList = page.getList();
@@ -66,9 +79,10 @@ public class PlsFoodService extends BaseService {
             List<PlsFoodSpecies> speciesList = plsFoodSpeciesDao.queryList(query);
             if (CollectionUtils.isNotEmpty(speciesIdList)) {
                 Map<Long, String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId, PlsFoodSpecies::getName));
-                foodList.forEach(item -> {
-                    item.setSpeciesName(speciesMap.get(item.getSpeciesId()));
-                });
+                for (PlsFood food : foodList) {
+                    food.setPrice(priceMap.get(food.getId()));
+                    food.setSpeciesName(speciesMap.get(food.getSpeciesId()));
+                }
             }
         }
         return ResResult.ok().withData(page);

@@ -392,6 +392,7 @@
                     pageNo: this.currentPage,
                     pageSize: this.limit,
                     speciesId: this.queryForm.speciesId,
+                    mainOrderId: this.subOrderForm.mainOrderId,
                     name: this.queryForm.name
                 });
                 if (Foods.code == 200) {
