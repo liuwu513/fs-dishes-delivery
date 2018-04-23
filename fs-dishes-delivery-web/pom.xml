@@ -6,7 +6,7 @@
 	<groupId>com.fs.dishes</groupId>
 	<artifactId>fs-dishes-delivery-web</artifactId>
 	<version>1.0.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>fs-dishes-delivery-web</name>
 	<description>佛山配送系统工程</description>

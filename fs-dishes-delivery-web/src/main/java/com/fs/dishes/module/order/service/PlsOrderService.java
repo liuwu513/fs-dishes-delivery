@@ -22,6 +22,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -246,6 +247,22 @@ public class PlsOrderService extends BaseService {
                     plsOrderFoodDao.updateByPrimaryKey(plsOrderFood);
                 }
                 logger.info("更新子单{}商品信息共{}个，更新成功", subOrderId, updateList.size());
+            }
+            if (mainOrderId != null){
+                Example example = new Example(PlsSubOrder.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("mainOrderId",mainOrderId);
+                criteria.andEqualTo("status",Constant.DataState.NORMAL.getValue());
+                List<PlsSubOrder> subOrderList = plsSubOrderDao.selectByExample(example);
+                if (CollectionUtils.isNotEmpty(subOrderList)){
+                    BigDecimal totalAmount = BigDecimal.ZERO;
+                    for (PlsSubOrder subOrder : subOrderList) {
+                        totalAmount = totalAmount.add(subOrder.getTotalAmount());
+                    }
+                    PlsMainOrder plsMainOrder = plsMainOrderDao.selectByPrimaryKey(mainOrderId);
+                    plsMainOrder.setTotalAmount(totalAmount);
+                    plsMainOrderDao.updateByPrimaryKey(plsMainOrder);
+                }
             }
             return ResResult.ok().withData(Boolean.TRUE);
         }

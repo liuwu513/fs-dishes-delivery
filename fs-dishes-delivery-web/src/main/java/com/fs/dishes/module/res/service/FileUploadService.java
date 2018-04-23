@@ -23,7 +23,10 @@ public class FileUploadService extends BaseService{
     @Value("${file.upload.path}")
     private String path;
 
-    public ResResult uploadImg(MultipartFile imgfile, String rootPath) {
+    @Value("${file.upload.relativePath}")
+    private String relativePath;
+
+    public ResResult uploadImg(MultipartFile imgfile) {
         if (imgfile == null) {
             return ResResult.error(300, "上传失败：文件为空");
         }
@@ -35,14 +38,14 @@ public class FileUploadService extends BaseService{
         if (StringUtils.isNotBlank(origFile)) {
             suffix = origFile.substring(origFile.lastIndexOf("."));
         }
-        String uploadPath = rootPath;
-        String relativePath = File.separator + path + File.separator + IdGen.uuid() + suffix;
-        String filePath = uploadPath + relativePath;
-        logger.info("图片上传目录：{}，上传地址：{}", rootPath, filePath);
+        String uploadPath = path;
+        String realRelativePath = relativePath + File.separator + IdGen.uuid() + suffix;
+        String filePath = uploadPath + realRelativePath;
+        logger.info("图片上传目录：{}，上传地址：{}", path, filePath);
         try {
             File file = new File(filePath);
             imgfile.transferTo(file);
-            return ResResult.ok().withData(relativePath);
+            return ResResult.ok().withData(realRelativePath);
         } catch (Exception e) {
             logger.error("图片上传失败", e);
             return ResResult.error(300, "文件上传失败，请重新上传！");

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 /**
  * 配送主单
@@ -24,6 +25,6 @@ public class PlsMainOrder extends BaseEntity {
     private String details;    //主单详情
     private Integer status;      //数据状态
     private Integer payStatus;   //支付状态
-    private String totalAmount;    //主单总金额
-    private String discountAmount;    //主单总优惠金额
+    private BigDecimal totalAmount;    //主单总金额
+    private BigDecimal discountAmount;    //主单总优惠金额
 }

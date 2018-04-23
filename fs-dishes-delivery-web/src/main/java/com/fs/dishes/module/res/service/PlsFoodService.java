@@ -80,7 +80,9 @@ public class PlsFoodService extends BaseService {
             if (CollectionUtils.isNotEmpty(speciesIdList)) {
                 Map<Long, String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId, PlsFoodSpecies::getName));
                 for (PlsFood food : foodList) {
-                    food.setPrice(priceMap.get(food.getId()));
+                    if (priceMap.get(food.getId()) != null){
+                        food.setPrice(priceMap.get(food.getId()));
+                    }
                     food.setSpeciesName(speciesMap.get(food.getSpeciesId()));
                 }
             }

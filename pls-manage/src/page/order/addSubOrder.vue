@@ -405,7 +405,7 @@
                         tableData.speciesId = item.speciesId;
                         tableData.speciesName = item.speciesName;
                         tableData.details = item.details;
-                        tableData.imgLink = baseUrl + item.imgLink;
+                        tableData.imgLink = item.imgLink;
                         tableData.price = item.price;
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;

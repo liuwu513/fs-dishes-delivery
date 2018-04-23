@@ -40,4 +40,5 @@ spring:
 file:
   upload:
     max-size: 10000000
-    path: uploadfiles
+    path: /home
+    relativePath: /static/uploadfiles/

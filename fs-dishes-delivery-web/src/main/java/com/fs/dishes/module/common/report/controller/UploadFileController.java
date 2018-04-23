@@ -4,6 +4,7 @@ import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.controller.AbstractController;
 import com.fs.dishes.module.res.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,13 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/upload")
 public class UploadFileController extends AbstractController {
 
-
     @Autowired
     private FileUploadService fileUploadService;
 
     @RequestMapping(value = "/img", method = RequestMethod.POST)
     public ResResult uploadImg(@RequestParam("imgFile") MultipartFile imgFile) {
-        String rootUrl = getRealPath("static");
-        return fileUploadService.uploadImg(imgFile, rootUrl);
+        return fileUploadService.uploadImg(imgFile);
     }
 }

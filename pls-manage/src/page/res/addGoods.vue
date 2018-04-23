@@ -63,7 +63,7 @@
 						  :show-file-list="false"
 						  :on-success="uploadImg"
 						  :before-upload="beforeImgUpload" name="imgFile">
-						  <img v-if="foodForm.imgLink" :src="baseUrl + foodForm.imgLink" class="avatar">
+						  <img v-if="foodForm.imgLink" :src="foodForm.imgLink" class="avatar">
 						  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
 					</el-form-item>
