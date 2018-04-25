@@ -32,7 +32,7 @@
                 </el-table-column>
                 <el-table-column
                     property="mobile"
-                    label="120">
+                    label="手机号码">
                 </el-table-column>
                 <el-table-column
                     prop="admin"
