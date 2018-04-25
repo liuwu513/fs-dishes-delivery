@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SecondReport" language="groovy" pageWidth="683" pageHeight="842" columnWidth="643" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" isIgnorePagination="true" uuid="51f6facd-e16f-4565-ab96-00f1cbfdbc26">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="324"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="tb_th" mode="Opaque" fill="Solid">
 		<box>
@@ -29,6 +29,7 @@
 	<field name="createOrderBy" class="java.lang.String"/>
 	<field name="phone" class="java.lang.String"/>
 	<field name="unitPrice" class="java.math.BigDecimal"/>
+	<field name="index" class="java.lang.Integer"/>
 	<variable name="sum_number" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{number}]]></variableExpression>
 	</variable>
@@ -105,7 +106,7 @@
 	<pageHeader>
 		<band height="29" splitType="Stretch">
 			<staticText>
-				<reportElement x="301" y="0" width="66" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="5a546ee6-bd1f-405a-9884-b14a3c687934"/>
+				<reportElement x="331" y="0" width="65" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="5a546ee6-bd1f-405a-9884-b14a3c687934"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -119,7 +120,7 @@
 				<text><![CDATA[订购数量]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="367" y="0" width="62" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="ddeeb441-618c-4612-9038-2a4b37df81a7"/>
+				<reportElement x="396" y="0" width="63" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="ddeeb441-618c-4612-9038-2a4b37df81a7"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -133,7 +134,7 @@
 				<text><![CDATA[含税单价]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="429" y="0" width="81" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="501ebc9c-21ba-4031-a6e6-b900faa2ec33"/>
+				<reportElement x="459" y="0" width="82" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="501ebc9c-21ba-4031-a6e6-b900faa2ec33"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -147,21 +148,7 @@
 				<text><![CDATA[价税合计]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="171" y="0" width="57" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="f8daac5c-04e5-4b6a-9aeb-e0ded71ba833"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[规格]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="510" y="0" width="132" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="ed79c2f0-1599-40e9-a907-f639488b4c94"/>
+				<reportElement x="541" y="0" width="101" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="ed79c2f0-1599-40e9-a907-f639488b4c94"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -175,7 +162,7 @@
 				<text><![CDATA[备注]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="08ad18c4-828a-4083-b03f-25fcd08a6fa8"/>
+				<reportElement x="64" y="0" width="72" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="08ad18c4-828a-4083-b03f-25fcd08a6fa8"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -189,7 +176,7 @@
 				<text><![CDATA[食品代码]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="64" y="0" width="107" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="8e9905e4-07c6-4c96-add1-c475a1b1a8d0"/>
+				<reportElement x="136" y="0" width="115" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="8e9905e4-07c6-4c96-add1-c475a1b1a8d0"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -203,7 +190,7 @@
 				<text><![CDATA[存货名称]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="228" y="0" width="73" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="f2f959bc-ba1c-432e-a625-4e67aaa0cca6"/>
+				<reportElement x="251" y="0" width="80" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="f2f959bc-ba1c-432e-a625-4e67aaa0cca6"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -215,6 +202,20 @@
 					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="3244769b-aa55-4c13-8412-5ec9c5bc5a2f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -229,7 +230,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 			</break>
 			<elementGroup>
 				<textField isBlankWhenNull="true">
-					<reportElement x="301" y="0" width="66" height="29" forecolor="#0099FF" uuid="ef1883ff-2bc9-4811-860d-5faf7616f466"/>
+					<reportElement x="331" y="0" width="65" height="29" forecolor="#0099FF" uuid="ef1883ff-2bc9-4811-860d-5faf7616f466"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -244,7 +245,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="228" y="0" width="73" height="29" forecolor="#0099FF" uuid="709dd31c-5b85-4c40-8c15-98bafb098fc7"/>
+					<reportElement x="251" y="0" width="80" height="29" forecolor="#0099FF" uuid="709dd31c-5b85-4c40-8c15-98bafb098fc7"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -259,7 +260,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{unitName}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="367" y="0" width="62" height="29" forecolor="#0099FF" uuid="813a99fb-893c-4b42-be85-f1d6481bb6f7"/>
+					<reportElement x="396" y="0" width="63" height="29" forecolor="#0099FF" uuid="813a99fb-893c-4b42-be85-f1d6481bb6f7"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -274,7 +275,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{unitPrice}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="510" y="0" width="132" height="29" forecolor="#0099FF" uuid="fe1d1402-f229-4c4d-95b5-be330a710987"/>
+					<reportElement x="541" y="0" width="101" height="29" forecolor="#0099FF" uuid="fe1d1402-f229-4c4d-95b5-be330a710987"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -289,7 +290,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" uuid="6cea25f4-2623-4a61-ab62-c4f2c1248dff"/>
+					<reportElement x="64" y="0" width="72" height="29" forecolor="#0099FF" uuid="6cea25f4-2623-4a61-ab62-c4f2c1248dff"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -304,22 +305,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{foodId}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="171" y="0" width="57" height="29" forecolor="#0099FF" uuid="782e1055-02be-4b16-bc4f-8e2eb46a3550"/>
-					<box>
-						<pen lineWidth="1.0"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="1.0"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="宋体" size="12" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{class}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="64" y="0" width="107" height="29" forecolor="#0099FF" uuid="7bd91645-bfe6-4ea1-9576-51c1678ac6cc"/>
+					<reportElement x="136" y="0" width="115" height="29" forecolor="#0099FF" uuid="7bd91645-bfe6-4ea1-9576-51c1678ac6cc"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -334,7 +320,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 					<textFieldExpression><![CDATA[$F{foodName}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="429" y="0" width="81" height="29" forecolor="#0099FF" uuid="25783115-9120-4093-98dc-aef637165e38"/>
+					<reportElement x="459" y="0" width="82" height="29" forecolor="#0099FF" uuid="25783115-9120-4093-98dc-aef637165e38"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -347,6 +333,21 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" uuid="8b8d2ecb-a942-4e09-81fd-14aedf1b6f56"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="宋体" size="12" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{index}]]></textFieldExpression>
 				</textField>
 			</elementGroup>
 		</band>
@@ -361,14 +362,14 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				<text><![CDATA[制单人：]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="251" y="0" width="98" height="18" forecolor="#0099FF" backcolor="#FFFFFF" uuid="b0b7a787-21dc-4173-bae0-775a13d4708d"/>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="251" y="1" width="98" height="18" forecolor="#0099FF" backcolor="#FFFFFF" uuid="b0b7a787-21dc-4173-bae0-775a13d4708d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[送货人签字：]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="430" y="0" width="98" height="18" forecolor="#0099FF" backcolor="#FFFFFF" uuid="a95ddebe-8975-4d32-ac14-9f130e8894b8"/>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="430" y="1" width="98" height="18" forecolor="#0099FF" backcolor="#FFFFFF" uuid="a95ddebe-8975-4d32-ac14-9f130e8894b8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -414,7 +415,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				<text><![CDATA[所有汇总：]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="64" y="29" width="107" height="29" forecolor="#0099FF" uuid="629dfe6f-fcb2-4b1f-9bef-f731056bbee9"/>
+				<reportElement x="136" y="29" width="115" height="29" forecolor="#0099FF" uuid="629dfe6f-fcb2-4b1f-9bef-f731056bbee9"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -427,20 +428,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="171" y="29" width="57" height="29" forecolor="#0099FF" uuid="9d9d878a-1f7d-41a3-8f46-bae3aff5425f"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-				</textElement>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="228" y="29" width="73" height="29" forecolor="#0099FF" uuid="977486b5-d7a0-4a8d-95b1-09c67c5808fa"/>
+				<reportElement x="251" y="29" width="80" height="29" forecolor="#0099FF" uuid="977486b5-d7a0-4a8d-95b1-09c67c5808fa"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -453,7 +441,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="301" y="29" width="66" height="29" forecolor="#0099FF" uuid="43906b50-9ff0-4e1e-8ba7-e62296bb33e7"/>
+				<reportElement x="331" y="29" width="65" height="29" forecolor="#0099FF" uuid="43906b50-9ff0-4e1e-8ba7-e62296bb33e7"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -467,7 +455,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				<textFieldExpression><![CDATA[$V{sum_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="367" y="29" width="62" height="29" forecolor="#0099FF" uuid="6e08dbfd-06d0-4cc1-afd3-0d00127ea808"/>
+				<reportElement x="396" y="29" width="63" height="29" forecolor="#0099FF" uuid="6e08dbfd-06d0-4cc1-afd3-0d00127ea808"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -480,7 +468,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="429" y="29" width="81" height="29" forecolor="#0099FF" uuid="dfeb9c78-5e13-4e77-b033-885cbbaa727a"/>
+				<reportElement x="459" y="29" width="82" height="29" forecolor="#0099FF" uuid="dfeb9c78-5e13-4e77-b033-885cbbaa727a"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -494,7 +482,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				<textFieldExpression><![CDATA[$V{sum_amount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="29" width="132" height="29" forecolor="#0099FF" uuid="f8731653-5112-4e4d-a365-68f91f354284"/>
+				<reportElement x="541" y="29" width="101" height="29" forecolor="#0099FF" uuid="f8731653-5112-4e4d-a365-68f91f354284"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -507,7 +495,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<staticText>
-				<reportElement x="64" y="0" width="107" height="29" forecolor="#0099FF" uuid="331fd4ce-5424-40db-8e75-12bf8d6c0061"/>
+				<reportElement x="136" y="0" width="115" height="29" forecolor="#0099FF" uuid="331fd4ce-5424-40db-8e75-12bf8d6c0061"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -521,20 +509,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="171" y="0" width="57" height="29" forecolor="#0099FF" uuid="b65849a7-8c80-4d08-b05d-ad44ea7554fc"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-				</textElement>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="228" y="0" width="73" height="29" forecolor="#0099FF" uuid="fc7a57ef-dbf8-49e0-98d9-5eb7278b68ba"/>
+				<reportElement x="251" y="0" width="80" height="29" forecolor="#0099FF" uuid="fc7a57ef-dbf8-49e0-98d9-5eb7278b68ba"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -547,7 +522,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="301" y="0" width="66" height="29" forecolor="#0099FF" uuid="e5ae6eed-7c53-4068-972f-1d2f16a372be"/>
+				<reportElement x="331" y="0" width="65" height="29" forecolor="#0099FF" uuid="e5ae6eed-7c53-4068-972f-1d2f16a372be"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -560,7 +535,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="367" y="0" width="62" height="29" forecolor="#0099FF" uuid="05e5190e-08a7-42cb-a2d0-b29d882e4ee6"/>
+				<reportElement x="396" y="0" width="63" height="29" forecolor="#0099FF" uuid="05e5190e-08a7-42cb-a2d0-b29d882e4ee6"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -573,7 +548,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="429" y="0" width="81" height="29" forecolor="#0099FF" uuid="1ef34f6e-809f-4165-b757-023d04a063d6"/>
+				<reportElement x="459" y="0" width="82" height="29" forecolor="#0099FF" uuid="1ef34f6e-809f-4165-b757-023d04a063d6"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -586,7 +561,7 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="510" y="0" width="132" height="29" forecolor="#0099FF" uuid="5743bac7-d3b9-4660-9d39-0d6b1657cef9"/>
+				<reportElement x="541" y="0" width="101" height="29" forecolor="#0099FF" uuid="5743bac7-d3b9-4660-9d39-0d6b1657cef9"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -599,7 +574,34 @@ new Boolean($V{PAGE_NUMBER}>1)]]></printWhenExpression>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" uuid="98ad165e-14b8-4b9b-8eaf-9894ce4ed0f7"/>
+				<reportElement x="64" y="0" width="72" height="29" forecolor="#0099FF" uuid="98ad165e-14b8-4b9b-8eaf-9894ce4ed0f7"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="64" height="29" forecolor="#0099FF" backcolor="#CCFFFF" uuid="59417110-3263-4898-93d5-b7742c10601c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="29" width="72" height="29" forecolor="#0099FF" uuid="77eaf9bc-c8f7-475a-be23-2b2eea448003"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>

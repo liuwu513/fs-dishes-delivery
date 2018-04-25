@@ -9,7 +9,7 @@
 						<el-input v-model="subOrderForm.name"></el-input>
 					</el-form-item>
                     <el-form-item label="客户" prop="customerId">
-                        <el-select v-model="subOrderForm.customerId" :placeholder="customerItem.label"  style="width: 100%;">
+                        <el-select v-model="subOrderForm.customerId" :placeholder="customerItem.label" @change="chooseCustomer(subOrderForm.customerId)" style="width: 100%;">
                             <el-option
                                 v-for="item in customerList"
                                 :key="item.value"
@@ -30,7 +30,7 @@
                                         <el-select v-model="queryForm.speciesId" placeholder="请选择食品分类" style="width:200px;">
                                             <el-option
                                                 v-for="item in menuSelectOptions"
-                                                :key="item.value + 'B'"
+                                                :key="item.value + 'C'"
                                                 :label="item.label"
                                                 :value="item.value">
                                             </el-option>
@@ -148,7 +148,7 @@
 
 <script>
  	import headTop from '@/components/headTop'
-    import {getCustomers, getFoods,getSpecies,addSubOrder,getSubOrder} from '@/api/getData'
+    import {getCustomers, getFoods,getSpecies,addSubOrder,getSubOrder,getSubByCsIdOrder} from '@/api/getData'
     import {baseUrl} from '@/config/env'
     export default {
     	data(){
@@ -230,6 +230,46 @@
             },
             handleDelete(index, row){
                 this.tableFoodData.splice(index, 1);
+            },
+            async chooseCustomer(customerId){
+                //如若为新增，则联想到客户最近下单数据填充食品列表
+                if (this.subOrderForm.id == null){
+                    try{
+                        const result = await getSubByCsIdOrder({
+                            customerId: customerId
+                        });
+                        if (result.code == 200) {
+                            const data = result.data;
+                            if(data == null){
+                                return false;
+                            }
+                            this.subOrderForm = {
+                                id: data.id,
+                                name: data.name,
+                                customerId: data.customerId,
+                                remarks: data.remarks,
+                                mainOrderId: data.mainOrderId
+                            };
+                            this.tableFoodData = [];
+                            data.list.forEach((item, index) => {
+                                this.tableFoodData.push({
+                                    id: item.id,
+                                    name: item.name,
+                                    mainOrderId: item.mainOrderId,
+                                    subOrderId: item.subOrderId,
+                                    foodId: item.foodId,
+                                    number: item.number,
+                                    unitPrice: item.unitPrice,
+                                    unitName: this.unitList[item.unitId - 1].label
+                                });
+                            })
+                        }else{
+                            console.log(result)
+                        }
+                    }catch(err){
+                        console.log(err)
+                    }
+                }
             },
             handleSelection(){
                 const selectIds = [];

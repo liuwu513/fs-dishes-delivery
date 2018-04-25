@@ -146,6 +146,31 @@ public class PlsOrderService extends BaseService {
         return ResResult.ok().withData(subOrder);
     }
 
+
+    /**
+     * 根据客户ID获取该客户最近下的子单食品数据
+     * @param customerId
+     * @return
+     */
+    public ResResult getSubByCustomerId(Long customerId){
+        Long subOrderId = plsSubOrderDao.getSubIdByCustomerId(customerId);
+        if (subOrderId != null){
+            ResResult resResult = getSubById(subOrderId);
+            if (resResult.getData() != null){
+                PlsSubOrder plsSubOrder = (PlsSubOrder)resResult.getData();
+                //设置ID为空
+                plsSubOrder.setId(null);
+                if (CollectionUtils.isNotEmpty(plsSubOrder.getList())){
+                    plsSubOrder.getList().forEach(item->{
+                        item.setId(StringUtils.EMPTY);
+                    });
+                }
+                return resResult;
+            }
+        }
+        return ResResult.ok();
+    }
+
     /**
      * 创建主单
      *
@@ -196,6 +221,7 @@ public class PlsOrderService extends BaseService {
             List<PlsOrderFood> orderFoodList = subOrder.getList();
             BigDecimal totalAmount = BigDecimal.ZERO;
             for (PlsOrderFood plsOrderFood : orderFoodList) {
+                plsOrderFood.setCreateTime(new Date());
                 plsOrderFood.setSubOrderId(subOrderId);
                 plsOrderFood.setAmount(plsOrderFood.getNumber().multiply(plsOrderFood.getUnitPrice()));
                 totalAmount = totalAmount.add(plsOrderFood.getAmount());

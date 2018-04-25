@@ -68,7 +68,7 @@
 						</el-upload>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="addFood('foodForm')">确认添加食品</el-button>
+						<el-button type="primary" @click="addFood('categoryForm','foodForm')">确认添加食品</el-button>
 					</el-form-item>
 	  			</el-form>
   			</el-col>
@@ -172,9 +172,9 @@
 		    addCategoryFun(){
 		    	this.showAddCategory = !this.showAddCategory;
 		    },
-		    submitCategoryForm(categoryForm) {
-				this.$refs[categoryForm].validate(async (valid) => {
-					if (valid) {
+            async submitCategoryForm(categoryForm) {
+//				this.$refs[categoryForm].validate(async (valid) => {
+//					if (valid) {
 						const params = {
 							name: this.categoryForm.name,
                             remarks: this.categoryForm.remarks
@@ -199,15 +199,15 @@
 						}catch(err){
 							console.log(err)
 						}
-					} else {
-						this.$notify.error({
-							title: '错误',
-							message: '请检查输入是否正确',
-							offset: 100
-						});
-						return false;
-					}
-				});
+//					} else {
+//						this.$notify.error({
+//							title: '错误',
+//							message: '请检查输入是否正确',
+//							offset: 100
+//						});
+//						return false;
+//					}
+//				});
 			},
 			uploadImg(res, file) {
 				if (res.code == 200) {
@@ -236,8 +236,8 @@
 		        }
 		        return '';
 		    },
-		    addFood(foodForm){
-		    	this.$refs[foodForm].validate(async (valid) => {
+		    addFood(categoryForm,foodForm){
+		    	this.$refs[categoryForm,foodForm].validate(async (valid) => {
 					if (valid) {
 						const params = {
 							...this.foodForm,

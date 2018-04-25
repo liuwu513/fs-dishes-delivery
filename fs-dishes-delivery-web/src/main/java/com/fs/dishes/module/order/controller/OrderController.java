@@ -91,6 +91,20 @@ public class OrderController extends AbstractController {
         return plsOrderService.getSubById(subOrderId);
     }
 
+
+    /**
+     * 获取客户最近下的子单数据
+     */
+    @ApiOperation(value = "获取客户最近下的子单数据", notes = "获取客户最近下的子单数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "customerId", value = "客户ID", dataType = "String", paramType = "query")
+    })
+    @RequestMapping(value = "/subByCsId/info", method = RequestMethod.POST)
+    public ResResult subInfoByCustomerId(@RequestBody Map<String, Object> params) {
+        Long customerId = MapUtils.getLong(params, "customerId");
+        return plsOrderService.getSubByCustomerId(customerId);
+    }
+
     /**
      * 保存以及修改主单信息
      */

@@ -31,6 +31,13 @@ public interface PlsSubOrderDao extends Mapper<PlsSubOrder> {
     List<Integer> queryAllPayStatus(@Param("mainOrderId") Long mainOrderId);
 
     /**
+     * 根据客户ID获取客户最新下的子单ID
+     * @param customerId
+     * @return
+     */
+    Long getSubIdByCustomerId(@Param("customerId") Long customerId);
+
+    /**
      * 批量更新付款状态
      *
      * @param params

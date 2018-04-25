@@ -123,6 +123,13 @@ export const listSubOrder = data => fetch('/api/order/sub/list', data, 'POST');
 export const getSubOrder = data => fetch('/api/order/sub/info', data, 'POST');
 
 /**
+ * 获取客户最近下的子单数据
+ * @param data
+ */
+export const getSubByCsIdOrder = data => fetch('/api/order/subByCsId/info', data, 'POST');
+
+
+/**
  * 删除子单信息
  * @param data
  */

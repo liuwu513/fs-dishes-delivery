@@ -6,6 +6,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 订单商品实体
@@ -24,6 +25,7 @@ public class PlsOrderFood implements Serializable {
     private BigDecimal number; //数量（以斤进行计算）
     private BigDecimal unitPrice; //单价（元/每斤）
     private BigDecimal amount;    //金额
+    private Date createTime;     //创建时间
 
     @Transient
     private String name;

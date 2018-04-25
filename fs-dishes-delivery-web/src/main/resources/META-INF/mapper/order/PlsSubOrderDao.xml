@@ -58,6 +58,15 @@
         </where>
     </select>
 
+    <select id="getSubIdByCustomerId" resultType="java.lang.Long">
+        SELECT max(id) FROM pls_sub_order
+        <where>
+            status = 1
+            <if test="customerId != null and customerId !=0 ">
+                AND customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
 
     <select id="queryCustomerByCondition" parameterType="map" resultType="java.lang.Long">
         SELECT DISTINCT customer_id FROM pls_sub_order
