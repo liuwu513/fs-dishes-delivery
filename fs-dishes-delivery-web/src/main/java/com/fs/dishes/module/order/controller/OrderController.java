@@ -73,7 +73,7 @@ public class OrderController extends AbstractController {
             @ApiImplicitParam(name = "orderId", value = "配送单ID", dataType = "String", paramType = "query")
     })
     @RequestMapping(value = "/main/info/{orderId}", method = RequestMethod.POST)
-    public ResResult mainInfo(@PathVariable("orderId") String orderId) {
+    public ResResult mainInfo(@PathVariable("orderId") Long orderId) {
         return plsOrderService.getMainById(orderId);
     }
 

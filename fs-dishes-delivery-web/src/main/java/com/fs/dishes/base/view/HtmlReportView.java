@@ -19,7 +19,7 @@ import java.util.Map;
 public class HtmlReportView extends AbstractView {
 
 
-    private static final String CONTENT_TYPE = "text/html";
+    private static final String CONTENT_TYPE = "text/html;charset=UTF-8";
 
     private String templatePath;
     private String exportFileName;

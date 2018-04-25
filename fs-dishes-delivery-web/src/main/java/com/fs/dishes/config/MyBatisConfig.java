@@ -58,7 +58,7 @@ public class MyBatisConfig {
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources("classpath:META-INF/mapper/*/*.xml"));
         sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:/mybatis-config.xml"));
-        sessionFactory.setTypeAliasesPackage("com.fs.dishes.module.*.entity");
+        sessionFactory.setTypeAliasesPackage("com.fs.dishes.module.**.entity");
         return sessionFactory.getObject();
     }
 
@@ -108,7 +108,7 @@ public class MyBatisConfig {
     @Bean
     public MapperScannerConfigurer mapperScan(){
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-        mapperScannerConfigurer.setBasePackage("com.fs.dishes.module.*.dao");
+        mapperScannerConfigurer.setBasePackage("com.fs.dishes.module.**.dao");
         mapperScannerConfigurer.setAnnotationClass(DataRepository.class);
         mapperScannerConfigurer.setSqlSessionTemplateBeanName("sqlSessionTemplate");
         return mapperScannerConfigurer;

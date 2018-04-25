@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by liuwu on 2018/2/28 0028.
  */
 @Data
-public class ResResult implements Serializable{
+public class ResResult<T> implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class ResResult implements Serializable{
 
     private String message;
 
-    private Object data;
+    private T data;
 
     public static ResResult ok(){
         ResResult result = new ResResult();
@@ -39,7 +39,7 @@ public class ResResult implements Serializable{
         return result;
     }
 
-    public ResResult withData(Object data){
+    public ResResult withData(T data){
         this.setData(data);
         return this;
     }

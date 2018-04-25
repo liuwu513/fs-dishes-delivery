@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -106,10 +105,10 @@ public class PlsOrderService extends BaseService {
     /**
      * 获取主单详情
      *
-     * @param orderId
+     * @param orderId  主单ID数据
      * @return
      */
-    public ResResult getMainById(String orderId) {
+    public ResResult getMainById(Long orderId) {
         PlsMainOrder mainOrder = plsMainOrderDao.selectByPrimaryKey(orderId);
         return ResResult.ok().withData(mainOrder);
     }
