@@ -58,7 +58,7 @@
                     label="付款状态"
                     :formatter="formatterPayStatus">
                 </el-table-column>
-                <el-table-column label="操作" width="250">
+                <el-table-column label="操作" width="350">
                     <template scope="scope">
                         <a :href="baseUrl + viewLink + scope.row.id + token" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
                         <el-button
