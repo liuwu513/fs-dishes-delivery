@@ -7,7 +7,7 @@
    
 ### 2.build工程
     cd fs-dishes-delivery-web
-    mvn install -Dmaven.test.skip=true
+    mvn install -Dmaven.test.skip=true
     
 ### 3.启动工程
     java -jar fs-dishes-delivery-web.jar
