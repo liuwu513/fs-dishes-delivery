@@ -18,9 +18,11 @@
 ## 二.前台系统启动步骤
 
 ### 1.克隆项目后，进入pls-manage 目录
+	cd fs-dishes-delivery-web
     	cd pls-manage
     
 ### 2.启动工程
+	cd fs-dishes-delivery-web
     	#启动开发环境
     	npm run dev
     
