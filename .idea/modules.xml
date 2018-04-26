@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/fs-dishes-delivery.iml" filepath="$PROJECT_DIR$/fs-dishes-delivery.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fs-dishes-delivery-web/fs-dishes-delivery-web.iml" filepath="$PROJECT_DIR$/fs-dishes-delivery-web/fs-dishes-delivery-web.iml" />
-    </modules>
-  </component>
-</project>
