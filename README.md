@@ -32,8 +32,8 @@
     
 ### 3.配置nginx代理
      server {
-     	listen 80;
-		server_name  xxxxx;
+        listen 80;
+        server_name  xxxxx;
 	
         #charset koi8-r;
         #access_log  /var/log/nginx/host.access.log  main;
