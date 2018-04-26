@@ -7,10 +7,10 @@
    
 ### 2.build工程
     cd fs-dishes-delivery-web
-    mvn install -Dmaven.test.skip=true
+    mvn install -Dmaven.test.skip=true
     
 ### 3.启动工程
-    java -jar fs-dishes-delivery-web.jar
+	java -jar fs-dishes-delivery-web.jar
    
 ### 4.访问swagger,查看接口情况
     http://127.0.0.1:8080/swagger-ui.html
