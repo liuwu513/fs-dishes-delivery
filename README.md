@@ -3,32 +3,32 @@
 ## 一.后台系统使用步骤
 
 ### 1.克隆代码
-    git clone https://github.com/liuwu513/fs-dishes-delivery.git
+    	git clone https://github.com/liuwu513/fs-dishes-delivery.git
    
 ### 2.build工程
-    cd fs-dishes-delivery-web
-    mvn install -Dmaven.test.skip=true
+    	cd fs-dishes-delivery-web
+    	mvn install -Dmaven.test.skip=true
     
 ### 3.启动工程
 	java -jar fs-dishes-delivery-web.jar
    
 ### 4.访问swagger,查看接口情况
-    http://127.0.0.1:8080/swagger-ui.html
+    	http://127.0.0.1:8080/swagger-ui.html
     
 ## 二.前台系统启动步骤
 
 ### 1.克隆项目后，进入pls-manage 目录
-    cd pls-manage
+    	cd pls-manage
     
 ### 2.启动工程
-    #启动开发环境
-    npm run dev
+    	#启动开发环境
+    	npm run dev
     
-    #打包生产环境
-    npm run build
+    	#打包生产环境
+    	npm run build
     
-    #打包进入 manage目录，拷贝manage目录进入/home/app/manage/
-    cp manage /home/app/
+    	#打包进入 manage目录，拷贝manage目录进入/home/app/manage/
+    	cp manage /home/app/
     
 ### 3.配置nginx代理
     server {
@@ -70,8 +70,8 @@
      }
      
 ### 4.启动nginx
-     nginx
-     nginx -s reload
+     	nginx
+     	nginx -s reload
      
 ### 5. http://xxxx/
      
