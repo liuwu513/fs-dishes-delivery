@@ -31,9 +31,9 @@
 	cp manage /home/app/
     
 ### 3.配置nginx代理
-    server {
+     server {
         listen       80;
-        server_name  xxxxx;
+	server_name  xxxxx;
 
         #charset koi8-r;
         #access_log  /var/log/nginx/host.access.log  main;
