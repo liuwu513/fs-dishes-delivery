@@ -22,13 +22,13 @@
     
 ### 2.启动工程
 	#启动开发环境
-    	npm run dev
-    
-    	#打包生产环境
-    	npm run build
-    
-    	#打包进入 manage目录，拷贝manage目录进入/home/app/manage/
-    	cp manage /home/app/
+	npm run dev
+	
+	#打包生产环境
+	npm run build
+	
+	#打包进入 manage目录，拷贝manage目录进入/home/app/manage/
+	cp manage /home/app/
     
 ### 3.配置nginx代理
     server {
