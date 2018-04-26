@@ -13,7 +13,7 @@
     java -jar fs-dishes-delivery-web.jar
    
 ### 4.访问swagger,查看接口情况
-    http://127.0.0.1:8080/swagger-ui.html
+    http://127.0.0.1:8080/swagger-ui.html
     
 ## 二.前台系统启动步骤
 
