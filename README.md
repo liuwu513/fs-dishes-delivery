@@ -3,7 +3,6 @@
 ## 一.后台系统使用步骤
 
 ### 1.克隆代码		
-    cd fs-dishes-delivery-web
     git clone https://github.com/liuwu513/fs-dishes-delivery.git
    
 ### 2.build工程
