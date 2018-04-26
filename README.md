@@ -32,7 +32,7 @@
     
 ### 3.配置nginx代理
      server {
-        listen       80;
+     	listen 80;
 	server_name  xxxxx;
 	
         #charset koi8-r;
