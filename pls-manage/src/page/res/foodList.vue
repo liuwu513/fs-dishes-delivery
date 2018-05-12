@@ -180,6 +180,21 @@
                 },{
                     value: 5,
                     label: '元/个'
+                },{
+                    value: 6,
+                    label: '元/板'
+                },{
+                    value: 7,
+                    label: '元/包'
+                },{
+                    value: 8,
+                    label: '元/块'
+                },{
+                    value: 9,
+                    label: '元/件'
+                },{
+                    value: 10,
+                    label: '元/箱'
                 }],
                 multipleSelection:[]
             }
