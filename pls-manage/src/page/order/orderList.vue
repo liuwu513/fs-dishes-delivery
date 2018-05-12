@@ -25,49 +25,53 @@
             </div>
             <el-table
                 :data="tableData"
-                style="width: 100%"
+                style="overflow: auto; width: 100%"
                 @selection-change="handleSelectionChange">
                 <el-table-column
                     type="selection"
-                    width="55">
+                    width="50">
                 </el-table-column>
                 <el-table-column
                     property="id"
                     label="主订单号"
-                    width="155">
+                    width="125">
+                    <template scope="scope">
+                        <a :href="baseUrl + viewLink + scope.row.id + token"  target="_blank">
+                            <el-tag size="medium">{{ scope.row.id }}</el-tag>
+                        </a>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     property="orderDesc"
-                    label="主订单名称">
+                    label="主单名称" minWidth="110">
                 </el-table-column>
                 <el-table-column
                     property="totalAmount"
-                    label="总金额">
+                    label="总金额" minWidth="85">
                 </el-table-column>
                 <el-table-column
                     property="discountAmount"
-                    label="总优惠金额">
+                    label="优惠金额" minWidth="85">
                 </el-table-column>
                 <el-table-column
                     property="createTime"
                     label="创建时间"
-                    :formatter="dateFormat">
+                    :formatter="dateFormat" minWidth="90">
                 </el-table-column>
                 <el-table-column
                     property="payStatus"
                     label="付款状态"
-                    :formatter="formatterPayStatus">
+                    :formatter="formatterPayStatus" minWidth="85">
                 </el-table-column>
-                <el-table-column label="操作" width="350">
+                <el-table-column label="操作" minWidth="200">
                     <template scope="scope">
-                        <a :href="baseUrl + viewLink + scope.row.id + token" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
                         <el-button
                             size="small"
                             @click="handleEdit(scope.row,'edit')">编辑
                         </el-button>
                         <el-button
                             size="small"
-                            @click="handleSub(scope.row)">分单管理
+                            @click="handleSub(scope.row)">分单
                         </el-button>
                         <el-button
                             size="small"
@@ -313,6 +317,16 @@
 
 <style lang="less">
     @import '../../style/mixin';
+
+    .el-table {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        background-color: #fff;
+        border: 1px solid #dfe6ec;
+        font-size: 12px;
+        color: #1f2d3d;
+    }
 
     .table_container {
         padding: 20px;

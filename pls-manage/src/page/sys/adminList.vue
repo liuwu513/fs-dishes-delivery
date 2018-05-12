@@ -13,26 +13,27 @@
                 <el-table-column
                     property="username"
                     label="用户名"
-                    width="150">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     property="nickname"
                     label="用户姓名"
-                    width="150">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     property="company"
                     label="公司名称"
-                    width="220">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     property="wechat"
                     label="微信号"
-                    width="120">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     property="mobile"
-                    label="手机号码">
+                    label="手机号码"
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="admin"

@@ -23,7 +23,7 @@
                     </el-form-item>
                 </el-form>
                     <header class="form_header">选择食品</header>
-                            <el-dialog title="选择食品信息" v-model="dialogFormVisible">
+                            <el-dialog title="选择食品信息"  v-model="dialogFormVisible">
                                 <div class="demo-input-size">
                                     <el-row class="category_select2">
                                         <el-input v-model="queryForm.name" placeholder="食品名称" style="width:200px;"></el-input>
@@ -325,7 +325,7 @@
                 this.dialogFormVisible = !this.dialogFormVisible;
             },
             cancel(){
-                this.$router.push('subOrderList');
+                this.$router.push({ path: 'subOrderList', query: { mainOrderId : this.subOrderForm.mainOrderId }});
             },
             handleQuery(){
                 this.getFoods();
@@ -481,6 +481,7 @@
 					            	type: 'success',
 					            	message: '添加成功'
 					          	});
+                                this.$router.push({ path: 'subOrderList', query: { mainOrderId : this.subOrderForm.mainOrderId }});
 					          	this.subOrderForm = {
 				    				name: '',
 				    				details: '',
@@ -490,7 +491,6 @@
 				    				price: 0.00,
                                     unitId: 1
 				    			}
-                                this.$router.push('subOrderList');
 							}else{
 								this.$message({
 					            	type: 'error',
@@ -517,7 +517,7 @@
 <style lang="less">
 	@import '../../style/mixin';
 	.form{
-		min-width: 400px;
+		min-width: 650px;
         width: 100%;
 		margin-bottom: 30px;
 		&:hover{
@@ -530,9 +530,26 @@
 		border: 1px solid #eaeefb;
 		padding: 10px 0px;
 	}
+
+    .el-dialog--small {
+        min-width: 680px;
+    }
+
+    .el-table {
+        overflow: hidden;
+        width: 100%;
+        min-width: 650px;
+        max-width: 100%;
+        background-color: #fff;
+        border: 1px solid #dfe6ec;
+        font-size: 12px;
+        color: #1f2d3d;
+    }
 	.form_header{
 		text-align: center;
 		margin-bottom: 10px;
+        min-width: 650px;
+        width: 100%;
 	}
 	.species_select{
         width: 100%;
@@ -570,6 +587,8 @@
         border-top-left-radius: 6px;
     }
 	.add_Food_button{
+        min-width: 650px;
+        width: 100%;
 		text-align: center;
 		line-height: 40px;
 		border-bottom-right-radius: 6px;
