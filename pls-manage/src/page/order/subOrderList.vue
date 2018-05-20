@@ -58,10 +58,15 @@
                     label="总金额(元)"
                     minWidth="95">
                 </el-table-column>
+                <!--<el-table-column-->
+                    <!--property="discountAmount"-->
+                    <!--label="优惠金额"-->
+                    <!--minWidth="90">-->
+                <!--</el-table-column>-->
                 <el-table-column
-                    property="discountAmount"
-                    label="优惠金额"
-                    minWidth="90">
+                    property="totalCost"
+                    label="总成本(元)"
+                    minWidth="95">
                 </el-table-column>
                 <el-table-column
                     property="createTime"
@@ -293,6 +298,7 @@
                                 customerName: item.customerName,
                                 totalAmount: item.totalAmount,
                                 discountAmount: item.discountAmount,
+                                totalCost: item.totalCost,
                                 createTime: item.createTime,
                                 details: item.details,
                                 payStatus: item.payStatus,

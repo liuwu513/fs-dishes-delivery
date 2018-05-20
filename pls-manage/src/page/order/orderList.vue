@@ -49,9 +49,13 @@
                     property="totalAmount"
                     label="总金额" minWidth="85">
                 </el-table-column>
+                <!--<el-table-column-->
+                    <!--property="discountAmount"-->
+                    <!--label="优惠金额" minWidth="85">-->
+                <!--</el-table-column>-->
                 <el-table-column
-                    property="discountAmount"
-                    label="优惠金额" minWidth="85">
+                    property="totalCost"
+                    label="总成本" minWidth="85">
                 </el-table-column>
                 <el-table-column
                     property="createTime"
@@ -99,6 +103,9 @@
                     <el-form-item label="总金额" label-width="100px">
                         <el-input v-model="selectTable.totalAmount" readonly></el-input>
                     </el-form-item>
+                    <el-form-item label="总成本" label-width="100px">
+                        <el-input v-model="selectTable.totalCost" readonly></el-input>
+                    </el-form-item>
                     <el-form-item label="优惠金额" label-width="100px">
                         <el-input v-model="selectTable.discountAmount" readonly></el-input>
                     </el-form-item>
@@ -142,6 +149,7 @@
                 modalTitle:'',
                 selectTable:{
                     totalAmount: 0.00,
+                    totalCost: 0.00,
                     discountAmount: 0.00
                 },
                 mainOrderIds:[],
@@ -195,13 +203,7 @@
                 this.getMainOrder()
             },
             handleEdit(row,type){
-                this.getSelectItemData(row);
-                this.dialogFormVisible = true;
-                if(type == 'edit'){
-                    this.modalTitle = '编辑主单信息';
-                }else {
-                    this.modalTitle = '新增主单信息';
-                }
+                this.$router.push({ path: 'addMainOrder', query: { sku: Math.random(),mainOrderId : row.id}});
             },
             handleSub(row){
                 this.$router.push({ path: 'subOrderList', query: { mainOrderId : row.id }});
@@ -216,6 +218,7 @@
                 this.selectTable = {
                     id: null,
                     totalAmount: 0.00,
+                    totalCost: 0.00,
                     discountAmount: 0.00,
                     details: null
                 }
@@ -296,6 +299,7 @@
                                 orderDesc: item.orderDesc,
                                 totalAmount: item.totalAmount,
                                 discountAmount: item.discountAmount,
+                                totalCost: item.totalCost,
                                 createTime: item.createTime,
                                 details: item.details,
                                 payStatus: item.payStatus,

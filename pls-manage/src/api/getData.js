@@ -79,6 +79,19 @@ export const listCustomers = data => fetch('/api/customer/list', data, 'POST');
 export const getCustomers = data => fetch('/api/customer/listMenu', data, 'POST');
 
 /**
+ * 客户商品单分页查询
+ * @param data
+ */
+export const listCustFood = data => fetch('/api/custfood/list', data, 'POST');
+
+/**
+ * 客户商品单保存
+ * @param data
+ */
+export const addCustFood = data => fetch('/api/custfood/save', data, 'POST');
+
+
+/**
  * 删除客户信息
  * @param data
  */
@@ -111,10 +124,18 @@ export const addMainOrder = data => fetch('/api/order/main/save', data, 'POST');
 
 
 /**
+ * 获取主订单详情
+ * @param data
+ */
+export const getMainOrder = data => fetch('/api/order/main/info', data, 'POST');
+
+/**
  * 子单分页查询
  * @param data
  */
 export const listSubOrder = data => fetch('/api/order/sub/list', data, 'POST');
+
+
 
 /**
  * 获取子订单详情

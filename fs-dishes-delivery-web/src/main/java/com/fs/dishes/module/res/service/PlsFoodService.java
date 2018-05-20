@@ -57,12 +57,16 @@ public class PlsFoodService extends BaseService {
         List<PlsFood> list = plsFoodDao.queryList(params);
 
         Map<Long, BigDecimal> priceMap = Maps.newHashMap();
+        Map<Long, BigDecimal> costPriceMap = Maps.newHashMap();
         Long mainOrderId = MapUtils.getLong(params, "mainOrderId");
         if (mainOrderId != null) {
             List<Map<String, Object>> orderFoodMapList = plsOrderFoodDao.queryPriceByMainOrderId(mainOrderId);
             if (CollectionUtils.isEmpty(orderFoodMapList)) {
                 priceMap = orderFoodMapList.stream().collect(Collectors.toMap(item -> Long.valueOf(item.get("food_id").toString()),
                         item -> BigDecimal.valueOf(Double.valueOf(item.get("unit_price").toString()))));
+                costPriceMap = orderFoodMapList.stream().collect(Collectors.toMap(item -> Long.valueOf(item.get("food_id").toString()),
+                        item -> BigDecimal.valueOf(Double.valueOf(item.get("cost_price").toString()))));
+
             }
         }
 
@@ -80,8 +84,12 @@ public class PlsFoodService extends BaseService {
             if (CollectionUtils.isNotEmpty(speciesIdList)) {
                 Map<Long, String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId, PlsFoodSpecies::getName));
                 for (PlsFood food : foodList) {
+                    food.setCostPrice(BigDecimal.ZERO);
                     if (priceMap.get(food.getId()) != null){
                         food.setPrice(priceMap.get(food.getId()));
+                    }
+                    if (costPriceMap.get(food.getId()) != null){
+                        food.setCostPrice(costPriceMap.get(food.getId()));
                     }
                     food.setSpeciesName(speciesMap.get(food.getSpeciesId()));
                 }
