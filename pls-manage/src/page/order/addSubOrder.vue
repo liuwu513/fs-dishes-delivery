@@ -278,6 +278,7 @@
                                 }
                                 this.tableFoodData = [];
                                 data.forEach((item, index) => {
+                                    item.costPrice = item.unitPrice;
                                     this.tableFoodData.push({
                                         name: item.foodName,
                                         mainOrderId: this.subOrderForm.mainOrderId,
@@ -520,6 +521,7 @@
                         tableData.details = item.details;
                         tableData.imgLink = item.imgLink;
                         tableData.price = item.price;
+                        tableData.costPrice = item.costPrice;
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;
                         tableData.index = index;
