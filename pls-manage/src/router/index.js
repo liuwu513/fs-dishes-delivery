@@ -12,13 +12,15 @@ const adminList = resolve => require(['@/page/sys/adminList'], resolve)
 const userList = resolve => require(['@/page/sys/userList'], resolve)
 const shopList =  resolve => require(['@/page/res/shopList'], resolve);
 const foodList =  resolve => require(['@/page/res/foodList'], resolve);
-const speciesList = resolve => require(['@/page/res/speciesList'], resolve)
-const customerList = resolve => require(['@/page/res/customerList'], resolve)
-const orderList = resolve => require(['@/page/order/orderList'], resolve)
-const subOrderList = resolve => require(['@/page/order/subOrderList'], resolve)
-const addSubOrder = resolve => require(['@/page/order/addSubOrder'], resolve)
-const uploadImg = resolve => require(['@/page/common/uploadImg'], resolve)
-const adminSet = resolve => require(['@/page/sys/adminSet'], resolve)
+const speciesList = resolve => require(['@/page/res/speciesList'], resolve);
+const customerList = resolve => require(['@/page/res/customerList'], resolve);
+const addCustFood = resolve => require(['@/page/res/addCustFood'], resolve);
+const orderList = resolve => require(['@/page/order/orderList'], resolve);
+const addMainOrder = resolve => require(['@/page/order/addMainOrder'], resolve);
+const subOrderList = resolve => require(['@/page/order/subOrderList'], resolve);
+const addSubOrder = resolve => require(['@/page/order/addSubOrder'], resolve);
+const uploadImg = resolve => require(['@/page/common/uploadImg'], resolve);
+const adminSet = resolve => require(['@/page/sys/adminSet'], resolve);
 
 const routes = [
 	{
@@ -79,6 +81,13 @@ const routes = [
                 nabs: ['资源管理','客户列表']
             }
         },{
+            path: '/addCustFood',
+            component: addCustFood,
+            meta: {
+                auth:true,
+                nabs: ['资源管理','客户列表',"添加客户商品单"]
+            }
+        },{
 			path: '/orderList',
 			component: orderList,
             meta: {
@@ -86,6 +95,13 @@ const routes = [
                 nabs: ['配送管理', '配送单列表']
             }
 		},{
+            path: '/addMainOrder',
+            component: addMainOrder,
+            meta: {
+                auth:true,
+                nabs: ['配送管理', '编辑配送主单']
+            }
+        },{
             path: '/subOrderList',
             component: subOrderList,
             meta: {

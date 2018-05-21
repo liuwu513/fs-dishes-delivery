@@ -23,6 +23,7 @@ public class PlsSubOrder extends BaseEntity {
     private Long customerId;	//客户ID
     private Long mainOrderId;	//主单ID
     private BigDecimal totalAmount;	//子单总金额
+    private BigDecimal totalCost;  //子单成本
     private BigDecimal discountAmount;	//子单总优惠金额
     private Integer payStatus;    //付款状态
     private Integer status;        //状态

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fs.dishes.module.customer.dao.PlsCustFoodDao">
+    <select id="queryList" parameterType="map" resultType="com.fs.dishes.module.customer.entity.PlsCustFood">
+        select * from pls_cust_food
+        <where>
+            1=1
+            <if test="customerId != null and customerId !='' ">
+                AND customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量添加 -->
+    <insert id="batchAdd">
+        INSERT INTO pls_cust_food (id,customer_id,food_id,number,unit_price)
+        VALUES
+        <foreach collection="list" item="item" index="index" open="" separator="," close="">
+            (replace(uuid(),'-',''),#{item.customerId,jdbcType=VARCHAR},#{item.foodId,jdbcType=BIGINT},
+            #{item.number,jdbcType=DECIMAL},#{item.unitPrice,jdbcType=DECIMAL})
+        </foreach>
+    </insert>
+
+    <!-- 批量删除-->
+    <delete id="batchDel">
+        DELETE FROM pls_cust_food WHERE id IN
+        <foreach collection="idList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

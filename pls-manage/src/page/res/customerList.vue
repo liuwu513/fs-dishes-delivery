@@ -23,26 +23,34 @@
                 <el-table-column
                     type="index"
                     label="序号"
-                    width="100">
+                    minWidth="100">
                 </el-table-column>
                 <el-table-column
                     property="name"
-                    label="客户名称">
+                    label="客户名称"
+                    minWidth="100">
                 </el-table-column>
                 <el-table-column
                     property="phone"
-                    label="手机号码">
+                    label="手机号码"
+                    minWidth="100">
                 </el-table-column>
                 <el-table-column
                     property="address"
-                    label="客户地址">
+                    label="客户地址"
+                    minWidth="100">
                 </el-table-column>
                 <el-table-column
                     property="remarks"
-                    label="备注">
+                    label="备注"
+                    minWidth="100">
                 </el-table-column>
-                <el-table-column label="操作" width="160">
+                <el-table-column label="操作" width="240">
                     <template scope="scope">
+                        <el-button
+                            size="small"
+                            @click="handleFood(scope.row.id,'edit')">商品单
+                        </el-button>
                         <el-button
                             size="small"
                             @click="handleEdit(scope.row,'edit')">编辑
@@ -126,6 +134,9 @@
                 } catch (err) {
                     console.log('获取数据失败', err);
                 }
+            },
+            handleFood(customerId){
+                this.$router.push({ path: 'addCustFood', query: { customerId : customerId }});
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);

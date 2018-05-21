@@ -29,4 +29,7 @@ public class PlsFood extends BaseEntity{
 
     @Transient
     private String speciesName; //品种名称
+
+    @Transient
+    private BigDecimal costPrice; //成本价
 }

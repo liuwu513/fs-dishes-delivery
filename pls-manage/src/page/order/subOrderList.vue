@@ -31,46 +31,61 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column
                     type="selection"
-                    width="55">
+                    width="50">
                 </el-table-column>
                 <el-table-column
                     property="id"
                     label="子单号"
-                    width="155">
+                    minWidth="125">
+                    <template scope="scope">
+                        <a :href="baseUrl + viewLink + scope.row.id + token"  target="_blank">
+                            <el-tag size="medium">{{ scope.row.id }}</el-tag>
+                        </a>
+                    </template>
                 </el-table-column>
-                <el-table-column
-                    property="name"
-                    label="子单名称">
-                </el-table-column>
+                <!--<el-table-column-->
+                    <!--property="name"-->
+                    <!--label="子单名称"-->
+                    <!--minWidth="100">-->
+                <!--</el-table-column>-->
                 <el-table-column
                     property="customerName"
-                    label="客户名称">
+                    label="客户名称"
+                    minWidth="100">
                 </el-table-column>
                 <el-table-column
                     property="totalAmount"
-                    label="总金额(元)">
+                    label="总金额(元)"
+                    minWidth="95">
                 </el-table-column>
+                <!--<el-table-column-->
+                    <!--property="discountAmount"-->
+                    <!--label="优惠金额"-->
+                    <!--minWidth="90">-->
+                <!--</el-table-column>-->
                 <el-table-column
-                    property="discountAmount"
-                    label="总优惠金额">
+                    property="totalCost"
+                    label="总成本(元)"
+                    minWidth="95">
                 </el-table-column>
                 <el-table-column
                     property="createTime"
                     label="创建时间"
-                    :formatter="dateFormat">
+                    :formatter="dateFormat" minWidth="90">
                 </el-table-column>
                 <el-table-column
                     property="payStatus"
                     label="付款状态"
-                    :formatter="formatterPayStatus">
+                    :formatter="formatterPayStatus"
+                    minWidth="85">
                 </el-table-column>
-                <el-table-column label="操作" width="250">
+                <el-table-column label="操作" width="150">
                     <template scope="scope">
                         <el-button
                             size="small"
                             @click="handleEdit(scope.row)">编辑
                         </el-button>
-                        <a :href="baseUrl + viewLink + scope.row.id + token" class="el-button el-button--default el-button--small" target="_blank">查看详情</a>
+                        <!--<a :href="baseUrl + viewLink + scope.row.id + token" class="el-button el-button&#45;&#45;default el-button&#45;&#45;small" target="_blank">查看详情</a>-->
                         <!--<el-button-->
                             <!--size="small"-->
                             <!--@click="handleDetails(scope.row)">查看详情-->
@@ -283,6 +298,7 @@
                                 customerName: item.customerName,
                                 totalAmount: item.totalAmount,
                                 discountAmount: item.discountAmount,
+                                totalCost: item.totalCost,
                                 createTime: item.createTime,
                                 details: item.details,
                                 payStatus: item.payStatus,
@@ -304,6 +320,16 @@
 
 <style lang="less">
     @import '../../style/mixin';
+
+    .el-table {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        background-color: #fff;
+        border: 1px solid #dfe6ec;
+        font-size: 12px;
+        color: #1f2d3d;
+    }
 
     .table_container {
         padding: 20px;

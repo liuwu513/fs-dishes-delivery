@@ -6,6 +6,7 @@
 *.swp
 *.out
 target/
+pls-manage/manage/
 /.idea
 *.iml
 *.ipr
@@ -24,3 +25,8 @@ git
 git.pub
 .dubbo/
 /*.iml
+/pls-manage/manage/static/css/*.css
+/pls-manage/manage/static/fonts/*.ttf
+/pls-manage/manage/static/js/*.js
+/pls-manage/manage
+manage

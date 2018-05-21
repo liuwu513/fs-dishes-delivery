@@ -4,11 +4,9 @@ import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 配送主单
@@ -26,5 +24,11 @@ public class PlsMainOrder extends BaseEntity {
     private Integer status;      //数据状态
     private Integer payStatus;   //支付状态
     private BigDecimal totalAmount;    //主单总金额
+    private BigDecimal totalCost;   //主单总成本
     private BigDecimal discountAmount;    //主单总优惠金额
+
+    @Transient
+    private Integer priceRadio; //判断是否调整成本价
+    @Transient
+    private List<PlsOrderFood> list;
 }
