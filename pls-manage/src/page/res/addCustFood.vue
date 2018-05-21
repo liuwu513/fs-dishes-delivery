@@ -167,8 +167,7 @@
     			    id: null,
     				name: '',
                     customerId: '',
-                    remarks: '',
-                    mainOrderId: null
+                    remarks: ''
     			},
                 custFormRules: {
                     customerId:[
@@ -272,7 +271,7 @@
                         if (existIds.indexOf(item.id) < 0){
                             const tableData = {};
                             tableData.foodId = item.id;
-                            tableData.mainOrderId = this.custFoodForm.customerId;
+                            tableData.customerId = this.custFoodForm.customerId;
                             tableData.name = item.name;
                             tableData.speciesId = item.speciesId;
                             tableData.speciesName = item.speciesName;
