@@ -1,6 +1,7 @@
 package com.fs.dishes.module.order.dao;
 
 import com.fs.dishes.base.annotations.DataRepository;
+import com.fs.dishes.module.order.entity.OrderFoodVo;
 import com.fs.dishes.module.order.entity.PlsOrderFood;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -54,5 +55,12 @@ public interface PlsOrderFoodDao extends Mapper<PlsOrderFood> {
      * @param mainOrderId
      * @return
      */
-    List<Map<String, Object>> queryPriceByMainOrderId(@Param("mainOrderId") Long mainOrderId);
+    List<OrderFoodVo> queryPriceByMainOrderId(@Param("mainOrderId") Long mainOrderId);
+
+    /**
+     * 根据条件获取食品下单信息
+     * @param params
+     * @return
+     */
+    List<OrderFoodVo> queryFoodOrderByCondition(Map<String,Object> params);
 }

@@ -4,6 +4,8 @@ import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
 import com.fs.dishes.module.customer.dao.PlsCustFoodDao;
 import com.fs.dishes.module.customer.entity.PlsCustFood;
+import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
+import com.fs.dishes.module.order.entity.OrderFoodVo;
 import com.fs.dishes.module.res.dao.PlsFoodDao;
 import com.fs.dishes.module.res.entity.PlsFood;
 import com.github.pagehelper.PageHelper;
@@ -30,6 +32,9 @@ public class PlsCustFoodService extends BaseService {
     private PlsCustFoodDao plsCustFoodDao;
 
     @Autowired
+    private PlsOrderFoodDao plsOrderFoodDao;
+
+    @Autowired
     private PlsFoodDao plsFoodDao;
 
     /**
@@ -54,6 +59,8 @@ public class PlsCustFoodService extends BaseService {
     public ResResult listCustFood(Map<String, Object> params) {
         List<PlsCustFood> list = plsCustFoodDao.queryList(params);
         setFoodName(list);
+        Long mainOrderId = MapUtils.getLong(params, "mainOrderId");
+        setMainInfo(mainOrderId, list);
         return ResResult.ok().withData(list);
     }
 
@@ -104,6 +111,7 @@ public class PlsCustFoodService extends BaseService {
 
     /**
      * 设置食品名称
+     *
      * @param custFoodList
      */
     private void setFoodName(List<PlsCustFood> custFoodList) {
@@ -116,7 +124,7 @@ public class PlsCustFoodService extends BaseService {
             Map<Long, PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
             custFoodList.forEach(item -> {
                 PlsFood food = (PlsFood) MapUtils.getObject(foodMap, item.getFoodId());
-                if (food != null){
+                if (food != null) {
                     item.setFoodName(food.getName());
                     item.setUnitId(food.getUnitId());
                 }
@@ -124,4 +132,30 @@ public class PlsCustFoodService extends BaseService {
         }
     }
 
+    /**
+     * 设置主单信息
+     * @param mainOrderId
+     * @param custFoodList
+     */
+    private void setMainInfo(Long mainOrderId, List<PlsCustFood> custFoodList) {
+        if (CollectionUtils.isNotEmpty(custFoodList)) {
+            List<Long> foodIdList = custFoodList.stream().map(item -> item.getFoodId()).
+                    distinct().collect(Collectors.toList());
+
+            Map<String, Object> params = Maps.newHashMap();
+            params.put("mainOrderId", mainOrderId);
+            params.put("foodIdList", foodIdList);
+            List<OrderFoodVo> orderFoodVoList = plsOrderFoodDao.queryFoodOrderByCondition(params);
+
+            Map<Long, OrderFoodVo> orderFoodVoMap = orderFoodVoList.stream().collect(Collectors.toMap(item -> item.getFoodId(),
+                    item -> item));
+
+            custFoodList.forEach(item -> {
+                OrderFoodVo orderFoodVo = orderFoodVoMap.get(item.getFoodId());
+                if (orderFoodVo != null) {
+                    item.setTotalNumber(orderFoodVo.getNumber());
+                }
+            });
+        }
+    }
 }

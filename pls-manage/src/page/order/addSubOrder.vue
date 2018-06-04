@@ -2,7 +2,7 @@
     <div>
         <head-top></head-top>
         <el-row style="margin-top: 20px;">
-            <el-col :span="14" :offset="2">
+            <el-col :span="14" :offset="1">
                 <header class="form_header">添加配送分单</header>
                 <el-form :model="subOrderForm" :rules="subOrderRules" ref="subOrderForm" label-width="110px"
                          class="form food_form">
@@ -118,6 +118,13 @@
                         prop="name">
                     </el-table-column>
                     <el-table-column
+                        label="总下单量"
+                        prop="totalNumber">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.totalNumber + scope.row.number}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="数量"
                         prop="number" width="120px;">
                         <template slot-scope="scope">
@@ -151,7 +158,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div align="center" style="margin:20px 10px;width: 650px;">
+                <div align="center" style="margin:20px 10px;width: 750px;">
                     <el-button type="primary" @click="addSubOrder('subOrderForm')">保存</el-button>
                     <el-button type="primary" @click="cancel()">取消</el-button>
                 </div>
@@ -269,7 +276,8 @@
                     if (this.custRadio == '1') {
                         try{
                             const result = await listCustFood({
-                                customerId: customerId
+                                customerId: customerId,
+                                mainOrderId: this.subOrderForm.mainOrderId
                             });
                             if (result.code == 200) {
                                 const data = result.data;
@@ -286,6 +294,7 @@
                                         number: item.number,
                                         costPrice:item.costPrice,
                                         unitPrice: item.unitPrice,
+                                        totalNumber:item.totalNumber,
                                         unitName: this.unitList[item.unitId - 1].label
                                     });
                                 })
@@ -298,7 +307,8 @@
                     } else {
                         try {
                             const result = await getSubByCsIdOrder({
-                                customerId: customerId
+                                customerId: customerId,
+                                mainOrderId: this.subOrderForm.mainOrderId
                             });
                             if (result.code == 200) {
                                 const data = result.data;
@@ -322,6 +332,7 @@
                                         number: item.number,
                                         costPrice:item.costPrice,
                                         unitPrice: item.unitPrice,
+                                        totalNumber:item.totalNumber,
                                         unitName: this.unitList[item.unitId - 1].label
                                     });
                                 })
@@ -358,8 +369,10 @@
                         tableData.imgLink = item.imgLink;
                         tableData.unitPrice = item.price;
                         tableData.costPrice = item.costPrice;
+                        tableData.totalNumber = item.number;
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;
+                        tableData.totalNumber = item.totalNumber;
                         this.tableFoodData.push(tableData);
                     });
                 } else {
@@ -383,8 +396,10 @@
                             tableData.imgLink = item.imgLink;
                             tableData.unitPrice = item.price;
                             tableData.costPrice = item.costPrice;
+                            tableData.totalNumber = item.number;
                             tableData.unitId = item.unitId;
                             tableData.unitName = this.unitList[item.unitId - 1].label;
+                            tableData.totalNumber = item.totalNumber;
                             this.tableFoodData.push(tableData);
                         }
                     });
@@ -409,11 +424,11 @@
                 };
                 this.tableFoodData = [];
                 this.disable = true;
+                this.subOrderForm.mainOrderId = this.$route.query.mainOrderId;
                 this.getCustomers();
                 this.getMenu();
                 this.getFoods();
                 this.tableFoodData = [];
-                this.subOrderForm.mainOrderId = this.$route.query.mainOrderId;
                 if (typeof this.$route.query.subOrderId == 'undefined') {
                     return false;
                 }
@@ -474,6 +489,7 @@
                                 number: item.number,
                                 costPrice: item.costPrice,
                                 unitPrice: item.unitPrice,
+                                totalNumber:item.totalNumber - item.number,
                                 unitName: this.unitList[item.unitId - 1].label
                             });
                         })
@@ -525,6 +541,7 @@
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;
                         tableData.index = index;
+                        tableData.totalNumber=item.totalNumber;
                         this.tableData.push(tableData);
                     })
                 } else {
@@ -597,7 +614,7 @@
     @import '../../style/mixin';
 
     .form{
-        min-width: 650px;
+        min-width: 750px;
         width: 100%;
         margin-bottom: 30px;
     &:hover{
@@ -618,7 +635,7 @@
     .el-table {
         overflow: hidden;
         width: 100%;
-        min-width: 650px;
+        min-width: 750px;
         max-width: 100%;
         background-color: #fff;
         border: 1px solid #dfe6ec;
@@ -628,7 +645,7 @@
     .form_header{
         text-align: center;
         margin-bottom: 10px;
-        min-width: 650px;
+        min-width: 750px;
         width: 100%;
     }
     .species_select{
@@ -667,7 +684,7 @@
         border-top-left-radius: 6px;
     }
     .add_Food_button{
-        min-width: 650px;
+        min-width: 750px;
         width: 100%;
         text-align: center;
         line-height: 40px;

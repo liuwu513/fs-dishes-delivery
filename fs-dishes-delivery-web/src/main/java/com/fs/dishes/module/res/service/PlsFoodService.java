@@ -6,6 +6,7 @@ import com.fs.dishes.base.service.BaseService;
 import com.fs.dishes.base.utils.IdGen;
 import com.fs.dishes.module.order.dao.PlsMainOrderDao;
 import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
+import com.fs.dishes.module.order.entity.OrderFoodVo;
 import com.fs.dishes.module.order.entity.PlsMainOrder;
 import com.fs.dishes.module.order.entity.PlsOrderFood;
 import com.fs.dishes.module.res.dao.PlsFoodDao;
@@ -56,17 +57,12 @@ public class PlsFoodService extends BaseService {
         PageHelper.startPage(getPageNo(params), getPageSize(params));
         List<PlsFood> list = plsFoodDao.queryList(params);
 
-        Map<Long, BigDecimal> priceMap = Maps.newHashMap();
-        Map<Long, BigDecimal> costPriceMap = Maps.newHashMap();
+        Map<Long, OrderFoodVo> orderFoodMap = Maps.newHashMap();
         Long mainOrderId = MapUtils.getLong(params, "mainOrderId");
         if (mainOrderId != null) {
-            List<Map<String, Object>> orderFoodMapList = plsOrderFoodDao.queryPriceByMainOrderId(mainOrderId);
-            if (CollectionUtils.isEmpty(orderFoodMapList)) {
-                priceMap = orderFoodMapList.stream().collect(Collectors.toMap(item -> Long.valueOf(item.get("food_id").toString()),
-                        item -> BigDecimal.valueOf(Double.valueOf(item.get("unit_price").toString()))));
-                costPriceMap = orderFoodMapList.stream().collect(Collectors.toMap(item -> Long.valueOf(item.get("food_id").toString()),
-                        item -> BigDecimal.valueOf(Double.valueOf(item.get("cost_price").toString()))));
-
+            List<OrderFoodVo> orderFoodVoList = plsOrderFoodDao.queryPriceByMainOrderId(mainOrderId);
+            if (CollectionUtils.isNotEmpty(orderFoodVoList)) {
+                orderFoodMap = orderFoodVoList.stream().collect(Collectors.toMap(item -> item.getFoodId(), item -> item));
             }
         }
 
@@ -85,11 +81,11 @@ public class PlsFoodService extends BaseService {
                 Map<Long, String> speciesMap = speciesList.stream().collect(Collectors.toMap(PlsFoodSpecies::getId, PlsFoodSpecies::getName));
                 for (PlsFood food : foodList) {
                     food.setCostPrice(BigDecimal.ZERO);
-                    if (priceMap.get(food.getId()) != null){
-                        food.setPrice(priceMap.get(food.getId()));
-                    }
-                    if (costPriceMap.get(food.getId()) != null){
-                        food.setCostPrice(costPriceMap.get(food.getId()));
+                    OrderFoodVo orderFoodVo = orderFoodMap.get(food.getId());
+                    if (orderFoodVo != null) {
+                        food.setPrice(orderFoodVo.getUnitPrice());
+                        food.setCostPrice(orderFoodVo.getCostPrice());
+                        food.setTotalNumber(orderFoodVo.getNumber());
                     }
                     food.setSpeciesName(speciesMap.get(food.getSpeciesId()));
                 }

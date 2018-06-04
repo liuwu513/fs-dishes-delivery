@@ -61,8 +61,23 @@
         </where>
     </select>
 
-    <select id="queryPriceByMainOrderId" parameterType="map" resultType="java.util.HashMap">
-      SELECT food_id, max(unit_price) as unit_price,max(cost_price) as cost_price FROM pls_order_food WHERE main_order_id = #{mainOrderId}
-      GROUP BY food_id
+    <select id="queryPriceByMainOrderId" resultType="com.fs.dishes.module.order.entity.OrderFoodVo">
+        SELECT food_id as foodId, max(unit_price) as unitPrice,max(cost_price) as costPrice,sum(number) as number FROM
+        pls_order_food WHERE main_order_id = #{mainOrderId} GROUP BY food_id
+    </select>
+
+    <select id="queryFoodOrderByCondition" parameterType="map" resultType="com.fs.dishes.module.order.entity.OrderFoodVo">
+        SELECT food_id as foodId, max(unit_price) as unitPrice,max(cost_price) as costPrice,sum(number) as number FROM
+        pls_order_food
+        <where>
+            main_order_id = #{mainOrderId}
+            <if test="foodIdList != null and foodIdList.size > 0">
+                AND food_id IN
+                <foreach collection="foodIdList" item="foodId" index="index" open="(" separator="," close=")">
+                    #{foodId}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY food_id
     </select>
 </mapper>

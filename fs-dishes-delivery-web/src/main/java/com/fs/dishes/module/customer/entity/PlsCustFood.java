@@ -29,4 +29,7 @@ public class PlsCustFood {
     private String foodName;
     @Transient
     private Integer unitId;
+    /**总下单量*/
+    @Transient
+    private BigDecimal totalNumber;
 }

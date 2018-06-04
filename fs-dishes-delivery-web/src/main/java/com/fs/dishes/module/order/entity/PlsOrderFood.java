@@ -33,4 +33,7 @@ public class PlsOrderFood implements Serializable {
     private String name;
     @Transient
     private Integer unitId;
+
+    @Transient
+    private BigDecimal totalNumber; //总下单量
 }

@@ -34,7 +34,7 @@
                 <el-table-column
                     property="id"
                     label="主订单号"
-                    width="125">
+                    minWidth="125">
                     <template scope="scope">
                         <a :href="baseUrl + viewLink + scope.row.id + token"  target="_blank">
                             <el-tag size="medium">{{ scope.row.id }}</el-tag>

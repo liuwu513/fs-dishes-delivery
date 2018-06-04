@@ -5,10 +5,12 @@ import com.fs.dishes.base.common.ResResult;
 import com.fs.dishes.base.service.BaseService;
 import com.fs.dishes.base.utils.IdGen;
 import com.fs.dishes.module.customer.dao.PlsCustomerDao;
+import com.fs.dishes.module.customer.entity.PlsCustFood;
 import com.fs.dishes.module.customer.entity.PlsCustomer;
 import com.fs.dishes.module.order.dao.PlsMainOrderDao;
 import com.fs.dishes.module.order.dao.PlsOrderFoodDao;
 import com.fs.dishes.module.order.dao.PlsSubOrderDao;
+import com.fs.dishes.module.order.entity.OrderFoodVo;
 import com.fs.dishes.module.order.entity.PlsMainOrder;
 import com.fs.dishes.module.order.entity.PlsOrderFood;
 import com.fs.dishes.module.order.entity.PlsSubOrder;
@@ -166,6 +168,8 @@ public class PlsOrderService extends BaseService {
                     }
                 }
             }
+
+            setMainInfo(subOrder.getMainOrderId(),list);
         }
         subOrder.setList(list);
         return ResResult.ok().withData(subOrder);
@@ -195,6 +199,9 @@ public class PlsOrderService extends BaseService {
         }
         return ResResult.ok();
     }
+
+
+
 
     /**
      * 创建主单
@@ -496,6 +503,34 @@ public class PlsOrderService extends BaseService {
                 return ResResult.error(300, "菜品信息不存在，请重新选择！");
             }
             return ResResult.ok().withData(food.getPrice());
+        }
+    }
+
+
+    /**
+     * 设置主单信息
+     * @param mainOrderId
+     * @param orderFoodList
+     */
+    private void setMainInfo(Long mainOrderId, List<PlsOrderFood> orderFoodList) {
+        if (CollectionUtils.isNotEmpty(orderFoodList)) {
+            List<Long> foodIdList = orderFoodList.stream().map(item -> item.getFoodId()).
+                    distinct().collect(Collectors.toList());
+
+            Map<String, Object> params = Maps.newHashMap();
+            params.put("mainOrderId", mainOrderId);
+            params.put("foodIdList", foodIdList);
+            List<OrderFoodVo> orderFoodVoList = plsOrderFoodDao.queryFoodOrderByCondition(params);
+
+            Map<Long, OrderFoodVo> orderFoodVoMap = orderFoodVoList.stream().collect(Collectors.toMap(item -> item.getFoodId(),
+                    item -> item));
+
+            orderFoodList.forEach(item -> {
+                OrderFoodVo orderFoodVo = orderFoodVoMap.get(item.getFoodId());
+                if (orderFoodVo != null) {
+                    item.setTotalNumber(orderFoodVo.getNumber());
+                }
+            });
         }
     }
 

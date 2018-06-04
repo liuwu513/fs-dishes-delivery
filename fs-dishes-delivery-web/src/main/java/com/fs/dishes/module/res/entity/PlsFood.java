@@ -32,4 +32,7 @@ public class PlsFood extends BaseEntity{
 
     @Transient
     private BigDecimal costPrice; //成本价
+
+    @Transient
+    private BigDecimal totalNumber; //下单量
 }
