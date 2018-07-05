@@ -1,5 +1,6 @@
 package com.fs.dishes.module.res.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fs.dishes.base.common.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
  * 配送食品实体
  * Created by liuwu on 2018/4/2 0002.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 @Data
 @Table(name = "pls_food")
