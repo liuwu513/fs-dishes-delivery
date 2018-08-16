@@ -21,6 +21,7 @@ public class PlsCustFood {
     private Long foodId;
     /** 订购数量*/
     private BigDecimal number;
+
     /** 食品单价*/
     private BigDecimal unitPrice;
 

@@ -51,11 +51,19 @@
                         prop="name" min-width="100px">
                     </el-table-column>
                     <el-table-column
+                        label="实际下单量"
+                        prop="actualNumber" min-width="100px;">
+                        <template slot-scope="scope">
+                            <el-input-number v-model="scope.row.actualNumber" :disabled="disable" :controls="controls" size="small"
+                                             :step="0.1" :min="0" :max="10000000"></el-input-number>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="数量"
                         prop="number" min-width="100px;">
                         <template slot-scope="scope">
-                            <el-input-number v-model="scope.row.number" :disabled="disable" :controls="controls" size="small" :min="1"
-                                             :max="10000000"></el-input-number>
+                            <el-input-number v-model="scope.row.number" :disabled="disable" :controls="controls" size="small"
+                                             :step="0.1" :min="0" :max="10000000"></el-input-number>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -71,7 +79,7 @@
                         label="成本小计（元）"
                         prop="sum" min-width="120px;">
                         <template slot-scope="scope">
-                            <label>{{scope.row.number * scope.row.costPrice}}</label>
+                            <label>{{scope.row.actualNumber * scope.row.costPrice}}</label>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -87,7 +95,7 @@
                         label="出售小计（元）"
                         prop="sum" min-width="120px">
                         <template slot-scope="scope">
-                            <label>{{scope.row.number * scope.row.unitPrice}}</label>
+                            <label>{{scope.row.actualNumber * scope.row.unitPrice}}</label>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -236,6 +244,7 @@
                                 subOrderId: item.subOrderId,
                                 costPrice:item.costPrice,
                                 foodId: item.foodId,
+                                actualNumber: item.actualNumber,
                                 number: item.number,
                                 unitPrice: item.unitPrice,
                                 unitName: this.unitList[item.unitId - 1].label

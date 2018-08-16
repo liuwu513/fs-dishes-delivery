@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fs.dishes.module.common.report.dao.PlsOrderReportDao">
     <select id="listMainOrderReport" resultType="com.fs.dishes.module.common.report.entity.MainOrderReport">
-      SELECT f.food_id AS foodId,g.name as foodName,g.unit_id AS unitId,SUM(f.number) AS number,sum(f.amount) as totalAmount
+      SELECT f.food_id AS foodId,g.name as foodName,g.unit_id AS unitId,SUM(f.number) AS number,sum(f.number * f.unit_price) as totalAmount
       from pls_order_food f LEFT JOIN pls_sub_order o
       ON f.sub_order_id = o.id
       LEFT JOIN pls_food g
@@ -13,7 +13,7 @@
     </select>
 
     <select id="listCustomerReportByMain" resultType="com.fs.dishes.module.common.report.entity.SubCustomerReport">
-      SELECT f.food_id AS foodId,c.id AS customerId,c.name AS customerName,sum(f.number) as number,sum(f.amount) AS totalAmount
+      SELECT f.food_id AS foodId,c.id AS customerId,c.name AS customerName,sum(f.number) as number,sum(f.number * f.unit_price) AS totalAmount
       ,f.unit_price
       FROM pls_order_food f LEFT JOIN pls_sub_order o
       ON f.sub_order_id = o.id

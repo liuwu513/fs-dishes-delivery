@@ -108,7 +108,7 @@ public class PlsOrderService extends BaseService {
     /**
      * 获取主单详情
      *
-     * @param orderId  主单ID数据
+     * @param orderId 主单ID数据
      * @return
      */
     public ResResult getMainById(Long orderId) {
@@ -116,9 +116,9 @@ public class PlsOrderService extends BaseService {
         Map<String, Object> params = Maps.newHashMap();
         params.put("mainOrderId", orderId);
         List<PlsOrderFood> list = plsOrderFoodDao.queryList(params);
-        if (CollectionUtils.isNotEmpty(list)){
-            Map<Long,List<PlsOrderFood>> resultMap = list.stream().collect(Collectors.groupingBy(item->item.getFoodId()));
-            List<Long> foodIdList = list.stream().map(item->item.getFoodId()).distinct().collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(list)) {
+            Map<Long, List<PlsOrderFood>> resultMap = list.stream().collect(Collectors.groupingBy(item -> item.getFoodId()));
+            List<Long> foodIdList = list.stream().map(item -> item.getFoodId()).distinct().collect(Collectors.toList());
             Map<String, Object> foodParams = Maps.newHashMap();
             foodParams.put("idList", foodIdList);
             foodParams.put("status", Constant.DataState.NORMAL.getValue());
@@ -126,13 +126,17 @@ public class PlsOrderService extends BaseService {
             Map<Long, PlsFood> foodMap = foodList.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
 
             List<PlsOrderFood> resultList = Lists.newArrayList();
-            resultMap.forEach((foodId,item)->{
-                if (CollectionUtils.isNotEmpty(item)){
-                    BigDecimal totalNumber = item.stream().map(PlsOrderFood::getNumber).reduce(BigDecimal.ZERO,BigDecimal::add);
+            resultMap.forEach((foodId, item) -> {
+                if (CollectionUtils.isNotEmpty(item)) {
+                    BigDecimal totalActualNumber = item.stream().map(value -> ((value.getActualNumber() != null &&
+                            value.getActualNumber().compareTo(BigDecimal.ZERO) > 0) ? value.getActualNumber() : value.getNumber()))
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal totalNumber = item.stream().map(value -> value.getNumber()).reduce(BigDecimal.ZERO, BigDecimal::add);
                     PlsFood food = foodMap.get(foodId);
                     item.get(0).setUnitId(food.getUnitId());
                     item.get(0).setName(food.getName());
                     item.get(0).setNumber(totalNumber);
+                    item.get(0).setActualNumber(totalActualNumber);
                     resultList.add(item.get(0));
                 }
             });
@@ -169,7 +173,7 @@ public class PlsOrderService extends BaseService {
                 }
             }
 
-            setMainInfo(subOrder.getMainOrderId(),list);
+            setMainInfo(subOrder.getMainOrderId(), list);
         }
         subOrder.setList(list);
         return ResResult.ok().withData(subOrder);
@@ -178,19 +182,20 @@ public class PlsOrderService extends BaseService {
 
     /**
      * 根据客户ID获取该客户最近下的子单食品数据
+     *
      * @param customerId
      * @return
      */
-    public ResResult getSubByCustomerId(Long customerId){
+    public ResResult getSubByCustomerId(Long customerId) {
         Long subOrderId = plsSubOrderDao.getSubIdByCustomerId(customerId);
-        if (subOrderId != null){
+        if (subOrderId != null) {
             ResResult resResult = getSubById(subOrderId);
-            if (resResult.getData() != null){
-                PlsSubOrder plsSubOrder = (PlsSubOrder)resResult.getData();
+            if (resResult.getData() != null) {
+                PlsSubOrder plsSubOrder = (PlsSubOrder) resResult.getData();
                 //设置ID为空
                 plsSubOrder.setId(null);
-                if (CollectionUtils.isNotEmpty(plsSubOrder.getList())){
-                    plsSubOrder.getList().forEach(item->{
+                if (CollectionUtils.isNotEmpty(plsSubOrder.getList())) {
+                    plsSubOrder.getList().forEach(item -> {
                         item.setId(StringUtils.EMPTY);
                     });
                 }
@@ -199,8 +204,6 @@ public class PlsOrderService extends BaseService {
         }
         return ResResult.ok();
     }
-
-
 
 
     /**
@@ -218,38 +221,38 @@ public class PlsOrderService extends BaseService {
             plsMainOrderDao.updateByPrimaryKeySelective(mainOrder);
             logger.info("主单名称:{}，更新成功", mainOrder.getOrderDesc());
 
-            if (CollectionUtils.isNotEmpty(mainOrder.getList())){
-                Map<String,Object> params = Maps.newHashMap();
-                params.put("mainOrderId",mainOrder.getId());
+            if (CollectionUtils.isNotEmpty(mainOrder.getList())) {
+                Map<String, Object> params = Maps.newHashMap();
+                params.put("mainOrderId", mainOrder.getId());
 
                 //调整价格后的商品信息
-                Map<Long,PlsOrderFood> orderFoodMap = mainOrder.getList().stream().collect(Collectors.toMap(item->item.getFoodId(),item->item));
+                Map<Long, PlsOrderFood> orderFoodMap = mainOrder.getList().stream().collect(Collectors.toMap(item -> item.getFoodId(), item -> item));
 
                 List<PlsOrderFood> list = plsOrderFoodDao.queryList(params);
-                Boolean modifyCostPrice = mainOrder.getPriceRadio().intValue() == 1 ? Boolean.FALSE:Boolean.TRUE;
-                if (CollectionUtils.isNotEmpty(list)){
+                Boolean modifyCostPrice = mainOrder.getPriceRadio().intValue() == 1 ? Boolean.FALSE : Boolean.TRUE;
+                if (CollectionUtils.isNotEmpty(list)) {
                     for (PlsOrderFood plsOrderFood : list) {
                         PlsOrderFood modifyOrderFood = orderFoodMap.get(plsOrderFood.getFoodId());
                         plsOrderFood.setCostPrice(modifyOrderFood.getCostPrice());
                         plsOrderFood.setCostAmount(modifyOrderFood.getCostPrice().multiply(plsOrderFood.getNumber()));
-                        if (modifyCostPrice){
+                        if (modifyCostPrice) {
                             plsOrderFood.setUnitPrice(modifyOrderFood.getUnitPrice());
                             plsOrderFood.setAmount(modifyOrderFood.getUnitPrice().multiply(plsOrderFood.getNumber()));
                         }
                         plsOrderFoodDao.updateByPrimaryKey(plsOrderFood);
                     }
-                    Map<Long,List<PlsOrderFood>> subMap = list.stream().collect(Collectors.groupingBy(item->item.getSubOrderId()));
-                    subMap.forEach((subOrderId,item)->{
-                        BigDecimal totalAmount = item.stream().map(PlsOrderFood::getAmount).reduce(BigDecimal.ZERO,BigDecimal::add);
-                        BigDecimal totalCostAmount = item.stream().map(PlsOrderFood::getCostAmount).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    Map<Long, List<PlsOrderFood>> subMap = list.stream().collect(Collectors.groupingBy(item -> item.getSubOrderId()));
+                    subMap.forEach((subOrderId, item) -> {
+                        BigDecimal totalAmount = item.stream().map(PlsOrderFood::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        BigDecimal totalCostAmount = item.stream().map(PlsOrderFood::getCostAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                         PlsSubOrder subOrder = new PlsSubOrder();
                         subOrder.setId(subOrderId);
                         subOrder.setTotalAmount(totalAmount);
                         subOrder.setTotalCost(totalCostAmount);
                         plsSubOrderDao.updateByPrimaryKeySelective(subOrder);
                     });
-                    BigDecimal totalAmount = list.stream().map(PlsOrderFood::getAmount).reduce(BigDecimal.ZERO,BigDecimal::add);
-                    BigDecimal totalCostAmount = list.stream().map(PlsOrderFood::getCostAmount).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    BigDecimal totalAmount = list.stream().map(PlsOrderFood::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal totalCostAmount = list.stream().map(PlsOrderFood::getCostAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                     PlsMainOrder plsMainOrder = new PlsMainOrder();
                     plsMainOrder.setId(mainOrder.getId());
                     plsMainOrder.setTotalAmount(totalAmount);
@@ -297,9 +300,14 @@ public class PlsOrderService extends BaseService {
             for (PlsOrderFood plsOrderFood : orderFoodList) {
                 plsOrderFood.setCreateTime(new Date());
                 plsOrderFood.setSubOrderId(subOrderId);
-                plsOrderFood.setAmount(plsOrderFood.getNumber().multiply(plsOrderFood.getUnitPrice()));
+
+                //当实际下单量不为空或者不为0时，则以实际下单量计算总金额，否则将以用户下单量计算金额
+                BigDecimal number = (plsOrderFood.getActualNumber() != null && plsOrderFood.getActualNumber().
+                        compareTo(BigDecimal.ZERO) > 0) ? plsOrderFood.getActualNumber() : plsOrderFood.getNumber();
+
+                plsOrderFood.setAmount(number.multiply(plsOrderFood.getUnitPrice()));
                 totalAmount = totalAmount.add(plsOrderFood.getAmount());
-                plsOrderFood.setCostAmount(plsOrderFood.getNumber().multiply(plsOrderFood.getCostPrice()));
+                plsOrderFood.setCostAmount(number.multiply(plsOrderFood.getCostPrice()));
                 totalCostAmount = totalCostAmount.add(plsOrderFood.getCostAmount());
             }
             subOrder.setTotalAmount(totalAmount);
@@ -351,13 +359,13 @@ public class PlsOrderService extends BaseService {
                 }
                 logger.info("更新子单{}商品信息共{}个，更新成功", subOrderId, updateList.size());
             }
-            if (mainOrderId != null){
+            if (mainOrderId != null) {
                 Example example = new Example(PlsSubOrder.class);
                 Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("mainOrderId",mainOrderId);
-                criteria.andEqualTo("status",Constant.DataState.NORMAL.getValue());
+                criteria.andEqualTo("mainOrderId", mainOrderId);
+                criteria.andEqualTo("status", Constant.DataState.NORMAL.getValue());
                 List<PlsSubOrder> subOrderList = plsSubOrderDao.selectByExample(example);
-                if (CollectionUtils.isNotEmpty(subOrderList)){
+                if (CollectionUtils.isNotEmpty(subOrderList)) {
                     BigDecimal totalAmount = BigDecimal.ZERO;
                     BigDecimal totalCost = BigDecimal.ZERO;
                     for (PlsSubOrder subOrder : subOrderList) {
@@ -433,7 +441,7 @@ public class PlsOrderService extends BaseService {
                     PlsSubOrder plsSubOrder = subOrderList.get(i);
                     if (subOrderIdList.contains(plsSubOrder.getId().toString())) {
                         errorMsg.append(plsSubOrder.getName());
-                        if (i < subOrderList.size() -1) {
+                        if (i < subOrderList.size() - 1) {
                             errorMsg.append("，");
                         }
                     }
@@ -509,6 +517,7 @@ public class PlsOrderService extends BaseService {
 
     /**
      * 设置主单信息
+     *
      * @param mainOrderId
      * @param orderFoodList
      */

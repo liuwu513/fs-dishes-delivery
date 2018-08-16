@@ -118,18 +118,19 @@
                         prop="name">
                     </el-table-column>
                     <el-table-column
-                        label="总下单量"
-                        prop="totalNumber">
+                        label="下单量"
+                        prop="number" width="150px;">
                         <template slot-scope="scope">
-                            <label>{{scope.row.totalNumber + scope.row.number}}</label>
+                            <el-input type="number" v-model="scope.row.number"  size="small" :step="0.1" :min="0.1"
+                                      :max="10000000"></el-input>
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="数量"
-                        prop="number" width="120px;">
+                        label="实际配送量"
+                        prop="actualNumber" width="150px;">
                         <template slot-scope="scope">
-                            <el-input-number v-model="scope.row.number" :controls="controls" size="small" :min="1"
-                                             :max="10000000"></el-input-number>
+                            <el-input type="number" v-model="scope.row.actualNumber"  size="small" :step="0.1" :min="0.1"
+                                      :max="10000000"></el-input>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -145,7 +146,8 @@
                         label="小计（元）"
                         prop="sum" width="120">
                         <template slot-scope="scope">
-                            <label>{{scope.row.number * scope.row.unitPrice}}</label>
+                            <label v-if="scope.row.actualNumber == 0">{{scope.row.number * scope.row.unitPrice | numFilter}}</label>
+                            <label v-if="scope.row.actualNumber != 0">{{scope.row.actualNumber * scope.row.unitPrice | numFilter}}</label>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="80">
@@ -202,7 +204,7 @@
                         {required: true, message: '请输入子单名称', trigger: 'blur'},
                     ],
                     customerId: [
-                        {type: 'number', required: true, message: '请选择客户', trigger: 'blur'},
+                        {type: 'number', required: true, message: '请输入数量', trigger: 'blur'},
                     ]
                 },
                 unitList: [{
@@ -253,6 +255,21 @@
             this.initData();
         },
         computed: {},
+        filters: {
+
+            numFilter(value) {
+
+                // 截取当前数据到小数点后两位
+
+                let realVal = Number(value).toFixed(2)
+
+                // num.toFixed(2)获取的是字符串
+
+                return Number(realVal)
+
+            }
+
+        },
         methods: {
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -294,7 +311,7 @@
                                         number: item.number,
                                         costPrice:item.costPrice,
                                         unitPrice: item.unitPrice,
-                                        totalNumber:item.totalNumber,
+                                        actualNumber:item.actualNumber,
                                         unitName: this.unitList[item.unitId - 1].label
                                     });
                                 })
@@ -332,7 +349,7 @@
                                         number: item.number,
                                         costPrice:item.costPrice,
                                         unitPrice: item.unitPrice,
-                                        totalNumber:item.totalNumber,
+                                        actualNumber:item.actualNumber,
                                         unitName: this.unitList[item.unitId - 1].label
                                     });
                                 })
@@ -369,10 +386,10 @@
                         tableData.imgLink = item.imgLink;
                         tableData.unitPrice = item.price;
                         tableData.costPrice = item.costPrice;
-                        tableData.totalNumber = item.number;
+                        tableData.actualNumber = item.number;
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;
-                        tableData.totalNumber = item.totalNumber;
+                        tableData.actualNumber = item.actualNumber;
                         this.tableFoodData.push(tableData);
                     });
                 } else {
@@ -396,10 +413,10 @@
                             tableData.imgLink = item.imgLink;
                             tableData.unitPrice = item.price;
                             tableData.costPrice = item.costPrice;
-                            tableData.totalNumber = item.number;
+                            tableData.actualNumber = item.number;
                             tableData.unitId = item.unitId;
                             tableData.unitName = this.unitList[item.unitId - 1].label;
-                            tableData.totalNumber = item.totalNumber;
+                            tableData.actualNumber = item.actualNumber;
                             this.tableFoodData.push(tableData);
                         }
                     });
@@ -489,7 +506,7 @@
                                 number: item.number,
                                 costPrice: item.costPrice,
                                 unitPrice: item.unitPrice,
-                                totalNumber:item.totalNumber - item.number,
+                                actualNumber:item.actualNumber,
                                 unitName: this.unitList[item.unitId - 1].label
                             });
                         })
@@ -541,7 +558,6 @@
                         tableData.unitId = item.unitId;
                         tableData.unitName = this.unitList[item.unitId - 1].label;
                         tableData.index = index;
-                        tableData.totalNumber=item.totalNumber;
                         this.tableData.push(tableData);
                     })
                 } else {

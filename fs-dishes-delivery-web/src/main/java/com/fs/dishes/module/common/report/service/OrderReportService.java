@@ -114,6 +114,8 @@ public class OrderReportService extends BaseService {
             mainOrderReport.setIndex(index);
             String unitName = DictEnum.UnitEnum.formCode(mainOrderReport.getUnitId()).desc();
             mainOrderReport.setUnitName(unitName);
+
+
             List<SubCustomerReport> subReportList = customerMap.get(mainOrderReport.getFoodId());
             if (CollectionUtils.isNotEmpty(subReportList)){
                 mainOrderReport.setSubData(new JRBeanCollectionDataSource(subReportList));
