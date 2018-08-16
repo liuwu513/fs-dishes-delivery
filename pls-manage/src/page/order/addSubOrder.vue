@@ -129,8 +129,10 @@
                         label="实际配送量"
                         prop="actualNumber" width="150px;">
                         <template slot-scope="scope">
-                            <el-input type="number" v-model="scope.row.actualNumber"  size="small" :step="0.1" :min="0.1"
-                                      :max="10000000"></el-input>
+                            <div class="el-input el-input--small">
+                                <input type="number" v-model="scope.row.actualNumber"  size="small" :step="0.1" :min="0.1"
+                                      :max="10000000" :tabindex="scope.row.index" class="el-input__inner"></input>
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -256,21 +258,17 @@
         },
         computed: {},
         filters: {
-
             numFilter(value) {
-
                 // 截取当前数据到小数点后两位
-
                 let realVal = Number(value).toFixed(2)
-
                 // num.toFixed(2)获取的是字符串
-
                 return Number(realVal)
-
             }
-
         },
         methods: {
+            enterNextInput(){
+                console.log("失去焦点");
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
@@ -305,6 +303,7 @@
                                 data.forEach((item, index) => {
                                     item.costPrice = item.unitPrice;
                                     this.tableFoodData.push({
+                                        index: index+1,
                                         name: item.foodName,
                                         mainOrderId: this.subOrderForm.mainOrderId,
                                         foodId: item.foodId,
@@ -343,6 +342,7 @@
                                 var mainOrderId =  this.subOrderForm.mainOrderId;
                                 data.list.forEach((item, index) => {
                                     this.tableFoodData.push({
+                                        index: index+1,
                                         name: item.name,
                                         mainOrderId: mainOrderId,
                                         foodId: item.foodId,
@@ -377,6 +377,7 @@
                 if (this.tableFoodData.length === 0) {
                     this.multipleSelection.forEach((item, index) => {
                         const tableData = {};
+                        tableData.index = index+1;
                         tableData.foodId = item.id;
                         tableData.mainOrderId = this.subOrderForm.mainOrderId;
                         tableData.name = item.name;
@@ -404,6 +405,7 @@
                     this.multipleSelection.forEach((item, index) => {
                         if (existIds.indexOf(item.id) < 0) {
                             const tableData = {};
+                            tableData.index = index+1;
                             tableData.foodId = item.id;
                             tableData.mainOrderId = this.subOrderForm.mainOrderId;
                             tableData.name = item.name;
@@ -497,7 +499,9 @@
                             mainOrderId: data.mainOrderId
                         };
                         data.list.forEach((item, index) => {
+                            var actualNumber = (item.actualNumber == 0) ? "" : item.actualNumber;
                             this.tableFoodData.push({
+                                index: index+1,
                                 id: item.id,
                                 name: item.name,
                                 mainOrderId: item.mainOrderId,
@@ -506,7 +510,7 @@
                                 number: item.number,
                                 costPrice: item.costPrice,
                                 unitPrice: item.unitPrice,
-                                actualNumber:item.actualNumber,
+                                actualNumber: actualNumber,
                                 unitName: this.unitList[item.unitId - 1].label
                             });
                         })
@@ -676,6 +680,13 @@
         overflow: hidden;
         transition: all 400ms;
         background: #f9fafc;
+    }
+    .enterinput{
+        display: inline-block;
+        width: 80px;
+        position: relative;
+        line-height: normal;
+        border:1px solid red;
     }
     .el-input-number{
         display: inline-block;
