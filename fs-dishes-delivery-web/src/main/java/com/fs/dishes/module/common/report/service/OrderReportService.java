@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,11 @@ public class OrderReportService extends BaseService {
             String unitName = DictEnum.UnitEnum.formCode(plsOrderFood.getUnitId()).desc();
             mapItem.put("unitName", unitName);
             mapItem.put("unitPrice", plsOrderFood.getUnitPrice());
-            mapItem.put("number", plsOrderFood.getActualNumber());
+
+            BigDecimal number = (plsOrderFood.getActualNumber() != null && plsOrderFood.getActualNumber().
+                    compareTo(BigDecimal.ZERO) > 0) ? plsOrderFood.getActualNumber() : plsOrderFood.getNumber();
+
+            mapItem.put("number", number);
             mapItem.put("amount", plsOrderFood.getAmount());
             dataList.add(mapItem);
             index++;
