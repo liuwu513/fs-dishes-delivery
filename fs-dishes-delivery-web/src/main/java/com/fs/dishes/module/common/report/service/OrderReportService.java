@@ -79,7 +79,7 @@ public class OrderReportService extends BaseService {
             String unitName = DictEnum.UnitEnum.formCode(plsOrderFood.getUnitId()).desc();
             mapItem.put("unitName", unitName);
             mapItem.put("unitPrice", plsOrderFood.getUnitPrice());
-            mapItem.put("number", plsOrderFood.getNumber());
+            mapItem.put("number", plsOrderFood.getActualNumber());
             mapItem.put("amount", plsOrderFood.getAmount());
             dataList.add(mapItem);
             index++;
