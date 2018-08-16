@@ -84,7 +84,9 @@ public class PlsFoodService extends BaseService {
                     OrderFoodVo orderFoodVo = orderFoodMap.get(food.getId());
                     if (orderFoodVo != null) {
                         food.setPrice(orderFoodVo.getUnitPrice());
-                        food.setCostPrice(orderFoodVo.getCostPrice());
+                        BigDecimal costPrice = (orderFoodVo.getCostPrice() != null && orderFoodVo.getCostPrice().
+                                compareTo(BigDecimal.ZERO) > 0) ? orderFoodVo.getCostPrice() : orderFoodVo.getUnitPrice();
+                        food.setCostPrice(costPrice);
                         food.setTotalNumber(orderFoodVo.getNumber());
                     }
                     food.setSpeciesName(speciesMap.get(food.getSpeciesId()));
