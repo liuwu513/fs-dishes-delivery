@@ -20,7 +20,7 @@
 	<field name="foodId" class="java.lang.Long"/>
 	<field name="foodName" class="java.lang.String"/>
 	<field name="unitName" class="java.lang.String"/>
-	<field name="number" class="java.lang.Integer"/>
+	<field name="number" class="java.math.BigDecimal"/>
 	<field name="totalAmount" class="java.math.BigDecimal"/>
 	<field name="remarks" class="java.lang.String"/>
 	<field name="index" class="java.lang.Integer"/>

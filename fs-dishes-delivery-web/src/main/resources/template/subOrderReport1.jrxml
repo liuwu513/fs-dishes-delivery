@@ -21,7 +21,7 @@
 	<field name="foodName" class="java.lang.String"/>
 	<field name="class" class="java.lang.String"/>
 	<field name="unitName" class="java.lang.String"/>
-	<field name="number" class="java.lang.Integer"/>
+	<field name="number" class="java.math.BigDecimal"/>
 	<field name="amount" class="java.math.BigDecimal"/>
 	<field name="remarks" class="java.lang.Integer"/>
 	<field name="subOrderNo" class="java.lang.Integer"/>
