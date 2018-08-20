@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.106.100.83:3306/pls-dev?useSSL=false&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+    url: jdbc:mysql://v-mariadb:3306/pls?useSSL=false&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
     password: XVQ8GfSFd8YIc+wdjvT91b4cPdct2RycUXnKW6SqMZKXAlCtBBDoVotZ5+NMLAsKaXMrzPzNgHiujNHq681/Lw==
     # 使用druid数据源
