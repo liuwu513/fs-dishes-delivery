@@ -2,6 +2,7 @@ package com.fs.dishes.base.controller;
 
 import com.fs.dishes.module.sys.entity.SysUser;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,10 +64,20 @@ public abstract class AbstractController {
     }
 
     /**
-     * 获取路径地址
+     * 获取参数值
+     * @param parameterName
      * @return
      */
-    protected String getRealPath(String folderName){
+    protected String getParameter(String parameterName) {
+        return request.getParameter(parameterName) != null ? request.getParameter(parameterName) : StringUtils.EMPTY;
+    }
+
+    /**
+     * 获取路径地址
+     *
+     * @return
+     */
+    protected String getRealPath(String folderName) {
         return this.getClass().getClassLoader().getResource(folderName).getPath();
     }
 }

@@ -35,7 +35,12 @@ public class OrderReportController extends AbstractController {
         //获取配送子单数据
         Map<String, Object> map = orderReportService.getSubOrderReportData(subOrderId);
         String reportName = MapUtils.getString(map, "customerName") + DateUtils.format(new Date(), DateUtils.DATE_PATTERN);
-        return new ModelAndView(new PdfReportView("template/subOrderReport1.jasper", reportName), map);
+        Integer size = Integer.valueOf(getParameter("size"));
+        if (size == 1) {
+            return new ModelAndView(new PdfReportView("template/subOrderReport1.jasper", reportName), map);
+        } else {
+            return new ModelAndView(new PdfReportView("template/subOrderReport2.jasper", reportName), map);
+        }
     }
 
 
@@ -44,6 +49,6 @@ public class OrderReportController extends AbstractController {
         //获取主单数据
         Map<String, Object> map = orderReportService.getMainOrderReportData(mainOrderId);
         String reportName = MapUtils.getString(map, "mainOrderName") + DateUtils.format(new Date(), DateUtils.DATE_PATTERN);
-        return new ModelAndView(new PdfReportView("template/mainOrderReport1.jasper", reportName),map);
+        return new ModelAndView(new PdfReportView("template/mainOrderReport1.jasper", reportName), map);
     }
 }

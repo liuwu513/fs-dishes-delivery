@@ -122,7 +122,7 @@
         data(){
             return {
                 baseUrl,
-                token: '?token='+ getStore('token'),
+                token: '?token='+ getStore('token')+'&size=2',
                 viewLink: '/api/rpt/viewOrderDetail/',
                 tableData: [],
                 currentRow: null,
