@@ -67,8 +67,9 @@
                     label="付款状态"
                     :formatter="formatterPayStatus" minWidth="85">
                 </el-table-column>
-                <el-table-column label="操作" minWidth="200">
+                <el-table-column label="操作" minWidth="250">
                     <template scope="scope">
+                        <a :href="baseUrl + xlsLink + scope.row.id + token" class="el-button el-button--default el-button--small" target="_blank">下载打印</a>
                         <el-button
                             size="small"
                             @click="handleEdit(scope.row,'edit')">编辑
@@ -134,6 +135,7 @@
                 baseUrl,
                 token: '?token='+ getStore('token'),
                 viewLink: '/api/rpt/viewMainHtml/',
+                xlsLink: '/api/xls/viewMainXls/',
                 tableData: [],
                 currentRow: null,
                 limit: 10,
